@@ -11,14 +11,14 @@ class Gaussian{
   private:
     // Use the full file, not the file name
     reparm::ParameterGroup param_group_;
+    std::vector<std::string> outputs_;
 
   public:
     Gaussian(const reparm::ParameterGroup &param_group)
       :param_group_{param_group}
       {}
 
-      std::vector<std::string> RunGaussian();
-      void ThreadRun(int i);
+    std::vector<std::string> RunGaussian();
 
 };
 

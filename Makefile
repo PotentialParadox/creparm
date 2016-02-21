@@ -1,5 +1,5 @@
 CC = g++-5
-CFLAGS = -Wall -std=c++11
+CFLAGS = -Wall -std=c++11 -pthread
 INC_DIR = include
 VPATH = src:include:bin
 OBJECTS = main.o gaussian_input.o coordinates.o parameters.o header.o gaussian.o \
