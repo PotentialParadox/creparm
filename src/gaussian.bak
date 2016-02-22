@@ -9,23 +9,18 @@
 
 using namespace reparm;
 
-void ThreadRun(int j, const std::string &input){
+void ThreadRun(int j, reparm::ParameterGroup param_group, std::vector<std::string> &outputs){
   // There will be as many outputs as there are inputs
-  //int number_inputs = static_cast<int>(param_group.GetInputs().size());
-  int number_inputs = 400;
+  int number_inputs = static_cast<int>(param_group.GetInputs().size());
   int number_threads = std::thread::hardware_concurrency();
-  //number_threads = 2;
-  std::string gout;
-  gout.resize(10000);
   try{
   for (int i = j; i < number_inputs; i += number_threads){
-    std::string cmd{"#!/bin/sh\ng09 2>&1 <<END\n" + input + "END"};
-    gout = (systls::exec(cmd, 10000));
+    std::string cmd{"#!/bin/sh\ng09 2>&1 <<END\n" + param_group.GetInputs()[i].str() + "END"};
+    std::string gout(systls::exec(cmd, 10000));
     std::regex p_normal_termination{"Normal termination of Gaussian 09"};
     std::regex p_no_g09{"g09: not found"};
     if (std::regex_search(gout, p_normal_termination)){
-      //outputs[i] = gout;
-      ;
+      outputs[i] = gout;
     }
     else if (std::regex_search(gout, p_no_g09)){
       std::cerr << "Gaussian not found, please check your exports" << std::endl;
@@ -65,12 +60,10 @@ std::vector<std::string> Gaussian::RunGaussian(){
   reparm::ParameterGroup param_group = this->param_group_;
   std::vector<std::thread> thread_list;
   int number_threads = std::thread::hardware_concurrency();
-  //number_threads = 2;
-  std::string input = param_group.GetInputs()[0].str();
   for (int i = 1; i < number_threads; ++i){
-    thread_list.push_back(std::thread(ThreadRun, i, input));
+    thread_list.push_back(std::thread(ThreadRun, i, param_group, std::ref(outputs)));
   }
-  ThreadRun(0, input);
+  ThreadRun(0, param_group, outputs);
   join_all(thread_list);
 
   return outputs;
