@@ -14,17 +14,13 @@ using namespace chrono;
 int main(){
 
   vector<GaussianInput> inputs;
-  for (int i = 0; i < 400; ++i){
+  for (int i = 0; i < 100; ++i){
     GaussianInput gin("FuranAM1.com");
-    gin.PerturbCoordinates(0.0);
     inputs.push_back(gin);
   }
 
   ParameterGroup param_group(inputs);
-  param_group.Mutate(0.1, 0);
-  //for (auto &&i: param_group.GetInputs()){
-    //cout << i.str() << endl;
-  //}
+  param_group.Mutate(0.1, 0.5);
   Gaussian gaussian{param_group};
 
   high_resolution_clock::time_point t1 = high_resolution_clock::now();
