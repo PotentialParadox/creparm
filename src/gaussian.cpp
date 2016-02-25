@@ -6,10 +6,11 @@
 #include <reparm_exceptions.h>
 #include <vector>
 #include <thread>
+#include <gaussian_output.h>
 
 using namespace reparm;
 
-void ThreadRun(int j, reparm::ParameterGroup param_group, std::vector<std::string> &outputs){
+void ThreadRun(int j, reparm::ParameterGroup param_group, std::vector<reparm::GaussianOutput> &outputs){
   // There will be as many outputs as there are inputs
   int number_inputs = static_cast<int>(param_group.GetInputs().size());
   int number_threads = std::thread::hardware_concurrency();
@@ -20,7 +21,8 @@ void ThreadRun(int j, reparm::ParameterGroup param_group, std::vector<std::strin
     std::regex p_normal_termination{"Normal termination of Gaussian 09"};
     std::regex p_no_g09{"g09: not found"};
     if (std::regex_search(gout, p_normal_termination)){
-      outputs[i] = gout;
+      reparm::GaussianOutput output{gout};
+      outputs[i] = output;
     }
     else if (std::regex_search(gout, p_no_g09)){
       std::cerr << "Gaussian not found, please check your exports" << std::endl;
@@ -42,10 +44,6 @@ void ThreadRun(int j, reparm::ParameterGroup param_group, std::vector<std::strin
   }
 }
 
-void ThreadPrint(int i){
-  std::cout << "hi from " << i <<  std::endl;
-}
-
 void do_join(std::thread &t){
   t.join();
 }
@@ -54,9 +52,9 @@ void join_all(std::vector<std::thread> &v){
   std::for_each(v.begin(), v.end(), do_join);
 }
 
-std::vector<std::string> Gaussian::RunGaussian(){
+std::vector<reparm::GaussianOutput> Gaussian::RunGaussian(){
   int number_inputs = this->param_group_.GetInputs().size();
-  std::vector<std::string> outputs(number_inputs);
+  std::vector<reparm::GaussianOutput> outputs(number_inputs);
   reparm::ParameterGroup param_group = this->param_group_;
   std::vector<std::thread> thread_list;
   int number_threads = std::thread::hardware_concurrency();

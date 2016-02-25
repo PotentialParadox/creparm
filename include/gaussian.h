@@ -4,6 +4,7 @@
 #include <string>
 #include <reparm_exceptions.h>
 #include <parameter_group.h>
+#include <gaussian_output.h>
 
 namespace reparm{
 
@@ -11,14 +12,13 @@ class Gaussian{
   private:
     // Use the full file, not the file name
     reparm::ParameterGroup param_group_;
-    std::vector<std::string> outputs_;
 
   public:
     Gaussian(const reparm::ParameterGroup &param_group)
       :param_group_{param_group}
       {}
 
-    std::vector<std::string> RunGaussian();
+      std::vector<reparm::GaussianOutput> RunGaussian();
 
 };
 

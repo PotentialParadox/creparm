@@ -1,4 +1,4 @@
-#P AM1(Input,print) freq
+#P AM1(Input,print) CIS(Singlets,NStates=15) pop(full) freq
 
 AM1-Reparam Input
 

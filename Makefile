@@ -3,12 +3,12 @@ CFLAGS = -Wall -std=c++11 -pthread
 INC_DIR = include
 VPATH = src:include:bin
 OBJECTS = main.o gaussian_input.o coordinates.o parameters.o header.o gaussian.o \
-	  parameter_group.o
+	  parameter_group.o gaussian_output.o
 
 all : bin/$(OBJECTS)
 	$(CC) $(CFLAGS) $^ -o bin/reparm
 
-bin/main.o : main.cpp gaussian_input.h header.h gaussian.h parameter_group.h
+bin/main.o : main.cpp gaussian_input.h header.h gaussian.h parameter_group.h gaussian_output.h
 	$(CC) -c -I $(INC_DIR) $(CFLAGS) $< -o $@
 
 bin/gaussian_input.o : gaussian_input.cpp header.h coordinates.h parameters.h reparm_exceptions.h
@@ -23,10 +23,13 @@ bin/header.o: header.cpp
 bin/parameters.o: parameters.cpp
 	$(CC) -c -I $(INC_DIR) $(CFLAGS) $< -o $@
 
-bin/gaussian.o: gaussian.cpp gaussian.h
+bin/gaussian.o: gaussian.cpp gaussian.h gaussian_output.h
 	$(CC) -c -I $(INC_DIR) $(CFLAGS) $< -o $@
 
-bin/parameter_group.o: parameter_group.cpp gaussian_input.h
+bin/parameter_group.o: parameter_group.cpp gaussian_input.h gaussian_output.h
+	$(CC) -c -I $(INC_DIR) $(CFLAGS) $< -o $@
+
+bin/gaussian_output.o: gaussian_output.cpp
 	$(CC) -c -I $(INC_DIR) $(CFLAGS) $< -o $@
 
 .PHONY :

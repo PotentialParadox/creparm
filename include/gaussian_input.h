@@ -1,5 +1,5 @@
 /* This Gaussian Input class is in charge of building and reading 
- * Gaussian input files
+ * Gaussian input files.
  * Created by Dustin Tracy (dtracy.uf@gmail.com) 2016 
  */
 

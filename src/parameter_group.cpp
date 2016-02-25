@@ -19,3 +19,11 @@ void reparm::ParameterGroup::Mutate(const double &perturbation, const double &ra
     i.SetParameters(parameters);
   }
 }
+
+void reparm::ParameterGroup::SetOutputs(const std::vector<reparm::GaussianOutput> &outputs){
+  this->outputs_ = outputs;
+}
+
+std::vector<reparm::GaussianOutput> reparm::ParameterGroup::GetOutputs(){
+  return this->outputs_;
+}
