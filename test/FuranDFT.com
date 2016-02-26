@@ -1,4 +1,4 @@
-#P B3LYP/3-21G CIS(Singlets,NStates=15) pop(full)
+#P B3LYP/3-21G CIS(Singlets,NStates=10) pop(full)
 
 Title Card Required
 
