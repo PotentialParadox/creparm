@@ -7,6 +7,7 @@
 #define GAUSSIAN_INPUT_H
 
 #include <string>
+#include <vector>
 #include <header.h>
 #include <coordinates.h>
 #include <parameters.h>
@@ -19,9 +20,9 @@ namespace reparm{
 
 class GaussianInput{
   private:
-    reparm::Header header_;
-    reparm::Coordinates coordinates_;
-    reparm::Parameters parameters_;
+    std::vector<reparm::Header> header_;
+    std::vector<reparm::Coordinates> coordinates_;
+    std::vector<reparm::Parameters> parameters_;
 
   public:
     GaussianInput(const std::string&);
@@ -35,6 +36,7 @@ class GaussianInput{
     void PerturbCoordinates(const float &p);
     void SetParameters(const reparm::Parameters&);
     void MutateParameters(const double &p, const float &r);
+    void Link(const reparm::GaussianInput&);
     reparm::Header GetHeader() const;
     reparm::Coordinates GetCoordinates() const;
     reparm::Parameters GetParameters() const;

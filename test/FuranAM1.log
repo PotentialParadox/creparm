@@ -2,8 +2,8 @@
  Input=FuranAM1.com
  Output=FuranAM1.log
  Initial command:
- /opt/g09/g09/l1.exe "/opt/g09/scratch/Gau-10226.inp" -scrdir="/opt/g09/scratch/"
- Entering Link 1 = /opt/g09/g09/l1.exe PID=     10227.
+ /opt/g09/g09/l1.exe "/opt/g09/scratch/Gau-14878.inp" -scrdir="/opt/g09/scratch/"
+ Entering Link 1 = /opt/g09/g09/l1.exe PID=     14879.
   
  Copyright (c) 1988,1990,1992,1993,1995,1998,2003,2009,2013,
             Gaussian, Inc.  All Rights Reserved.
@@ -95,7 +95,7 @@
  7/8=1,10=1,12=6,13=5,25=1,44=2/1,2,3,16;
  1/10=4,30=1/3;
  99//99;
- Leave Link    1 at Thu Feb 25 12:57:21 2016, MaxMem=           0 cpu:         0.0
+ Leave Link    1 at Thu Feb 25 16:52:01 2016, MaxMem=           0 cpu:         0.0
  (Enter /opt/g09/g09/l101.exe)
  -----------------
  AM1-Reparam Input
@@ -126,7 +126,7 @@
  NQMom=    0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000
  NMagM=    0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   2.7928460   2.7928460   2.7928460   2.7928460
  AtZNuc=   6.0000000   6.0000000   8.0000000   6.0000000   6.0000000   1.0000000   1.0000000   1.0000000   1.0000000
- Leave Link  101 at Thu Feb 25 12:57:21 2016, MaxMem=    33554432 cpu:         0.0
+ Leave Link  101 at Thu Feb 25 16:52:01 2016, MaxMem=    33554432 cpu:         0.0
  (Enter /opt/g09/g09/l103.exe)
 
  GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad
@@ -136,7 +136,7 @@
  Number of steps in this run=      2 maximum allowed number of steps=      2.
  GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad
 
- Leave Link  103 at Thu Feb 25 12:57:21 2016, MaxMem=    33554432 cpu:         0.0
+ Leave Link  103 at Thu Feb 25 16:52:01 2016, MaxMem=    33554432 cpu:         0.0
  (Enter /opt/g09/g09/l202.exe)
                           Input orientation:                          
  ---------------------------------------------------------------------
@@ -191,7 +191,7 @@
       9          1           0        0.000000    1.369382   -1.810438
  ---------------------------------------------------------------------
  Rotational constants (GHZ):      9.5015164      9.3284592      4.7070963
- Leave Link  202 at Thu Feb 25 12:57:21 2016, MaxMem=    33554432 cpu:         0.0
+ Leave Link  202 at Thu Feb 25 16:52:01 2016, MaxMem=    33554432 cpu:         0.0
  (Enter /opt/g09/g09/l301.exe)
 
  Semi-emprical parameters in input format:
@@ -256,7 +256,7 @@
  Integral buffers will be    131072 words long.
  Regular integral format.
  Two-electron integral symmetry is turned off.
- Leave Link  301 at Thu Feb 25 12:57:21 2016, MaxMem=    33554432 cpu:         0.0
+ Leave Link  301 at Thu Feb 25 16:52:01 2016, MaxMem=    33554432 cpu:         0.0
  (Enter /opt/g09/g09/l302.exe)
  Do NDO integrals.
  NPDir=0 NMtPBC=     1 NCelOv=     1 NCel=       1 NClECP=     1 NCelD=      1
@@ -264,12 +264,12 @@
  One-electron integrals computed using PRISM.
  NBasis=    24 RedAO= T EigKep=  1.00D+00  NBF=    10     2     3     9
  NBsUse=    24 1.00D-06 EigRej= -1.00D+00 NBFU=    10     2     3     9
- Leave Link  302 at Thu Feb 25 12:57:21 2016, MaxMem=    33554432 cpu:         0.0
+ Leave Link  302 at Thu Feb 25 16:52:01 2016, MaxMem=    33554432 cpu:         0.0
  (Enter /opt/g09/g09/l308.exe)
- Leave Link  308 at Thu Feb 25 12:57:21 2016, MaxMem=    33554432 cpu:         0.0
+ Leave Link  308 at Thu Feb 25 16:52:01 2016, MaxMem=    33554432 cpu:         0.0
  (Enter /opt/g09/g09/l303.exe)
  DipDrv:  MaxL=1.
- Leave Link  303 at Thu Feb 25 12:57:21 2016, MaxMem=    33554432 cpu:         0.0
+ Leave Link  303 at Thu Feb 25 16:52:01 2016, MaxMem=    33554432 cpu:         0.0
  (Enter /opt/g09/g09/l401.exe)
  Simple Huckel Guess.
  JPrj=0 DoOrth=F DoCkMO=F.
@@ -279,7 +279,7 @@
        Virtual   (B1) (A2) (B2) (B2) (A1) (A1) (B2) (B2) (A1) (A1)
                  (B2)
  The electronic state of the initial guess is 1-A1.
- Leave Link  401 at Thu Feb 25 12:57:22 2016, MaxMem=    33554432 cpu:         0.0
+ Leave Link  401 at Thu Feb 25 16:52:01 2016, MaxMem=    33554432 cpu:         0.0
  (Enter /opt/g09/g09/l502.exe)
  Closed shell SCF:
  Using DIIS extrapolation, IDIIS=  1040.
@@ -451,12 +451,12 @@
  SCF Done:  E(RAM1) =  0.108592571981E-01 A.U. after   13 cycles
             NFock= 12  Conv=0.48D-08     -V/T= 1.0007
  KE=-1.657292780719D+01 PE=-1.712317604647D+02 EE= 8.424090650700D+01
- Leave Link  502 at Thu Feb 25 12:57:22 2016, MaxMem=    33554432 cpu:         0.0
+ Leave Link  502 at Thu Feb 25 16:52:01 2016, MaxMem=    33554432 cpu:         0.0
  (Enter /opt/g09/g09/l801.exe)
  Range of M.O.s used for correlation:     1    24
  NBasis=    24 NAE=    13 NBE=    13 NFC=     0 NFV=     0
  NROrb=     24 NOA=    13 NOB=    13 NVA=    11 NVB=    11
- Leave Link  801 at Thu Feb 25 12:57:22 2016, MaxMem=    33554432 cpu:         0.0
+ Leave Link  801 at Thu Feb 25 16:52:01 2016, MaxMem=    33554432 cpu:         0.0
  (Enter /opt/g09/g09/l914.exe)
  RHF ground state
  MDV=    33554432 DFT=F DoStab=F Mixed=F DoRPA=F DoScal=F NonHer=F
@@ -1043,7 +1043,7 @@
  The selected state is a singlet
  CISAX will form     1 AO SS matrices at one time.
  NMat=     1 NSing=     1 JSym2X= 0.
- Leave Link  914 at Thu Feb 25 12:57:22 2016, MaxMem=    33554432 cpu:         0.1
+ Leave Link  914 at Thu Feb 25 16:52:01 2016, MaxMem=    33554432 cpu:         0.1
  (Enter /opt/g09/g09/l1002.exe)
  Minotr:  Closed shell wavefunction.
           Computing CIS/TD-HF/TD-KS derivatives.
@@ -1081,16 +1081,16 @@
  End of Minotr F.D. properties file   721 does not exist.
  End of Minotr F.D. properties file   722 does not exist.
  End of Minotr F.D. properties file   788 does not exist.
- Leave Link 1002 at Thu Feb 25 12:57:22 2016, MaxMem=    33554432 cpu:         0.0
+ Leave Link 1002 at Thu Feb 25 16:52:01 2016, MaxMem=    33554432 cpu:         0.0
  (Enter /opt/g09/g09/l1101.exe)
  Using compressed Sx but separate Hx and Fx, NAtomX=     9.
  Will process     10 centers per pass.
- Leave Link 1101 at Thu Feb 25 12:57:22 2016, MaxMem=    33554432 cpu:         0.0
+ Leave Link 1101 at Thu Feb 25 16:52:01 2016, MaxMem=    33554432 cpu:         0.0
  (Enter /opt/g09/g09/l1102.exe)
  Use density number 6.
  Symmetrizing basis deriv contribution to polar:
  IMax=3 JMax=2 DiffMx= 0.00D+00
- Leave Link 1102 at Thu Feb 25 12:57:22 2016, MaxMem=    33554432 cpu:         0.0
+ Leave Link 1102 at Thu Feb 25 16:52:01 2016, MaxMem=    33554432 cpu:         0.0
  (Enter /opt/g09/g09/l1110.exe)
  Forming Gx(P) for the SCF density, NAtomX=     9.
  Integral derivatives from FoFJK, PRISM(SPDF).
@@ -1120,7 +1120,7 @@
  End of G2Drv F.D. properties file   721 does not exist.
  End of G2Drv F.D. properties file   722 does not exist.
  End of G2Drv F.D. properties file   788 does not exist.
- Leave Link 1110 at Thu Feb 25 12:57:22 2016, MaxMem=    33554432 cpu:         0.0
+ Leave Link 1110 at Thu Feb 25 16:52:01 2016, MaxMem=    33554432 cpu:         0.0
  (Enter /opt/g09/g09/l1002.exe)
  Minotr:  Closed shell wavefunction.
           IDoAtm=111111111
@@ -1156,7 +1156,7 @@
  End of Minotr F.D. properties file   721 does not exist.
  End of Minotr F.D. properties file   722 does not exist.
  End of Minotr F.D. properties file   788 does not exist.
- Leave Link 1002 at Thu Feb 25 12:57:22 2016, MaxMem=    33554432 cpu:         0.0
+ Leave Link 1002 at Thu Feb 25 16:52:01 2016, MaxMem=    33554432 cpu:         0.0
  (Enter /opt/g09/g09/l1014.exe)
  Doing CIS second derivatives.
  This link is doing    30 degrees of freedom
@@ -1190,7 +1190,7 @@
  CISAX will form    30 AO SS matrices at one time.
  NMat=    30 NSing=    30 JSym2X= 0.
  Interchange theorem applied.
- Leave Link 1014 at Thu Feb 25 12:57:22 2016, MaxMem=    33554432 cpu:         0.0
+ Leave Link 1014 at Thu Feb 25 16:52:01 2016, MaxMem=    33554432 cpu:         0.1
  (Enter /opt/g09/g09/l601.exe)
  Copying SCF densities to generalized density rwf, IOpCl= 0 IROHF=0.
 
@@ -1622,14 +1622,14 @@
  Total kinetic energy from orbitals=-1.657292780719D+01
   Exact polarizability:  16.575   0.000  80.799   0.000   0.000  40.870
  Approx polarizability:   5.230   0.000  34.624   0.000   0.000  40.835
- Leave Link  601 at Thu Feb 25 12:57:22 2016, MaxMem=    33554432 cpu:         0.0
+ Leave Link  601 at Thu Feb 25 16:52:01 2016, MaxMem=    33554432 cpu:         0.0
  (Enter /opt/g09/g09/l701.exe)
  Compute integral second derivatives.
  ... and contract with generalized density number  6.
- Leave Link  701 at Thu Feb 25 12:57:22 2016, MaxMem=    33554432 cpu:         0.0
+ Leave Link  701 at Thu Feb 25 16:52:01 2016, MaxMem=    33554432 cpu:         0.0
  (Enter /opt/g09/g09/l702.exe)
  L702 exits ... SP integral derivatives will be done elsewhere.
- Leave Link  702 at Thu Feb 25 12:57:22 2016, MaxMem=    33554432 cpu:         0.0
+ Leave Link  702 at Thu Feb 25 16:52:01 2016, MaxMem=    33554432 cpu:         0.0
  (Enter /opt/g09/g09/l703.exe)
  Compute integral second derivatives, UseDBF=F ICtDFT=           0.
  Integral derivatives from FoFJK, PRISM(SPDF).
@@ -1641,7 +1641,7 @@
          wScrn=  0.000000 ICntrl=10105127 IOpCl=  0 I1Cent=           0 NGrid=           0
          NMat0=    1 NMatS0=      1 NMatT0=    0 NMatD0=    1 NMtDS0=    0 NMtDT0=    0
  Symmetry not used in FoFCou.
- Leave Link  703 at Thu Feb 25 12:57:22 2016, MaxMem=    33554432 cpu:         0.0
+ Leave Link  703 at Thu Feb 25 16:52:01 2016, MaxMem=    33554432 cpu:         0.0
  (Enter /opt/g09/g09/l716.exe)
  Dipole        = 2.69806339D-15-8.19344592D-14-2.44832356D-01
  Polarizability= 1.65746039D+01 1.22806554D-13 8.07989632D+01
@@ -1974,7 +1974,7 @@
                26            27 
      26  0.172853D+00
      27  0.000000D+00  0.165521D-01
- Leave Link  716 at Thu Feb 25 12:57:22 2016, MaxMem=    33554432 cpu:         0.0
+ Leave Link  716 at Thu Feb 25 16:52:01 2016, MaxMem=    33554432 cpu:         0.0
  (Enter /opt/g09/g09/l103.exe)
 
  GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad
@@ -2036,7 +2036,7 @@
  Predicted change in Energy=-1.841810D-02
  GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad
 
- Leave Link  103 at Thu Feb 25 12:57:22 2016, MaxMem=    33554432 cpu:         0.0
+ Leave Link  103 at Thu Feb 25 16:52:01 2016, MaxMem=    33554432 cpu:         0.0
  (Enter /opt/g09/g09/l9999.exe)
  1\1\GINC-LINUX-CBNE\Freq\RAM1-Full\STO-3G\C4H4O1\DUSTIN\25-Feb-2016\0\
  \#P AM1(Input,print) CIS(Singlets,NStates=15) pop(full) freq\\AM1-Repa
@@ -2103,8 +2103,9 @@
  298972,0.\\\@
 
 
- IF YOU GIVE A BOY AND A PIG EVERYTHING THEY WANT,
- YOU'LL GET A BAD BOY AND A GOOD PIG.
+ GETTING A SIMPLE ANSWER FROM A PROFESSOR IS LIKE
+ GETTING A THIMBLE OF WATER FROM A FIRE HYDRANT.
+     -- PROF. LEN SHAPIRO, NDSU
  Job cpu time:       0 days  0 hours  0 minutes  0.5 seconds.
  File lengths (MBytes):  RWF=      7 Int=      0 D2E=      0 Chk=      2 Scr=      1
- Normal termination of Gaussian 09 at Thu Feb 25 12:57:22 2016.
+ Normal termination of Gaussian 09 at Thu Feb 25 16:52:01 2016.

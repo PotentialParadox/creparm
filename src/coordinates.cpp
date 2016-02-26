@@ -6,6 +6,7 @@
 #include <random>
 #include <chrono>
 #include <cmath>
+#include <map>
 
 reparm::Coordinates::Coordinates(const std::string &s){
   ReadSpins(s);
@@ -19,13 +20,26 @@ void reparm::Coordinates::ReadSpins(const std::string &s){
   this->spins_ = m[0];
 }
 
+std::string Number(const std::string &s){
+  std::map<std::string, std::string> periodic_table{{"H", "1"}, {"He", "2"}, {"Li", "3"},
+                                                    {"Be", "4"}, {"B", "5"}, {"C", "6"},
+                                                    {"N", "7"}, {"O", "8"}, {"F", "9"},
+                                                    {"Ne", "10"}, {"Na", "11"}, {"Mg", "12"},
+                                                    {"Al", "13"}, {"Si", "14"}, {"P", "15"},
+                                                    {"S", "16"}, {"Cl", "17"}, {"Ar", "18"}};
+  if (periodic_table.find(s) != periodic_table.end()){
+    return periodic_table.find(s)->second;
+  }
+  return s;
+}
+
 void reparm::Coordinates::ReadCoordinates(const std::string &s){
-  std::regex p_coord{"(\\d+)\\s+(-?\\d+\\.\\d+\\s+)(-?\\d+\\.\\d+\\s+)(-?\\d+\\.\\d+\\s+)"};
+  std::regex p_coord{"(\\S+)\\s+(-?\\d+\\.\\d+\\s+)(-?\\d+\\.\\d+\\s+)(-?\\d+\\.\\d+\\s*)"};
   std::sregex_iterator pos(s.cbegin(), s.cend(), p_coord);
   std::sregex_iterator end;
   for (; pos != end; ++pos){
     std::vector<float> coordinate;
-    coordinate.push_back(stof(pos->str(1)));
+    coordinate.push_back(stof(Number(pos->str(1))));
     coordinate.push_back(stof(pos->str(2)));
     coordinate.push_back(stof(pos->str(3)));
     coordinate.push_back(stof(pos->str(4)));
@@ -76,3 +90,4 @@ std::string reparm::Coordinates::str() const{
         
   return coordinates.str();
 }
+

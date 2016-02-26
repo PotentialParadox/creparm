@@ -6,7 +6,10 @@
 double FindEnergy(const std::string &s){
   std::regex p_energy{"\n\\s*SCF\\s+Done.*"};
   std::smatch m;
-  std::regex_search(s, m, p_energy);
+  if(!std::regex_search(s, m, p_energy)){
+    std::cerr << "Cannot find energies" << std::endl;
+    throw "Error";
+  }
   std::string e_line{m[0].str()};
   std::regex p_float{"-?\\d+\\.\\w+-?\\w*"};
   std::regex_search(e_line, m, p_float);
@@ -16,7 +19,10 @@ double FindEnergy(const std::string &s){
 std::vector<double> FindDipole(const std::string &s){
   std::regex p_dipole{"Dipole\\s+moment.*\n.*"};
   std::smatch m;
-  std::regex_search(s, m, p_dipole);
+  if(!std::regex_search(s, m, p_dipole)){
+    std::cerr << "Cannot find dipoles" << std::endl;
+    throw "Error";
+  }
   std::string d_line{m[0].str()};
   std::regex p_x{"X=\\s+(-?\\d+\\.\\d+)"};
   std::regex p_y{"Y=\\s+(-?\\d+\\.\\d+)"};
@@ -31,28 +37,23 @@ std::vector<double> FindDipole(const std::string &s){
 }
 
 std::vector<double> FindForces(const std::string &s){
-  std::regex p_hartrees{"Forces\\s+\\(H[\\s\\S]+Cartesian Forces"};
+  std::regex p_forces{"Forces\\s+\\(.*\n.*\n.*\n(\\s+\\d+\\s+\\d+\\s+.*\n)*"};
   std::smatch m;
-  std::regex_search(s, m, p_hartrees);
-  std::string f_lines{m[0].str()};
-  std::regex p_float{"-?\\d+\\.\\d+"};
-  std::sregex_iterator pos(f_lines.cbegin(), f_lines.cend(), p_float);
-  std::sregex_iterator end;
+  std::regex_search(s, m, p_forces);
+  std::string force_string = m[0];
+  std::regex p_floats{"-?\\d+\\.\\d+"};
+  std::sregex_iterator pos1(force_string.cbegin(), force_string.cend(), p_floats);
+  std::sregex_iterator end1;
   std::vector<double> forces;
-  for (; pos != end; ++pos){
-    forces.push_back(std::stod(pos->str(0)));
-  }
-  if (forces.size() == 0){
-    std::cerr << "Could not read forces" << std::endl;
-    throw "Error";
+  for (; pos1 != end1; ++pos1){
+    forces.push_back(stod(pos1->str(0)));
   }
   return forces;
 }
 
 std::vector<double> FindFrequencies(const std::string &s){
   std::regex p_frequencies{"\n\\s+Frequencies.*-?\\d+\\.\\d+"};
-  std::smatch m;
-  std::sregex_iterator pos(s.cbegin(), s.cend(), p_frequencies);
+  std::sregex_iterator pos(s.begin(), s.end(), p_frequencies);
   std::sregex_iterator end;
   std::string freq_string;
   for (; pos != end; ++pos){
@@ -65,16 +66,11 @@ std::vector<double> FindFrequencies(const std::string &s){
   for (; pos1 !=end1; ++pos1){
     frequencies.push_back(stod(pos1->str(0)));
   }
-  if (frequencies.size() == 0){
-    std::cerr << "Could not read frequencies" << std::endl;
-    throw "Error";
-  }
   return frequencies;
 }
 
 std::vector<double> FindIntensities(const std::string &s){
   std::regex p_intensities{"\n\\s+IR\\s+Inten.*-?\\d+\\.\\d+"};
-  std::smatch m;
   std::sregex_iterator pos(s.begin(), s.end(), p_intensities);
   std::sregex_iterator end;
   std::string ir_string;
@@ -87,10 +83,6 @@ std::vector<double> FindIntensities(const std::string &s){
   std::vector<double> intensities;
   for (; pos1 !=end1; ++pos1){
     intensities.push_back(stod(pos1->str(0)));
-  }
-  if (intensities.size() == 0){
-    std::cerr << "Could not read intensities" << std::endl;
-    throw "Error";
   }
   return intensities;
 }

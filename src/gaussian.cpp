@@ -17,7 +17,7 @@ void ThreadRun(int j, reparm::ParameterGroup param_group, std::vector<reparm::Ga
   try{
   for (int i = j; i < number_inputs; i += number_threads){
     std::string cmd{"#!/bin/sh\ng09 2>&1 <<END\n" + param_group.GetInputs()[i].str() + "END"};
-    std::string gout(systls::exec(cmd, 10000));
+    std::string gout(systls::exec(cmd, 100000));
     std::regex p_normal_termination{"Normal termination of Gaussian 09"};
     std::regex p_no_g09{"g09: not found"};
     if (std::regex_search(gout, p_normal_termination)){
@@ -30,6 +30,7 @@ void ThreadRun(int j, reparm::ParameterGroup param_group, std::vector<reparm::Ga
       throw e;
     }
     else{
+      std::cout << gout << std::endl;
       std::cerr << "Gaussian Failure" << std::endl;
       gaussian_error e;
       throw e;

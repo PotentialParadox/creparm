@@ -14,16 +14,18 @@ using namespace chrono;
 
 int main(){
 
-  ifstream fin{"FuranDFT.log"};
-  string outfile;
-  string line;
-  while (getline(fin, line)){
-    outfile += line + "\n";
+  vector<GaussianInput> inputs;
+  for (int i=0; i<4; ++i){
+    GaussianInput input("FuranDFT.com");
+    GaussianInput freq("FuranDFTfreq.com");
+    input.Link(freq);
+    inputs.push_back(input);
   }
-
-  GaussianOutput output(outfile);
-  cout << output.str();
-
+  ParameterGroup param_group{inputs};
+  Gaussian gaussian{param_group};
+  vector<GaussianOutput> outputs;
+  outputs = gaussian.RunGaussian();
+  cout << outputs[0].str() << endl;
 
   return 0;
 
