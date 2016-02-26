@@ -14,18 +14,21 @@ using namespace chrono;
 
 int main(){
 
-  vector<GaussianInput> inputs;
-  for (int i=0; i<4; ++i){
-    GaussianInput input("FuranDFT.com");
-    GaussianInput freq("FuranDFTfreq.com");
-    input.Link(freq);
-    inputs.push_back(input);
+  try{
+    vector<GaussianInput> inputs;
+    for (int i=0; i<40; ++i){
+      GaussianInput input("FuranAM1.com");
+      input.PerturbCoordinates(1.5);
+      inputs.push_back(input);
+    }
+    ParameterGroup param_group{inputs};
+    Gaussian gaussian{param_group};
+    vector<GaussianOutput> outputs;
+    outputs = gaussian.RunGaussian();
   }
-  ParameterGroup param_group{inputs};
-  Gaussian gaussian{param_group};
-  vector<GaussianOutput> outputs;
-  outputs = gaussian.RunGaussian();
-  cout << outputs[0].str() << endl;
+  catch(...){
+    cerr << "Caught Gaussian Error" << endl;
+  }
 
   return 0;
 

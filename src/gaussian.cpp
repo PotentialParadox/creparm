@@ -10,11 +10,11 @@
 
 using namespace reparm;
 
-void ThreadRun(int j, reparm::ParameterGroup param_group, std::vector<reparm::GaussianOutput> &outputs){
-  // There will be as many outputs as there are inputs
-  int number_inputs = static_cast<int>(param_group.GetInputs().size());
-  int number_threads = std::thread::hardware_concurrency();
-  try{
+void ThreadRun(int j, reparm::ParameterGroup param_group,
+               std::vector<reparm::GaussianOutput> &outputs, bool &failure){
+// There will be as many outputs as there are inputs
+int number_inputs = static_cast<int>(param_group.GetInputs().size());
+int number_threads = std::thread::hardware_concurrency();
   for (int i = j; i < number_inputs; i += number_threads){
     std::string cmd{"#!/bin/sh\ng09 2>&1 <<END\n" + param_group.GetInputs()[i].str() + "END"};
     std::string gout(systls::exec(cmd, 100000));
@@ -26,22 +26,11 @@ void ThreadRun(int j, reparm::ParameterGroup param_group, std::vector<reparm::Ga
     }
     else if (std::regex_search(gout, p_no_g09)){
       std::cerr << "Gaussian not found, please check your exports" << std::endl;
-      gaussian_critical_error e;
-      throw e;
+      throw "No Gaussian";
     }
     else{
-      std::cout << gout << std::endl;
-      std::cerr << "Gaussian Failure" << std::endl;
-      gaussian_error e;
-      throw e;
+      failure = true;
     }
-  }
-  } catch(const char *e){
-    std::cout << e << std::endl;
-    gaussian_error ge;
-    throw ge;
-  } catch(gaussian_critical_error e){
-    throw e;
   }
 }
 
@@ -59,11 +48,22 @@ std::vector<reparm::GaussianOutput> Gaussian::RunGaussian(){
   reparm::ParameterGroup param_group = this->param_group_;
   std::vector<std::thread> thread_list;
   int number_threads = std::thread::hardware_concurrency();
-  for (int i = 1; i < number_threads; ++i){
-    thread_list.push_back(std::thread(ThreadRun, i, param_group, std::ref(outputs)));
+  bool gaussian_failure = false;
+  try{
+    for (int i = 1; i < number_threads; ++i){
+      thread_list.push_back(std::thread(ThreadRun, i, param_group, std::ref(outputs),
+                                        std::ref(gaussian_failure)));
+    }
+    ThreadRun(0, param_group, outputs, gaussian_failure);
+    join_all(thread_list);
+    if (gaussian_failure == true){
+      reparm::gaussian_error e;
+      throw e;
+    }
   }
-  ThreadRun(0, param_group, outputs);
-  join_all(thread_list);
+  catch(...){
+    throw;
+  }
 
   return outputs;
 }
