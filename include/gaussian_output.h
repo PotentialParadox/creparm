@@ -27,8 +27,8 @@ class GaussianOutput{
       {}
 
     GaussianOutput(const std::string&);
-
-    std::string str();
+    double GetEnergy() const {return energy_;}
+    std::string str() const;
 };
 
 }

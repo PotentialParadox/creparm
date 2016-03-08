@@ -10,13 +10,23 @@ ReparmInput reparm::ReparmData::GetReparmInput(){
   return reparm_input_;
 }
 
-void reparm::ReparmData::CreatePopulation(reparm::GaussianInput &input){
+const std::vector<reparm::GaussianOutput>& reparm::ReparmData::GetHighLevelOutputs() const{
+  return high_level_outputs_;
+}
+
+std::vector<reparm::ParameterGroup> 
+reparm::ReparmData::CreatePopulation(reparm::GaussianInput &input){
   // First perturb the coordinates
   int ng = reparm_input_.GetNumberGeometries();
+  std::stringstream ss;
+  ss << reparm_input_.GetNumberExcitedStates();
+  std::string ne = ss.str();
+  reparm::Header header{"#P AM1(Input,Print) CIS(Singlets,NStates=" + ne + ") pop(full) freq\n\nhi\n"};
   double pert = reparm_input_.GetGeometricPerturbation();
   std::vector<reparm::GaussianInput> inputs;
   for (int i = 0; i != ng; ++i){
     reparm::GaussianInput in = input;
+    in.SetHeader(header);
     in.PerturbCoordinates(pert);
     inputs.push_back(in);
   }
@@ -24,6 +34,7 @@ void reparm::ReparmData::CreatePopulation(reparm::GaussianInput &input){
   for (int i = 0; i != ps; ++i){
     population_.push_back(ParameterGroup{inputs});
   }
+  return population_;
 }
 
 void reparm::ReparmData::CalculateHighLevel(){
@@ -45,6 +56,10 @@ void reparm::ReparmData::CalculateHighLevel(){
   }
   hlgroup.SetInputs(inputs);
   reparm::Gaussian gaussian{hlgroup};
-  high_level_outputs_ = gaussian.RunGaussian();
-  std::cout << high_level_outputs_[0].str() << std::endl;
+  try{
+    high_level_outputs_ = gaussian.RunGaussian();
+  }
+  catch(...){
+    throw "Problem running high level calculations";
+  }
 }

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <gaussian.h>
+#include <header.h>
 #include <regex>
 
 std::string CreateInput(std::string &s){

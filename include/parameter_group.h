@@ -11,21 +11,30 @@ class ParameterGroup{
   private:
     std::vector<reparm::GaussianInput> inputs_;
     std::vector<reparm::GaussianOutput> outputs_;
+    double fitness_;
 
   public:
     ParameterGroup(const std::vector<reparm::GaussianInput> inputs)
       : inputs_{inputs}
+      , fitness_{1.0}
     {}
     ParameterGroup()
       : inputs_{}
       , outputs_{}
+      , fitness_{1.0}
     {}
 
     void SetInputs(const std::vector<reparm::GaussianInput>);
-    std::vector<reparm::GaussianInput> GetInputs();
+    std::vector<reparm::GaussianInput> GetInputs() const;
     void SetOutputs(const std::vector<reparm::GaussianOutput>&);
-    std::vector<reparm::GaussianOutput> GetOutputs();
+    std::vector<reparm::GaussianOutput> GetOutputs() const;
+    void SetFitness(double fitness);
+    double GetFitness();
     void Mutate(const double &perturbation, const double &rate);
+
+    bool operator < (const reparm::ParameterGroup &rhs){
+      return fitness_ < rhs.fitness_;
+    }
 };
 
 }

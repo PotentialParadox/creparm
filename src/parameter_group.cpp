@@ -5,7 +5,7 @@ void reparm::ParameterGroup::SetInputs(const std::vector<reparm::GaussianInput> 
   this->inputs_ = inputs;
 }
 
-std::vector<reparm::GaussianInput> reparm::ParameterGroup::GetInputs(){
+std::vector<reparm::GaussianInput> reparm::ParameterGroup::GetInputs() const{
   return this->inputs_;
 }
 
@@ -24,6 +24,14 @@ void reparm::ParameterGroup::SetOutputs(const std::vector<reparm::GaussianOutput
   this->outputs_ = outputs;
 }
 
-std::vector<reparm::GaussianOutput> reparm::ParameterGroup::GetOutputs(){
+void reparm::ParameterGroup::SetFitness(double fitness){
+  fitness_ = fitness;
+}
+
+double reparm::ParameterGroup::GetFitness(){
+  return fitness_;
+}
+
+std::vector<reparm::GaussianOutput> reparm::ParameterGroup::GetOutputs() const{
   return this->outputs_;
 }

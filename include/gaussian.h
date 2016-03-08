@@ -22,6 +22,7 @@ class Gaussian{
       {}
 
     std::vector<reparm::GaussianOutput> RunGaussian();
+    std::vector<reparm::GaussianOutput> RunGaussian(reparm::ParameterGroup&);
     std::string RunGaussian(std::string &input_file);
 
 };

@@ -73,3 +73,28 @@ std::vector<reparm::GaussianOutput> Gaussian::RunGaussian(){
 
   return outputs;
 }
+
+std::vector<reparm::GaussianOutput> Gaussian::RunGaussian(reparm::ParameterGroup& param_group){
+  int number_inputs = param_group.GetInputs().size();
+  std::vector<reparm::GaussianOutput> outputs(number_inputs);
+  std::vector<std::thread> thread_list;
+  int number_threads = std::thread::hardware_concurrency();
+  bool gaussian_failure = false;
+  try{
+    for (int i = 1; i < number_threads; ++i){
+      thread_list.push_back(std::thread(ThreadRun, i, param_group, std::ref(outputs),
+                                        std::ref(gaussian_failure)));
+    }
+    ThreadRun(0, param_group, outputs, gaussian_failure);
+    join_all(thread_list);
+    if (gaussian_failure == true){
+      reparm::gaussian_error e;
+      throw e;
+    }
+  }
+  catch(...){
+    throw;
+  }
+
+  return outputs;
+}

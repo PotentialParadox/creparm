@@ -73,10 +73,8 @@ void ReparmInput::ReadInputFile(){
     }
 
   } catch(const char *e){
-    std::cerr << "Exception occured: " << e << ".\n"
-      << "Please check your input file.\n";
-    reparm::inputerror error;
-    throw error;
+    std::cerr << "Exception occured: " << e << ".\n";
+    throw "Reparm Input Error";
   }
 }
 

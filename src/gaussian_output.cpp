@@ -113,7 +113,7 @@ reparm::GaussianOutput::GaussianOutput(const std::string &output_string){
   }
 }
 
-std::string reparm::GaussianOutput::str(){
+std::string reparm::GaussianOutput::str() const{
   std::stringstream ss;
   ss << "*****Printing Gaussian Output*****\n";
   ss << "Energy:\t\t" << this->energy_ << "\n";
