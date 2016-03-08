@@ -7,34 +7,30 @@
 #include <gaussian.h>
 #include <chrono>
 #include <gaussian_output.h>
+#include <genetic_algorithm.h>
+#include <reparm_data.h>
+#include <reparm_input.h>
 
 using namespace std;
 using namespace reparm;
 using namespace chrono;
 
+
 int main(){
+  // Read the input files and convert to a Reparm Gaussian Input
+  ReparmData reparm_data{"reparm.in"};
+  ReparmInput reparm_input{reparm_data.GetReparmInput()};
+  string starter_file{reparm_input.GetMoleculeName() + ".com"};
+  GaussianInput input{CreateReparmGaussian(starter_file)};
 
-  try{
-    vector<GaussianInput> inputs;
-    for (int i=0; i<12; ++i){
-      GaussianInput input("FuranDFT.com");
-      input.PerturbCoordinates(0.5);
-      GaussianInput freq(input);
-      Header header("#P B3LYP/3-21G freq\n\nHi\n");
-      freq.SetHeader(header);
-      input.Link(freq);
-      inputs.push_back(input);
-    }
-    ParameterGroup param_group{inputs};
-    Gaussian gaussian{param_group};
-    vector<GaussianOutput> outputs;
-    outputs = gaussian.RunGaussian();
-    cout << outputs[0].str() << endl;
-  }
-  catch(...){
-    cerr << "Caught Gaussian Error" << endl;
-  }
+  // Create the AM1 population from this formated input
+  reparm_data.CreatePopulation(input);
 
+  // Calculate the high level outputs
+  reparm_data.CalculateHighLevel();
+
+
+  
+  
   return 0;
-
 }

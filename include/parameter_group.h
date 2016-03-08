@@ -16,6 +16,10 @@ class ParameterGroup{
     ParameterGroup(const std::vector<reparm::GaussianInput> inputs)
       : inputs_{inputs}
     {}
+    ParameterGroup()
+      : inputs_{}
+      , outputs_{}
+    {}
 
     void SetInputs(const std::vector<reparm::GaussianInput>);
     std::vector<reparm::GaussianInput> GetInputs();

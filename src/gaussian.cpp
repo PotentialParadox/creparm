@@ -10,6 +10,12 @@
 
 using namespace reparm;
 
+std::string reparm::Gaussian::RunGaussian(std::string &input_file){
+  std::string cmd{"#!/bin/sh\ng09 2>&1 <<END\n" + input_file + "END"};
+  std::string gout(systls::exec(cmd, 100000));
+  return gout;
+}
+
 void ThreadRun(int j, reparm::ParameterGroup param_group,
                std::vector<reparm::GaussianOutput> &outputs, bool &failure){
 // There will be as many outputs as there are inputs

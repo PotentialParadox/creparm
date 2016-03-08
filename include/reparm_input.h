@@ -33,7 +33,7 @@ class ReparmInput {
       , mutation_perturbation_{0.05}
       , survival_chance_{0.5}
       , geometric_perturbation_{0.05}
-      { }
+      {ReadInputFile();}
 
     void SetHighLevelTheory(std::string);
     std::string GetHighLevelTheory() const;
@@ -58,7 +58,7 @@ class ReparmInput {
     void SetGeometricPerturbation(float N);
     float GetGeometricPerturbation() const;
 
-    void ReadInputFile() throw(inputerror);
+    void ReadInputFile();
 
 };
 

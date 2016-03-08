@@ -14,11 +14,15 @@ class Gaussian{
     reparm::ParameterGroup param_group_;
 
   public:
+    Gaussian()
+      :param_group_{}
+      {}
     Gaussian(const reparm::ParameterGroup &param_group)
       :param_group_{param_group}
       {}
 
-      std::vector<reparm::GaussianOutput> RunGaussian();
+    std::vector<reparm::GaussianOutput> RunGaussian();
+    std::string RunGaussian(std::string &input_file);
 
 };
 

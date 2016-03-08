@@ -4,7 +4,7 @@
 #include <fstream>
 #include <regex>
 
-void ReparmInput::ReadInputFile() throw(inputerror){
+void ReparmInput::ReadInputFile(){
   std::string file;
   std::ifstream fin(this->file_name_);
   try{
@@ -17,7 +17,7 @@ void ReparmInput::ReadInputFile() throw(inputerror){
     std::regex p{"Molecule Name:\\s+(.+)"};
     std::smatch m;
     if(std::regex_search (file, m,  p)){
-      this->file_name_ = m[1];
+      this->SetMoleculeName(m[1]);
     }
     else {throw "Molecule name not found in input";}
 
@@ -75,7 +75,7 @@ void ReparmInput::ReadInputFile() throw(inputerror){
   } catch(const char *e){
     std::cerr << "Exception occured: " << e << ".\n"
       << "Please check your input file.\n";
-    inputerror error;
+    reparm::inputerror error;
     throw error;
   }
 }
