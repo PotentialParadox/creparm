@@ -12,6 +12,7 @@
 #include <reparm_data.h>
 #include <reparm_input.h>
 #include <fitness.h>
+#include <mutate.h>
 
 using namespace std;
 using namespace reparm;
@@ -36,24 +37,18 @@ int main(){
     // Calculate the high level outputs
     reparm_data.CalculateHighLevel();
 
-    // Initialize the fitness functor
+    // Initialize the functors
     Fitness fitness(reparm_data.population_[0], reparm_data.GetHighLevelOutputs());
+    Mutate mutate(reparm_data, fitness);
 
-    reparm_data.population_[0].Mutate(0.1, 0.1);
-    gouts = gaussian.RunGaussian(reparm_data.population_[0]);
-    reparm_data.population_[0].SetOutputs(gouts);
-    fitness(reparm_data.population_[0]);
-    for (auto i: reparm_data.population_){
-      cout << i.GetFitness() << " ";
-    }
+    // ******* Begin the main loop *********
+    mutate(reparm_data.population_);
+    for (auto &i: reparm_data.population_){cout << i.GetFitness() << " ";}
     cout << endl;
-    sort(reparm_data.population_.begin(), reparm_data.population_.end());
-    for (auto i: reparm_data.population_){
-      cout << i.GetFitness() << " ";
-    }
+    mutate(reparm_data.population_, 0, 2);
+    for (auto &i: reparm_data.population_){cout << i.GetFitness() << " ";}
     cout << endl;
     
-
   }
   catch(const char *e){
     cerr << e << endl;

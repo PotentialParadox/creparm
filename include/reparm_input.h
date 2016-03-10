@@ -13,6 +13,7 @@ class ReparmInput {
     int number_generations_;
     int number_processors_;
     int number_geometries_;
+    int number_elites_;
     int population_size_;
     float mutation_rate_;
     float mutation_perturbation_;
@@ -28,6 +29,7 @@ class ReparmInput {
       , number_generations_{1}
       , number_processors_{1}
       , number_geometries_{1}
+      , number_elites_{0}
       , population_size_{1}
       , mutation_rate_{0.1}
       , mutation_perturbation_{0.05}
@@ -47,6 +49,8 @@ class ReparmInput {
     int GetNumberExcitedStates() const;
     void SetNumberGeometries(int N);
     int GetNumberGeometries() const;
+    void SetNumberElites(int N);
+    int GetNumberElites() const;
     void SetPopulationSize(int N);
     int GetPopulationSize() const;
     void SetMutationRate(float N);

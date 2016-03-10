@@ -47,6 +47,11 @@ void ReparmInput::ReadInputFile(){
       this->number_geometries_ = stoi(m[1]);
     }
 
+    p = "Number of Elites:\\s+(.+)";
+    if(std::regex_search (file, m,  p)){
+      this->number_elites_ = stoi(m[1]);
+    }
+
     p = "Population Size:\\s+(.+)";
     if(std::regex_search (file, m,  p)){
       this->population_size_ = stoi(m[1]);
@@ -124,6 +129,14 @@ void ReparmInput::SetNumberGeometries(int N){
 
 int ReparmInput::GetNumberGeometries() const{
   return this->number_geometries_;
+}
+
+void ReparmInput::SetNumberElites(int N){
+  this->number_elites_ = N;
+}
+
+int ReparmInput::GetNumberElites() const{
+  return this->number_elites_;
 }
 
 void ReparmInput::SetPopulationSize(int N){
