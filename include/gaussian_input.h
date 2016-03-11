@@ -35,6 +35,7 @@ class GaussianInput{
     void SetCoordinates(const reparm::Coordinates&);
     void PerturbCoordinates(const float &p);
     void SetParameters(const reparm::Parameters&);
+    reparm::Parameters Cross(const reparm::Parameters&);
     void MutateParameters(const double &p, const float &r);
     void Link(const reparm::GaussianInput&);
     reparm::Header GetHeader() const;

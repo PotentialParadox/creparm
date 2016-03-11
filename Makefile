@@ -28,7 +28,7 @@ bin/parameters.o: parameters.cpp
 bin/gaussian.o: gaussian.cpp gaussian.h gaussian_output.h
 	$(CC) -c -I $(INC_DIR) $(CFLAGS) $< -o $@
 
-bin/parameter_group.o: parameter_group.cpp gaussian_input.h gaussian_output.h
+bin/parameter_group.o: parameter_group.cpp gaussian_input.h gaussian_output.h parameters.h
 	$(CC) -c -I $(INC_DIR) $(CFLAGS) $< -o $@
 
 bin/gaussian_output.o: gaussian_output.cpp

@@ -20,6 +20,19 @@ void reparm::ParameterGroup::Mutate(const double &perturbation, const double &ra
   }
 }
 
+void reparm::ParameterGroup::SetParameters(const reparm::Parameters &parameters){
+  for (auto &&i: inputs_)
+    i.SetParameters(parameters);
+}
+
+reparm::ParameterGroup reparm::ParameterGroup::Cross(const reparm::ParameterGroup &rhs){
+  reparm::Parameters params = inputs_[0].Cross(rhs.GetInputs()[0].GetParameters());
+  reparm::ParameterGroup child = rhs;
+  for (auto &&i: child.inputs_)
+    i.SetParameters(params);
+  return child;
+}
+
 void reparm::ParameterGroup::SetOutputs(const std::vector<reparm::GaussianOutput> &outputs){
   this->outputs_ = outputs;
 }

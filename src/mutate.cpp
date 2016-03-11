@@ -26,7 +26,7 @@ void reparm::Mutate::operator()(std::vector<reparm::ParameterGroup> &population,
   auto end = population.begin() + finish;
   Gaussian gaussian;
   for (; it < end; ++it){
-    it->Mutate(mutation_rate_, mutation_perturbation_);
+    it->Mutate(mutation_perturbation_, mutation_rate_);
     std::vector<reparm::GaussianOutput> gouts;
     gouts = gaussian.RunGaussian(*it);
     it->SetOutputs(gouts);

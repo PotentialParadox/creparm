@@ -14,11 +14,13 @@ std::vector<double> Fitnesses(std::vector<reparm::ParameterGroup> &population){
   return fitnesses;
 }
 
-// Change this function if you want to adjust the weights
+// Change this function if you want to adjust the weights.
+// This is most likely the only thing you'll want to change.
 std::vector<double> Fitness_to_Survival(std::vector<double> fitnesses){
   std::vector<double> chances;
+  double e = 4;  // Change the exponential weight
   for (auto &i: fitnesses){
-    chances.push_back(1/std::pow(i,4));
+    chances.push_back(1/std::pow(i,e));
   }
   return chances;
 }

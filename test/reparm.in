@@ -6,7 +6,7 @@ Number of Processors:           4
 Number of Geometries:           2
 Number of Elites:               1
 Population Size:                6
-Mutation Rate:                  0.05
+Mutation Rate:                  1
 Mutation Perturbation:          0.05
 Survival Chance:                0.5
 Geometric Perturbation:         0.05

@@ -118,3 +118,21 @@ void reparm::Parameters::Mutate(const double  &perturbation, const float &rate){
     throw "Error";
   }
 }
+
+reparm::Parameters reparm::Parameters::Cross(const reparm::Parameters& rhs){
+    unsigned seed = std::chrono::steady_clock::now().time_since_epoch().count();
+    std::default_random_engine rand(seed);
+    std::uniform_int_distribution<int> distribution(0, 1);
+    reparm::Parameters cross_parameters = rhs;
+    std::vector<double> cross_p_floats;
+    for (size_t i = 0; i < parameter_floats_.size(); ++i){
+      int r = distribution(rand);
+      if (r){
+        cross_p_floats.push_back(parameter_floats_[i]);
+      }else{
+        cross_p_floats.push_back(rhs.parameter_floats_[i]);
+      }
+    }
+    cross_parameters.SetParameters(cross_p_floats);
+    return cross_parameters;
+}

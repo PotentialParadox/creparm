@@ -45,11 +45,17 @@ int main(){
 
     // ******* Begin the main loop *********
     mutate(reparm_data.population_, 0, 6);
-    for (auto &i: reparm_data.population_){cout << i.GetFitness() << " ";}
-    cout << endl;
-    survivor(reparm_data.population_);
-    for (auto &i: reparm_data.population_){cout << i.GetFitness() << " ";}
-    cout << endl;
+    ParameterGroup test_group = reparm_data.population_[0].Cross(reparm_data.population_[1]);
+
+    // Debug
+    //for (auto &i: reparm_data.population_){cout << i.GetFitness() << " ";}
+    //cout << endl;
+    
+    //survivor(reparm_data.population_);
+
+    // Debug
+    //for (auto &i: reparm_data.population_){cout << i.GetFitness() << " ";}
+    //cout << endl;
   }
   catch(const char *e){
     cerr << e << endl;

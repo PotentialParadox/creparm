@@ -2,6 +2,7 @@
 #define PARAMETER_GROUP_H
 
 #include <vector>
+#include <parameters.h>
 #include <gaussian_input.h>
 #include <gaussian_output.h>
 
@@ -31,6 +32,8 @@ class ParameterGroup{
     void SetFitness(double fitness);
     double GetFitness();
     void Mutate(const double &perturbation, const double &rate);
+    reparm::ParameterGroup Cross(const reparm::ParameterGroup&);
+    void SetParameters(const reparm::Parameters&);
 
     bool operator < (const reparm::ParameterGroup &rhs){
       return fitness_ < rhs.fitness_;

@@ -89,6 +89,10 @@ void reparm::GaussianInput::MutateParameters(const double &p, const float &r){
   this->parameters_[0].Mutate(p, r);
 }
 
+reparm::Parameters reparm::GaussianInput::Cross(const reparm::Parameters &params){
+  return parameters_[0].Cross(params);
+}
+
 reparm::Header reparm::GaussianInput::GetHeader() const{
   return this->header_[0];
 }
