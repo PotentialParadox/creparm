@@ -13,6 +13,7 @@
 #include <reparm_input.h>
 #include <fitness.h>
 #include <mutate.h>
+#include <survivor.h>
 
 using namespace std;
 using namespace reparm;
@@ -40,15 +41,15 @@ int main(){
     // Initialize the functors
     Fitness fitness(reparm_data.population_[0], reparm_data.GetHighLevelOutputs());
     Mutate mutate(reparm_data, fitness);
+    Survivor survivor(reparm_data);
 
     // ******* Begin the main loop *********
-    mutate(reparm_data.population_);
+    mutate(reparm_data.population_, 0, 6);
     for (auto &i: reparm_data.population_){cout << i.GetFitness() << " ";}
     cout << endl;
-    mutate(reparm_data.population_, 0, 2);
+    survivor(reparm_data.population_);
     for (auto &i: reparm_data.population_){cout << i.GetFitness() << " ";}
     cout << endl;
-    
   }
   catch(const char *e){
     cerr << e << endl;
