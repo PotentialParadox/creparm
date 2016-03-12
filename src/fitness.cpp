@@ -46,7 +46,14 @@ reparm::Fitness::Fitness(const reparm::ParameterGroup &param_group,
 } 
 
 double reparm::Fitness::operator () (reparm::ParameterGroup &rhs){
-  double fitness = (EnergyFitness(rhs, high_level_outputs_) / original_fitness_[0]);
+  double fitness = 0;
+  try{
+    fitness = (EnergyFitness(rhs, high_level_outputs_) / original_fitness_[0]);
+  }
+  catch(const char* e){
+    std::cout << e << std::endl;
+    return 10;
+  }
   rhs.SetFitness(fitness);
   return fitness;
 }

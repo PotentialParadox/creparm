@@ -22,9 +22,9 @@ using namespace chrono;
 
 
 int main(){
+  // Read the input files and convert to a Reparm Gaussian Input
+  ReparmData reparm_data{"reparm.in"};
   try{
-    // Read the input files and convert to a Reparm Gaussian Input
-    ReparmData reparm_data{"reparm.in"};
     ReparmInput reparm_input{reparm_data.GetReparmInput()};
     string starter_file{reparm_input.GetMoleculeName() + ".com"};
     GaussianInput input{CreateReparmGaussian(starter_file)};
@@ -74,8 +74,8 @@ int main(){
   catch(const char *e){
     cerr << e << endl;
   }
-
-
+  ofstream fout{"best.com"};
+  fout << reparm_data.population_[0].GetInputs()[0].str();
   
   
   return 0;

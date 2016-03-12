@@ -69,7 +69,7 @@ int ChooseSurvivor(std::vector<Weights> &contestants){
 
 std::vector<int> Voting(std::vector<Weights> &contestants, const double &survival_chance){
   std::vector<int> winners;
-  int number_survivors = contestants.size() * (1 - survival_chance);
+  int number_survivors = contestants.size() * survival_chance + 1;
   for (int i = 0; i < number_survivors; ++i){
     Normalize(contestants);
     winners.push_back(ChooseSurvivor(contestants));

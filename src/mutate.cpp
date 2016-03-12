@@ -10,7 +10,12 @@ void reparm::Mutate::operator()(std::vector<reparm::ParameterGroup> &population)
   for (; it < population.end(); ++it){
     it->Mutate(mutation_rate_, mutation_perturbation_);
     std::vector<reparm::GaussianOutput> gouts;
-    gouts = gaussian.RunGaussian(*it);
+    try{
+      gouts = gaussian.RunGaussian(*it);
+    }
+    catch(...){
+      std::cout << "Gaussian failed after mutation" << std::endl;
+    }
     it->SetOutputs(gouts);
     fitness_(*it);
   }
@@ -28,7 +33,12 @@ void reparm::Mutate::operator()(std::vector<reparm::ParameterGroup> &population,
   for (; it < end; ++it){
     it->Mutate(mutation_perturbation_, mutation_rate_);
     std::vector<reparm::GaussianOutput> gouts;
-    gouts = gaussian.RunGaussian(*it);
+    try{
+      gouts = gaussian.RunGaussian(*it);
+    }
+    catch(...){
+      std::cout << "Gaussian failed after mutation" << std::endl;
+    }
     it->SetOutputs(gouts);
     fitness_(*it);
   }
