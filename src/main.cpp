@@ -14,6 +14,7 @@
 #include <fitness.h>
 #include <mutate.h>
 #include <survivor.h>
+#include <breed.h>
 
 using namespace std;
 using namespace reparm;
@@ -42,20 +43,33 @@ int main(){
     Fitness fitness(reparm_data.population_[0], reparm_data.GetHighLevelOutputs());
     Mutate mutate(reparm_data, fitness);
     Survivor survivor(reparm_data);
+    Breed breed(reparm_data);
+
+    mutate(reparm_data.population_, 0, reparm_data.GetReparmInput().GetPopulationSize());
 
     // ******* Begin the main loop *********
-    mutate(reparm_data.population_, 0, 6);
-    ParameterGroup test_group = reparm_data.population_[0].Cross(reparm_data.population_[1]);
+    for (int i = 0; i < reparm_data.GetReparmInput().GetNumberGenerations(); ++i){
+      
+      // Debug
+      for (auto &i: reparm_data.population_){cout << i.GetFitness() << " ";}
+      cout << endl;
+      
+      survivor(reparm_data.population_);
+      
+      // Debug
+      for (auto &i: reparm_data.population_){cout << i.GetFitness() << " ";}
+      cout << endl;
+      
+      breed(reparm_data.population_);
+      
+      // Debug
+      for (auto &i: reparm_data.population_){cout << i.GetFitness() << " ";}
+      cout << endl;
+      
+      mutate(reparm_data.population_);
+    }
 
-    // Debug
-    //for (auto &i: reparm_data.population_){cout << i.GetFitness() << " ";}
-    //cout << endl;
-    
-    //survivor(reparm_data.population_);
 
-    // Debug
-    //for (auto &i: reparm_data.population_){cout << i.GetFitness() << " ";}
-    //cout << endl;
   }
   catch(const char *e){
     cerr << e << endl;

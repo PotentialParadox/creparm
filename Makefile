@@ -4,13 +4,14 @@ INC_DIR = include
 VPATH = src:include:bin
 OBJECTS = main.o gaussian_input.o coordinates.o parameters.o header.o gaussian.o \
 	  parameter_group.o gaussian_output.o genetic_algorithm.o reparm_input.o \
-	  reparm_data.o fitness.o mutate.o survivor.o
+	  reparm_data.o fitness.o mutate.o survivor.o breed.o
 
 all : bin/$(OBJECTS)
 	$(CC) $(CFLAGS) $^ -o bin/reparm
 
 bin/main.o : main.cpp gaussian_input.h header.h gaussian.h parameter_group.h gaussian_output.h \
-  	     genetic_algorithm.h reparm_input.h reparm_data.h fitness.h mutate.h survivor.h
+  	     genetic_algorithm.h reparm_input.h reparm_data.h fitness.h mutate.h survivor.h \
+	     breed.h
 	$(CC) -c -I $(INC_DIR) $(CFLAGS) $< -o $@
 
 bin/gaussian_input.o : gaussian_input.cpp header.h coordinates.h parameters.h reparm_exceptions.h
@@ -50,6 +51,9 @@ bin/mutate.o: mutate.cpp reparm_data.h parameter_group.h fitness.h gaussian.h
 	$(CC) -c -I $(INC_DIR) $(CFLAGS) $< -o $@
 
 bin/survivor.o: survivor.cpp reparm_data.h parameter_group.h
+	$(CC) -c -I $(INC_DIR) $(CFLAGS) $< -o $@
+
+bin/breed.o: breed.cpp reparm_data.h parameter_group.h
 	$(CC) -c -I $(INC_DIR) $(CFLAGS) $< -o $@
 
 .PHONY :
