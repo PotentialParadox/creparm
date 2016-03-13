@@ -1,12 +1,12 @@
 Molecule Name:                  Furan
 High Level Theory:              B3LYP/3-21G
-Number of Excited States:       0
-Number of Generations:          20
+Number of Excited States:       2
+Number of Generations:          100
 Number of Processors:           4
-Number of Geometries:           4 
-Number of Elites:               0
+Number of Geometries:           64 
+Number of Elites:               1
 Population Size:                1
-Mutation Rate:                  0.05
-Mutation Perturbation:          0.05
+Mutation Rate:                  0.10
+Mutation Perturbation:          0.10
 Survival Chance:                0.5
-Geometric Perturbation:         0.05
+Geometric Perturbation:         0.10

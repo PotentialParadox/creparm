@@ -13,13 +13,14 @@
 namespace reparm{
 
 class Mutate{
+  friend class AristocraticCloning;
 
 private:
   double mutation_rate_;
   double mutation_perturbation_;
   int number_elites_;
   reparm::Fitness fitness_;
-  Mutate();
+  Mutate(){};
 
 public:
   Mutate(reparm::ReparmData reparm_data, reparm::Fitness fitness)

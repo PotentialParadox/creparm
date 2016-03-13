@@ -11,10 +11,12 @@
 namespace reparm{
 
 class Fitness{
+  friend class Mutate;
+
   private:
     std::vector<double> original_fitness_;
     std::vector<reparm::GaussianOutput> high_level_outputs_;
-    Fitness();
+    Fitness(){};
 
   public:
     Fitness(const ParameterGroup &population,

@@ -15,6 +15,7 @@
 #include <mutate.h>
 #include <survivor.h>
 #include <breed.h>
+#include <aristocratic_cloning.h>
 
 using namespace std;
 using namespace reparm;
@@ -44,6 +45,7 @@ int main(){
     Mutate mutate(reparm_data, fitness);
     Survivor survivor(reparm_data);
     Breed breed(reparm_data);
+    AristocraticCloning aristocratic_clone(reparm_data, fitness);
 
     mutate(reparm_data.population_, 0, reparm_data.GetReparmInput().GetPopulationSize());
 
@@ -53,18 +55,28 @@ int main(){
       // Debug
       for (auto &i: reparm_data.population_){cout << i.GetFitness() << " ";}
       cout << endl;
+      cout << "survivor" << endl;
       
       survivor(reparm_data.population_);
       
       // Debug
       for (auto &i: reparm_data.population_){cout << i.GetFitness() << " ";}
       cout << endl;
+      cout << "aristocratic_clone" << endl;
+      
+      aristocratic_clone(reparm_data.population_);
+      
+      // Debug
+      for (auto &i: reparm_data.population_){cout << i.GetFitness() << " ";}
+      cout << endl;
+      cout << "breed" << endl;
       
       breed(reparm_data.population_);
       
       // Debug
       for (auto &i: reparm_data.population_){cout << i.GetFitness() << " ";}
       cout << endl;
+      cout << "mutate" << endl;
       
       mutate(reparm_data.population_);
     }
