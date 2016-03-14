@@ -3,7 +3,7 @@ High Level Theory:              B3LYP/3-21G
 Number of Excited States:       2
 Number of Generations:          100
 Number of Processors:           4
-Number of Geometries:           64 
+Number of Geometries:           16 
 Number of Elites:               1
 Population Size:                1
 Mutation Rate:                  0.10

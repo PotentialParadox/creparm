@@ -3,6 +3,7 @@
 #include <iostream>
 #include <parameter_group.h>
 #include <cmath>
+#include <sstream>
 
 double RMS(std::vector<double> &a, std::vector<double> &b){
   if (a.size() != b.size())
@@ -40,12 +41,21 @@ double EnergyFitness(const reparm::ParameterGroup &param_group,
 }
 
 reparm::Fitness::Fitness(const reparm::ParameterGroup &param_group,
-                         const std::vector<reparm::GaussianOutput> &high_level_outputs){
-  high_level_outputs_ = high_level_outputs;
+                         const std::vector<reparm::GaussianOutput> &high_level_outputs)
+  : high_level_outputs_{high_level_outputs}
+{
   original_fitness_.push_back(EnergyFitness(param_group, high_level_outputs_));
 } 
 
-double reparm::Fitness::operator () (reparm::ParameterGroup &rhs){
+std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_group) const{
+  std::stringstream ss;
+  double e_fitness = (EnergyFitness(param_group, high_level_outputs_) / original_fitness_[0]);
+  ss << "Energy Fitness: ";
+  ss << e_fitness << std::endl;
+  return ss.str();
+}
+
+double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
   double fitness = 0;
   try{
     fitness = (EnergyFitness(rhs, high_level_outputs_) / original_fitness_[0]);

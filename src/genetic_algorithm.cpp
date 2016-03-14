@@ -24,7 +24,14 @@ reparm::GaussianInput reparm::CreateReparmGaussian(std::string s){
   if (g_input.GetParameters().str().empty()){
     std::string input{CreateInput(s)};
     Gaussian gaussian{};
-    std::string output{gaussian.RunGaussian(input)};
+    std::string output;
+    try{
+      output = gaussian.RunGaussian(input);
+    }
+    catch(...){
+      std::cerr << "Error on original gaussians" << std::endl;
+      throw "Startup Gaussian Error";
+    }
     std::regex p_parameters{"(\\s+Method=(.|\n)*)Standard"};
     std::smatch m;
     regex_search(output, m, p_parameters);

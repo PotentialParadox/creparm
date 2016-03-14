@@ -16,6 +16,7 @@
 #include <survivor.h>
 #include <breed.h>
 #include <aristocratic_cloning.h>
+#include <print_best.h>
 
 using namespace std;
 using namespace reparm;
@@ -51,34 +52,13 @@ int main(){
 
     // ******* Begin the main loop *********
     for (int i = 0; i < reparm_data.GetReparmInput().GetNumberGenerations(); ++i){
-      
-      // Debug
-      for (auto &i: reparm_data.population_){cout << i.GetFitness() << " ";}
-      cout << endl;
-      cout << "survivor" << endl;
-      
       survivor(reparm_data.population_);
-      
-      // Debug
-      for (auto &i: reparm_data.population_){cout << i.GetFitness() << " ";}
-      cout << endl;
-      cout << "aristocratic_clone" << endl;
-      
       aristocratic_clone(reparm_data.population_);
-      
-      // Debug
-      for (auto &i: reparm_data.population_){cout << i.GetFitness() << " ";}
-      cout << endl;
-      cout << "breed" << endl;
-      
       breed(reparm_data.population_);
-      
-      // Debug
-      for (auto &i: reparm_data.population_){cout << i.GetFitness() << " ";}
-      cout << endl;
-      cout << "mutate" << endl;
-      
       mutate(reparm_data.population_);
+
+      cout << "Fitness of Step " << i <<  endl;
+      cout << fitness.StringList(reparm_data.population_[0]);
     }
 
 
@@ -86,9 +66,9 @@ int main(){
   catch(const char *e){
     cerr << e << endl;
   }
-  ofstream fout{"best.com"};
-  fout << reparm_data.population_[0].GetInputs()[0].str();
-  
+  cout << reparm_data.population_[0].GetFitness() << endl;
+  PrintBest print_best{reparm_data};
+  print_best();
   
   return 0;
 }

@@ -6,7 +6,7 @@
 #include <vector>
 #include <gaussian.h>
 
-ReparmInput reparm::ReparmData::GetReparmInput(){
+ReparmInput reparm::ReparmData::GetReparmInput() const{
   return reparm_input_;
 }
 

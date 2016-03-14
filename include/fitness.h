@@ -22,7 +22,8 @@ class Fitness{
     Fitness(const ParameterGroup &population,
             const std::vector<reparm::GaussianOutput> &high_level_outputs);
 
-    double operator () (reparm::ParameterGroup &rhs);
+    std::string StringList(const reparm::ParameterGroup &param_group) const;
+    double operator () (reparm::ParameterGroup &rhs) const;
 };
 
 }

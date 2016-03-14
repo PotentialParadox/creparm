@@ -25,7 +25,7 @@ namespace reparm{
 
       // population_ should be modifiable
       std::vector<ParameterGroup> population_;
-      ReparmInput GetReparmInput();
+      ReparmInput GetReparmInput() const;
       std::vector<reparm::ParameterGroup> CreatePopulation(GaussianInput &input);
       const std::vector<GaussianOutput>& GetHighLevelOutputs() const;
       void CalculateHighLevel();
