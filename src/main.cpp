@@ -25,6 +25,7 @@ using namespace chrono;
 
 int main(){
   // Read the input files and convert to a Reparm Gaussian Input
+  high_resolution_clock::time_point t1 = high_resolution_clock::now();
   ReparmData reparm_data{"reparm.in"};
   try{
     ReparmInput reparm_input{reparm_data.GetReparmInput()};
@@ -69,6 +70,9 @@ int main(){
   cout << reparm_data.population_[0].GetFitness() << endl;
   PrintBest print_best{reparm_data};
   print_best();
+  high_resolution_clock::time_point t2 = high_resolution_clock::now();
+  duration<double> time_span = duration_cast<duration<double> >(t2 - t1);
+  cout << "Job took " << time_span.count() << " seconds" << endl;
   
   return 0;
 }
