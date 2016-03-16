@@ -29,6 +29,7 @@ namespace reparm{
       std::vector<reparm::ParameterGroup> CreatePopulation(GaussianInput &input);
       const std::vector<GaussianOutput>& GetHighLevelOutputs() const;
       void CalculateHighLevel();
+      void RunBest();
   };
 
 }

@@ -1,10 +1,13 @@
 #include <reparm_data.h>
+#include <system_tools.hpp>
 #include <gaussian_input.h>
 #include <header.h>
 #include <iostream>
+#include <string>
 #include <sstream>
 #include <vector>
 #include <gaussian.h>
+#include <fstream>
 
 ReparmInput reparm::ReparmData::GetReparmInput() const{
   return reparm_input_;
@@ -62,4 +65,25 @@ void reparm::ReparmData::CalculateHighLevel(){
   catch(...){
     throw "Problem running high level calculations";
   }
+}
+
+void reparm::ReparmData::RunBest(){
+  reparm::GaussianInput input1{population_[0].GetInputs()[0]};
+  reparm::Header header1{"#P AM1(Input,Print) opt\n\nbest\n"};
+  input1.SetHeader(header1);
+  
+  reparm::GaussianInput input2{input1};
+  reparm::Header header2{"#P AM1(Input,Print) CIS(Singlets,NStates=" +
+                         std::to_string(GetReparmInput().GetNumberExcitedStates()) +
+                         ") pop(full) freq\n\nbest1\n"};
+  input2.SetHeader(header2);
+
+  input1.Link(input2);
+  std::ofstream fout{"best.com"};
+  std::cout << "Printing Best" << std::endl;
+  fout << input1.str();
+  fout.close();
+  std::cout << "Running Best" << std::endl;
+  std::string command{"g09 best.com best.log"};
+  systls::exec(command, 100000);
 }

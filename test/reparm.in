@@ -4,8 +4,8 @@ Number of Excited States:       10
 Number of Generations:          5
 Number of Processors:           4
 Number of Geometries:           4 
-Number of Elites:               2
-Population Size:                6
+Number of Elites:               1
+Population Size:                4
 Mutation Rate:                  0.10
 Mutation Perturbation:          0.10
 Survival Chance:                0.5

@@ -16,7 +16,6 @@
 #include <survivor.h>
 #include <breed.h>
 #include <aristocratic_cloning.h>
-#include <print_best.h>
 
 using namespace std;
 using namespace reparm;
@@ -68,8 +67,7 @@ int main(){
     cerr << e << endl;
   }
   cout << reparm_data.population_[0].GetFitness() << endl;
-  PrintBest print_best{reparm_data};
-  print_best();
+  reparm_data.RunBest();
   high_resolution_clock::time_point t2 = high_resolution_clock::now();
   duration<double> time_span = duration_cast<duration<double> >(t2 - t1);
   cout << "Job took " << time_span.count() << " seconds" << endl;
