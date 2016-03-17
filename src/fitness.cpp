@@ -110,13 +110,22 @@ std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_grou
 }
 
 double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
-  double fitness = 0;
+  double fitness;
+  double e_fitness = 0;
+  double d_fitness = 0;
+  double es_fitness = 0;
   try{
-    fitness = (ExcitedStateFitness(rhs, high_level_outputs_) / original_es_fitness_);
+    e_fitness = (EnergyFitness(rhs, high_level_outputs_) / original_e_fitness_);
+    d_fitness = (DipoleFitness(rhs, high_level_outputs_) / original_d_fitness_);
+    es_fitness = (ExcitedStateFitness(rhs, high_level_outputs_) / original_es_fitness_);
+    double fit_sum = e_fitness + d_fitness + es_fitness;
+    fitness = ( (e_fitness / fit_sum) * e_fitness +
+                       (d_fitness / fit_sum) * d_fitness +
+                       (es_fitness / fit_sum) * es_fitness );
   }
   catch(const char* e){
     std::cout << e << std::endl;
-    return 10;
+    fitness = 10;
   }
   rhs.SetFitness(fitness);
   return fitness;

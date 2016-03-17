@@ -56,6 +56,7 @@ int main(){
 
     // ******* Begin the main loop *********
     for (int i = 0; i < reparm_data.GetReparmInput().GetNumberGenerations(); ++i){
+
       survivor(reparm_data.population_);
       aristocratic_clone(reparm_data.population_);
       breed(reparm_data.population_);
@@ -80,7 +81,10 @@ int main(){
   cout << "Fitness: " << reparm_data.population_[0].GetFitness() << endl;
   high_resolution_clock::time_point t2 = high_resolution_clock::now();
   duration<double> time_span = duration_cast<duration<double> >(t2 - t1);
-  cout << "Job took " << time_span.count() << " seconds" << endl;
+  int time = static_cast<int>(time_span.count());
+  cout << "Job took " << static_cast<int>(time/3600) << " hours ";
+  cout << static_cast<int>( (time % 3600) / 60 ) << " minutes ";
+  cout << static_cast<int>(time % 60) << " seconds";
   
   return 0;
 }

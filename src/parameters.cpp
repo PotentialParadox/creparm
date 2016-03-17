@@ -106,9 +106,8 @@ void reparm::Parameters::Mutate(const double  &perturbation, const float &rate){
     for (size_t i = 0; i < (*p).size(); i+=4){
       // Determine if parameter is mutated
       if (distribution(rand) < rate){
-        double max_value = (*p)[i] + perturbation * (*p)[i];
-        double min_value = (*p)[i] - perturbation * (*p)[i];
-        std::uniform_real_distribution<double> p_distribution(min_value, max_value);
+        double stdev = (*p)[i] * perturbation;
+        std::normal_distribution<double> p_distribution((*p)[i], stdev);
         (*p)[i] = p_distribution(rand);
       }
     }
