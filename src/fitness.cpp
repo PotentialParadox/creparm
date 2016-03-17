@@ -5,9 +5,15 @@
 #include <cmath>
 #include <sstream>
 
-double RMS(std::vector<double> &a, std::vector<double> &b){
+double Average(std::vector<double> &a){
+  double value = 0;
+  for (auto &i: a){ value += i;}
+  return value / static_cast<double>(a.size());
+}
+
+double RMS(const std::vector<double> &a,const std::vector<double> &b){
   if (a.size() != b.size())
-    throw "RMS Failure";
+    throw "RMS Failure: vector sizes are not the same";
   double variance = 0;
   for (size_t i = 0; i != a.size(); ++i)
     variance += pow(a[i] - b[i], 2);
@@ -15,10 +21,14 @@ double RMS(std::vector<double> &a, std::vector<double> &b){
   return sqrt(variance);
 }
 
-double Average(std::vector<double> &a){
-  double value = 0;
-  for (auto &i: a){ value += i;}
-  return value / static_cast<double>(a.size());
+double AverageRMS(const std::vector<std::vector<double> > &a,
+                  const std::vector<std::vector<double> > &b){
+  if (a.size() != b.size())
+    throw "RMS Failure: vector sizes are not the same";
+  double avearge_rms = 0;
+  for (size_t i = 0; i < a.size(); ++i)
+    avearge_rms += RMS(a[i], b[i]);
+  return avearge_rms / static_cast<double>(a.size());
 }
 
 double EnergyFitness(const reparm::ParameterGroup &param_group,
@@ -40,25 +50,45 @@ double EnergyFitness(const reparm::ParameterGroup &param_group,
   return RMS(am1_energies, hlt_energies);
 }
 
+double DipoleFitness(const reparm::ParameterGroup &param_group,
+                     const std::vector<reparm::GaussianOutput> &high_level_outputs){
+  // Get AM1 Dipoles
+  std::vector<std::vector<double> > am1_dipoles;
+  for (const auto &i: param_group.GetOutputs())
+    am1_dipoles.push_back(i.GetDipole());
+  // Get HLT Dipoles
+  std::vector<std::vector<double> > hlt_dipoles;
+  for (const auto &i: high_level_outputs)
+    hlt_dipoles.push_back(i.GetDipole());
+  return AverageRMS(am1_dipoles, hlt_dipoles);
+}
+
 reparm::Fitness::Fitness(const reparm::ParameterGroup &param_group,
                          const std::vector<reparm::GaussianOutput> &high_level_outputs)
   : high_level_outputs_{high_level_outputs}
 {
-  original_fitness_.push_back(EnergyFitness(param_group, high_level_outputs_));
+  original_e_fitness_ = EnergyFitness(param_group, high_level_outputs_);
+  original_d_fitness_ = DipoleFitness(param_group, high_level_outputs_);
 } 
 
 std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_group) const{
   std::stringstream ss;
-  double e_fitness = (EnergyFitness(param_group, high_level_outputs_) / original_fitness_[0]);
+
+  double e_fitness = (EnergyFitness(param_group, high_level_outputs_) / original_e_fitness_);
   ss << "Energy Fitness: ";
   ss << e_fitness << std::endl;
+
+  double d_fitness = (DipoleFitness(param_group, high_level_outputs_) / original_d_fitness_);
+  ss << "Dipole Fitness: ";
+  ss << d_fitness << std::endl;
+
   return ss.str();
 }
 
 double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
   double fitness = 0;
   try{
-    fitness = (EnergyFitness(rhs, high_level_outputs_) / original_fitness_[0]);
+    fitness = (DipoleFitness(rhs, high_level_outputs_) / original_d_fitness_);
   }
   catch(const char* e){
     std::cout << e << std::endl;

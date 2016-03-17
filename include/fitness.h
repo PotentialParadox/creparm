@@ -14,7 +14,8 @@ class Fitness{
   friend class Mutate;
 
   private:
-    std::vector<double> original_fitness_;
+    double original_e_fitness_;
+    double original_d_fitness_;
     std::vector<reparm::GaussianOutput> high_level_outputs_;
     Fitness(){};
 

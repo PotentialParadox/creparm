@@ -16,7 +16,6 @@ namespace reparm{
   class ReparmData{
     private:
       ReparmInput reparm_input_;
-      std::vector<GaussianOutput> high_level_outputs_;
 
     public:
       ReparmData(std::string s)
@@ -24,6 +23,7 @@ namespace reparm{
         {}
 
       // population_ should be modifiable
+      std::vector<GaussianOutput> high_level_outputs_;
       std::vector<ParameterGroup> population_;
       ReparmInput GetReparmInput() const;
       std::vector<reparm::ParameterGroup> CreatePopulation(GaussianInput &input);

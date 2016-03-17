@@ -17,22 +17,27 @@ double FindEnergy(const std::string &s){
 }
 
 std::vector<double> FindDipole(const std::string &s){
-  std::regex p_dipole{"Dipole\\s+moment.*\n.*"};
+  std::regex p_dipole{"Charge=.*\n.*Dipole\\s+moment.*\n.*"};
+  std::sregex_iterator pos(s.begin(), s.end(), p_dipole);
+  std::sregex_iterator end;
+  std::vector<std::string> dipole_list;
+  for (; pos != end; ++pos)
+    dipole_list.push_back(pos->str(0));
+  std::string last_dipole{*(dipole_list.end() - 1)};
+
+  std::regex p_x{"X=\\s+(-?\\d+\\.\\d+)\\s+"};
   std::smatch m;
-  if(!std::regex_search(s, m, p_dipole)){
-    std::cerr << "Cannot find dipoles" << std::endl;
-    throw "Error";
-  }
-  std::string d_line{m[0].str()};
-  std::regex p_x{"X=\\s+(-?\\d+\\.\\d+)"};
-  std::regex p_y{"Y=\\s+(-?\\d+\\.\\d+)"};
-  std::regex p_z{"Z=\\s+(-?\\d+\\.\\d+)"};
-  std::regex_search(d_line, m, p_x);
-  double x = stod(m[1]);
-  std::regex_search(d_line, m, p_y);
-  double y = stod(m[1]);
-  std::regex_search(d_line, m, p_z);
-  double z = stod(m[1]);
+  std::regex_search(last_dipole, m, p_x);
+  double x{stod(m[1])};
+
+  std::regex p_y{"Y=\\s+(-?\\d+\\.\\d+)\\s+"};
+  std::regex_search(last_dipole, m, p_y);
+  double y{stod(m[1])};
+
+  std::regex p_z{"Z=\\s+(-?\\d+\\.\\d+)\\s+"};
+  std::regex_search(last_dipole, m, p_z);
+  double z{stod(m[1])};
+
   return std::vector<double>{x, y, z};
 }
 

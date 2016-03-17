@@ -37,6 +37,8 @@ int main(){
     Gaussian gaussian{reparm_data.population_[0]};
     vector<GaussianOutput> gouts{gaussian.RunGaussian()};
     reparm_data.population_[0].SetOutputs(gouts);
+    cout << "Initial Output:" << endl;
+    cout << reparm_data.population_[0].GetOutputs()[0].str() << endl;;
 
     // Calculate the high level outputs
     reparm_data.CalculateHighLevel();
@@ -66,8 +68,12 @@ int main(){
   catch(const char *e){
     cerr << e << endl;
   }
-  cout << reparm_data.population_[0].GetFitness() << endl;
   reparm_data.RunBest();
+  cout << "BEST OUTPUTS" << endl;
+  cout << reparm_data.population_[0].GetOutputs()[0].str() << endl;
+  cout << "Corresponding DFT" << endl;
+  cout << reparm_data.high_level_outputs_[0].str() << endl;
+  cout << "Fitness: " << reparm_data.population_[0].GetFitness() << endl;
   high_resolution_clock::time_point t2 = high_resolution_clock::now();
   duration<double> time_span = duration_cast<duration<double> >(t2 - t1);
   cout << "Job took " << time_span.count() << " seconds" << endl;
