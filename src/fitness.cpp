@@ -63,24 +63,48 @@ double DipoleFitness(const reparm::ParameterGroup &param_group,
   return AverageRMS(am1_dipoles, hlt_dipoles);
 }
 
+double ExcitedStateFitness(const reparm::ParameterGroup &param_group,
+                           const std::vector<reparm::GaussianOutput> &high_level_outputs){
+  // Get AM1 Excited States
+  std::vector<std::vector<double> > am1_excited_states;
+  for (const auto &i: param_group.GetOutputs())
+    am1_excited_states.push_back(i.GetExcitedStates());
+  // Get HLT Excited States
+  std::vector<std::vector<double> > hlt_excited_states;
+  for (const auto &i: high_level_outputs)
+    hlt_excited_states.push_back(i.GetExcitedStates());
+  return AverageRMS(am1_excited_states, hlt_excited_states);
+}
+
 reparm::Fitness::Fitness(const reparm::ParameterGroup &param_group,
                          const std::vector<reparm::GaussianOutput> &high_level_outputs)
   : high_level_outputs_{high_level_outputs}
 {
   original_e_fitness_ = EnergyFitness(param_group, high_level_outputs_);
   original_d_fitness_ = DipoleFitness(param_group, high_level_outputs_);
+  original_es_fitness_ = ExcitedStateFitness(param_group, high_level_outputs_);
 } 
 
 std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_group) const{
   std::stringstream ss;
 
-  double e_fitness = (EnergyFitness(param_group, high_level_outputs_) / original_e_fitness_);
-  ss << "Energy Fitness: ";
-  ss << e_fitness << std::endl;
+  try{
+    double e_fitness = (EnergyFitness(param_group, high_level_outputs_) / original_e_fitness_);
+    ss << "Energy Fitness: ";
+    ss << e_fitness << std::endl;
 
-  double d_fitness = (DipoleFitness(param_group, high_level_outputs_) / original_d_fitness_);
-  ss << "Dipole Fitness: ";
-  ss << d_fitness << std::endl;
+    double d_fitness = (DipoleFitness(param_group, high_level_outputs_) / original_d_fitness_);
+    ss << "Dipole Fitness: ";
+    ss << d_fitness << std::endl;
+
+    double es_fitness = (ExcitedStateFitness(param_group, high_level_outputs_) / 
+                         original_es_fitness_);
+    ss << "Excited State Fitness: ";
+    ss << es_fitness << std::endl;
+  }
+  catch(const char* e){
+    std::cout << "Ignoring Step" << std::endl;
+  }
 
   return ss.str();
 }
@@ -88,7 +112,7 @@ std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_grou
 double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
   double fitness = 0;
   try{
-    fitness = (DipoleFitness(rhs, high_level_outputs_) / original_d_fitness_);
+    fitness = (ExcitedStateFitness(rhs, high_level_outputs_) / original_es_fitness_);
   }
   catch(const char* e){
     std::cout << e << std::endl;

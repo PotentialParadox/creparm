@@ -14,8 +14,9 @@ class Fitness{
   friend class Mutate;
 
   private:
-    double original_e_fitness_;
-    double original_d_fitness_;
+    double original_e_fitness_;  // Energy Fitness
+    double original_d_fitness_;  // Dipole Fitness
+    double original_es_fitness_; // Excited State Fitness
     std::vector<reparm::GaussianOutput> high_level_outputs_;
     Fitness(){};
 

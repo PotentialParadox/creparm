@@ -29,6 +29,7 @@ class GaussianOutput{
     GaussianOutput(const std::string&);
     double GetEnergy() const {return energy_;}
     std::vector<double> GetDipole() const {return dipole_;}
+    std::vector<double> GetExcitedStates() const {return excited_states_;}
     std::string str() const;
 };
 

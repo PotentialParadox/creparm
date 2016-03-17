@@ -23,6 +23,7 @@ using namespace chrono;
 
 
 int main(){
+  std::string initial_output;
   // Read the input files and convert to a Reparm Gaussian Input
   high_resolution_clock::time_point t1 = high_resolution_clock::now();
   ReparmData reparm_data{"reparm.in"};
@@ -37,8 +38,7 @@ int main(){
     Gaussian gaussian{reparm_data.population_[0]};
     vector<GaussianOutput> gouts{gaussian.RunGaussian()};
     reparm_data.population_[0].SetOutputs(gouts);
-    cout << "Initial Output:" << endl;
-    cout << reparm_data.population_[0].GetOutputs()[0].str() << endl;;
+    initial_output = reparm_data.population_[0].GetOutputs()[0].str();
 
     // Calculate the high level outputs
     reparm_data.CalculateHighLevel();
@@ -50,7 +50,9 @@ int main(){
     Breed breed(reparm_data);
     AristocraticCloning aristocratic_clone(reparm_data, fitness);
 
-    mutate(reparm_data.population_, 0, reparm_data.GetReparmInput().GetPopulationSize());
+    // Index starts at one, guarenteeing that at least member is at least as good as
+    // the user's input
+    mutate(reparm_data.population_, 1, reparm_data.GetReparmInput().GetPopulationSize());
 
     // ******* Begin the main loop *********
     for (int i = 0; i < reparm_data.GetReparmInput().GetNumberGenerations(); ++i){
@@ -69,6 +71,8 @@ int main(){
     cerr << e << endl;
   }
   reparm_data.RunBest();
+  cout << "Initial Output" << endl;
+  cout << initial_output << endl;
   cout << "BEST OUTPUTS" << endl;
   cout << reparm_data.population_[0].GetOutputs()[0].str() << endl;
   cout << "Corresponding DFT" << endl;
