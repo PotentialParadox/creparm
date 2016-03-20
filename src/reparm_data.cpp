@@ -80,10 +80,8 @@ void reparm::ReparmData::RunBest(){
 
   input1.Link(input2);
   std::ofstream fout{"best.com"};
-  std::cout << "Printing Best" << std::endl;
   fout << input1.str();
   fout.close();
-  std::cout << "Running Best" << std::endl;
   std::string command{"g09 best.com best.log"};
   systls::exec(command, 100000);
 }

@@ -1,4 +1,4 @@
-#P B3LYP/3-21G opt
+#P AM1 opt
 
 AM1-Reparam Input
 
@@ -14,7 +14,7 @@ AM1-Reparam Input
 1        1.810438   -1.369382    0.000000
 
 --Link1--
-#P B3LYP/3-21G CIS(Singlets,Nstates=10) pop(full)
+#P AM1 CIS(Singlets,Nstates=10) pop(full)
 
 Linked
 
@@ -30,7 +30,7 @@ Linked
 1        1.810438   -1.369382    0.000000
 
 --Link1--
-#P B3LYP/3-21G freq
+#P AM1 freq
 
 Linked
 
