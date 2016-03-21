@@ -214,7 +214,7 @@ std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_grou
     ss << es_fitness << std::endl;
 
     double f_fitness = (ForceFitness(param_group, high_level_outputs_) / 
-                         original_es_fitness_);
+                         original_f_fitness_);
     ss << "Force Fitness: ";
     ss << f_fitness << std::endl;
 
@@ -235,16 +235,19 @@ double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
   double e_fitness = 0;
   double d_fitness = 0;
   double es_fitness = 0;
+  double f_fitness = 0;
   double ir_fitness = 0;
   try{
     e_fitness = (EnergyFitness(rhs, high_level_outputs_) / original_e_fitness_);
     d_fitness = (DipoleFitness(rhs, high_level_outputs_) / original_d_fitness_);
     es_fitness = (ExcitedStateFitness(rhs, high_level_outputs_) / original_es_fitness_);
+    f_fitness = (ForceFitness(rhs, high_level_outputs_) / original_f_fitness_);
     ir_fitness = (IRSpecFitness(rhs, high_level_outputs_) / original_es_fitness_);
-    double fit_sum = e_fitness + d_fitness + es_fitness;
+    double fit_sum = e_fitness + d_fitness + es_fitness + f_fitness;
     fitness = ( (e_fitness / fit_sum) * e_fitness +
                 (d_fitness / fit_sum) * d_fitness +
-                (es_fitness / fit_sum) * es_fitness );
+                (es_fitness / fit_sum) * es_fitness  +
+                (f_fitness / fit_sum) * f_fitness);
   }
   catch(const char* e){
     std::cout << e << std::endl;
