@@ -71,8 +71,6 @@ int main(){
         best_fitness = reparm_data.population_[0].GetFitness();
       }
     }
-
-
   }
   catch(const char *e){
     cerr << e << endl;

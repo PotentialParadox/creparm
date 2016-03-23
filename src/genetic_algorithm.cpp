@@ -37,6 +37,13 @@ reparm::GaussianInput reparm::CreateReparmGaussian(std::string s){
     regex_search(output, m, p_parameters);
     g_input.SetParameters(g_input.ReadParameters(m[1]));
   }
+  else{
+    std::ifstream fin{s};
+    std::regex p_link{"--Link1--"};
+    std::smatch m;
+    if (std::regex_search(s, m, p_link))
+        throw "--Link1-- found in user given starter file";
+  }
   return g_input;
 }
 
