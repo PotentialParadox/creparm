@@ -22,9 +22,7 @@ std::string CreateInput(std::string &s){
 reparm::GaussianInput reparm::CreateReparmGaussian(std::string s){
   {
     std::ifstream fin{s};
-    std::regex p_link{"Link1"};
-    std::smatch m;
-    std::cout << "Looking for Link1" << std::endl;
+    std::regex p_link{"--Link1--"};
     std::string line;
     while (getline(fin, line)){
       if (std::regex_search(line, p_link))
