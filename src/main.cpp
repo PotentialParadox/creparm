@@ -33,7 +33,7 @@ int main(){
     string starter_file{reparm_input.GetMoleculeName() + ".com"};
     GaussianInput input{CreateReparmGaussian(starter_file)};
 
-    // Create the AM1 population from this formated input
+    fout << "Creating AM1 population" << endl;
     reparm_data.CreatePopulation(input);
     // Since the entire population is the same, we only run the first
     Gaussian gaussian{reparm_data.population_[0]};
@@ -41,8 +41,9 @@ int main(){
     reparm_data.population_[0].SetOutputs(gouts);
     initial_output = reparm_data.population_[0].GetOutputs()[0].str();
 
-    // Calculate the high level outputs
+    fout << "Calculating High Level Theory" << endl;
     reparm_data.CalculateHighLevel();
+    fout << "Finished with High Level Theory" << endl;
 
     // Initialize the functors
     Fitness fitness(reparm_data.population_[0], reparm_data.GetHighLevelOutputs());
@@ -59,7 +60,7 @@ int main(){
     double best_fitness = 1;
     for (int i = 0; i < reparm_data.GetReparmInput().GetNumberGenerations(); ++i){
 
-      cout << "Step: " << i << endl;
+      fout << "Step: " << i << endl;
       survivor(reparm_data.population_);
       aristocratic_clone(reparm_data.population_);
       breed(reparm_data.population_);
