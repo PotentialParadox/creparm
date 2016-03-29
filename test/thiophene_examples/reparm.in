@@ -1,7 +1,7 @@
 Molecule Name:                  Thiophene
 High Level Theory:              B3LYP/3-21G
-Number of Excited States:       10
-Number of Generations:          500
+Number of Excited States:       0
+Number of Generations:          100
 Number of Processors:           4
 Number of Geometries:           64 
 Number of Elites:               1

@@ -59,23 +59,31 @@ double SpecDistance(std::vector<std::vector<double> > &a, std::vector<std::vecto
   return distance / static_cast<double>(a.size());
 }
 
+std::vector<double> Differences(const std::vector<double> v){
+  if (v.size() < 2)
+    throw "Vector not large enough for finding differences";
+  std::vector<double> differences;
+  for (size_t i = 0; i < v.size() - 1; ++i)
+    differences.push_back(v[i+1] - v[i]);
+  return differences;
+}
+
 double EnergyFitness(const reparm::ParameterGroup &param_group,
                      const std::vector<reparm::GaussianOutput> &high_level_outputs){
   // Get AM1 Energies
   std::vector<double> am1_energies;
   for (auto &i: param_group.GetOutputs())
     am1_energies.push_back(i.GetEnergy());
+  /* Convert to Differences */
+  auto am1_differences = Differences(am1_energies);
   // Get HLT Energies
   std::vector<double> hlt_energies;
   for (auto &i: high_level_outputs)
     hlt_energies.push_back(i.GetEnergy());
-  // Find the difference between the units
-  double difference = Average(am1_energies) - Average(hlt_energies);
-  // Convert the AM1 energies to the HLT units
-  for (auto &i: am1_energies)
-    i -= difference;
+  /* Convert to Differences */
+  auto hlt_differences = Differences(hlt_energies);
   // Return the RMS
-  return RMS(am1_energies, hlt_energies);
+  return RMS(am1_differences, hlt_differences);
 }
 
 double DipoleFitness(const reparm::ParameterGroup &param_group,
@@ -243,11 +251,11 @@ double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
     es_fitness = (ExcitedStateFitness(rhs, high_level_outputs_) / original_es_fitness_);
     f_fitness = (ForceFitness(rhs, high_level_outputs_) / original_f_fitness_);
     ir_fitness = (IRSpecFitness(rhs, high_level_outputs_) / original_es_fitness_);
-    double fit_sum = e_fitness + d_fitness + es_fitness + f_fitness;
-    fitness = ( (e_fitness / fit_sum) * e_fitness +
-                (d_fitness / fit_sum) * d_fitness +
-                (es_fitness / fit_sum) * es_fitness  +
-                (f_fitness / fit_sum) * f_fitness);
+    double fit_sum = e_fitness; // + d_fitness + es_fitness + f_fitness;
+    fitness = ( (e_fitness / fit_sum) * e_fitness);
+                //(d_fitness / fit_sum) * d_fitness +
+                //(es_fitness / fit_sum) * es_fitness  +
+                //(f_fitness / fit_sum) * f_fitness);
   }
   catch(const char* e){
     std::cout << e << std::endl;

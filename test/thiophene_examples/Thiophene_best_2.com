@@ -1,4 +1,3 @@
-%Chk=freq
 #P AM1(Input,Print) opt
 
 best
@@ -54,12 +53,20 @@ GCore=0.0008596462,3.5843376148,3.5762507560
 ****
 
 --Link1--
-%Chk=freq
-#P AM1(Input,Print) CIS(Singlets,NStates=0) pop(full) Geom=Checkpoint freq
+#P AM1(Input,Print) CIS(Singlets,NStates=0) pop(full) freq
 
 best1
 
 0 1
+6        0.869808    -0.701506     0.056117
+6       -0.396279    -1.230906    -0.015526
+6       -0.327906     1.347920    -0.006442
+6        0.894548     0.716912    -0.023630
+1        1.744882     1.303552     0.040418
+1       -0.540542     2.324699     0.254702
+1       -0.628351    -2.286621     0.121165
+1        1.792311    -1.269526    -0.053007
+16       -1.616521     0.037214    -0.119411
 
 Method=8 CoreType=1 PeptideFC=0.0119657245 RIJScale=0.5881090766
 ****
