@@ -91,8 +91,4 @@ int main(){
   fout << "Job took " << static_cast<int>(time/3600) << " hours ";
   fout << static_cast<int>( (time % 3600) / 60 ) << " minutes ";
   fout << static_cast<int>(time % 60) << " seconds";
-  
-  //GaussianInput input{"best.com"};
-  //cout << input.str() << endl;
-  //return 0;
 }
