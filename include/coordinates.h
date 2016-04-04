@@ -24,6 +24,7 @@ class Coordinates{
     Coordinates(const std::string&);
     void ReadSpins(const std::string&);
     void ReadCoordinates(const std::string&);
+    void ClearCoordinates();
     void Perturb(const float&);
     std::string str() const;
 };

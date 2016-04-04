@@ -91,4 +91,5 @@ int main(){
   fout << "Job took " << static_cast<int>(time/3600) << " hours ";
   fout << static_cast<int>( (time % 3600) / 60 ) << " minutes ";
   fout << static_cast<int>(time % 60) << " seconds";
+  fout.close();
 }

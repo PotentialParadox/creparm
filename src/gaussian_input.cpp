@@ -115,6 +115,10 @@ std::string reparm::GaussianInput::str() {
   return input;
 }
 
+void reparm::GaussianInput::ClearCoordinates(){
+  for (auto &i: coordinates_){ i.ClearCoordinates(); }
+}
+
 void reparm::GaussianInput::Link(const reparm::GaussianInput& rhs){
   this->header_.push_back(rhs.GetHeader());
   this->coordinates_.push_back(rhs.GetCoordinates());

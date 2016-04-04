@@ -41,6 +41,7 @@ class GaussianInput{
     reparm::Header GetHeader() const;
     reparm::Coordinates GetCoordinates() const;
     reparm::Parameters GetParameters() const;
+    void ClearCoordinates();
     std::string str();
 };
 

@@ -91,3 +91,7 @@ std::string reparm::Coordinates::str() const{
   return coordinates.str();
 }
 
+void reparm::Coordinates::ClearCoordinates(){
+  coordinates_.clear();
+}
+
