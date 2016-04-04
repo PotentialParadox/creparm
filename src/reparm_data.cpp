@@ -69,13 +69,13 @@ void reparm::ReparmData::CalculateHighLevel(){
 
 void reparm::ReparmData::RunBest(){
   reparm::GaussianInput input1{population_[0].GetInputs()[0]};
-  reparm::Header header1{"#P AM1(Input,Print) opt\n\nbest\n"};
+  reparm::Header header1{"\%chk=best\n#P AM1(Input,Print) opt\n\nbest\n"};
   input1.SetHeader(header1);
   
   reparm::GaussianInput input2{input1};
-  reparm::Header header2{"#P AM1(Input,Print) CIS(Singlets,NStates=" +
+  reparm::Header header2{"\%chk=best\n#P AM1(Input,Print) CIS(Singlets,NStates=" +
                          std::to_string(GetReparmInput().GetNumberExcitedStates()) +
-                         ") pop(full) freq\n\nbest1\n"};
+                         ") pop(full) freq geom=Checkpoint\n\nbest1\n"};
   input2.SetHeader(header2);
 
   input1.Link(input2);

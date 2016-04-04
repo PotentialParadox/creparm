@@ -44,7 +44,7 @@ std::string reparm::GaussianInput::ReadFile(const std::string &file_name) const{
 
 reparm::Header reparm::GaussianInput::ReadHeader(const std::string &file){
   using namespace std;
-  regex p_header{"^(.*\n){3}"};
+  regex p_header{"^(.+\n)+\n(.+\n)"};
   smatch m;
   regex_search(file, m, p_header);
   reparm::Header header{m[0]};

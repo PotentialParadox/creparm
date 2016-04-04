@@ -19,7 +19,7 @@ Header::Header(const std::string& header){
 std::string Header::ReadCommand(const std::string &header){
   using namespace std;
   try{
-    regex p_command{"^.*"};
+    regex p_command{"^(.+\n)+"};
     smatch m;
     if (!regex_search(header, m, p_command)){throw "Can't find command in inputfile";}
     return m[0];
@@ -33,10 +33,10 @@ std::string Header::ReadCommand(const std::string &header){
 std::string Header::ReadTitle(const std::string &header){
   using namespace std;
   try{
-    regex p_title{"^(.*\n){3}"};
+    regex p_title{"^(.+\n)+\n(.+\n)"};
     smatch m;
     if (!regex_search(header, m, p_title)){throw "Can't find command in inputfile";}
-    return m[1];
+    return m[2];
   }
   catch(const char *e){
     cerr << e << endl;
@@ -49,5 +49,5 @@ std::string Header::GetCommand() const{
 }
 
 std::string Header::str() const{
-  return this->command_ + "\n\n" +  this->title_ + "\n";
+  return this->command_ + "\n" +  this->title_ + "\n";
 }
