@@ -5,8 +5,31 @@
 #include <cmath>
 #include <sstream>
 
+double Average(std::vector<double> &a);
+double RMS(const std::vector<double> &a,const std::vector<double> &b);
+double AverageRMS(const std::vector<std::vector<double> > &a,
+                  const std::vector<std::vector<double> > &b);
+double Distance(std::vector<double> s1, std::vector<double> s2);
+double MergeDistance(const std::vector<double> &a, const std::vector<double> &b);
+double SpecDistance(std::vector<std::vector<double> > &a,
+                    std::vector<std::vector<double> > &b);
+std::vector<double> Differences(const std::vector<double> v);
+double EnergyFitness(const reparm::ParameterGroup &param_group,
+                     const std::vector<reparm::GaussianOutput> &high_level_outputs);
+double DipoleFitness(const reparm::ParameterGroup &param_group,
+                     const std::vector<reparm::GaussianOutput> &high_level_outputs);
+double ExcitedStateFitness(const reparm::ParameterGroup &param_group,
+                           const std::vector<reparm::GaussianOutput> &high_level_outputs);
+double IRSpecFitness(const reparm::ParameterGroup &param_group,
+                     const std::vector<reparm::GaussianOutput> &high_level_outputs);
+double Average3dDistance(std::vector<double> a, std::vector<double> b);
+double AverageForceDistance(std::vector<std::vector<double> > a,
+                            std::vector<std::vector<double> > b);
+double ForceFitness(const reparm::ParameterGroup &param_group,
+                    const std::vector<reparm::GaussianOutput> &high_level_outputs);
+
 double Average(std::vector<double> &a){
-  double value = 0;
+  double value{0.0};
   for (auto &i: a){ value += i;}
   return value / static_cast<double>(a.size());
 }
@@ -50,7 +73,8 @@ double MergeDistance(const std::vector<double> &a, const std::vector<double> &b)
   return distance / static_cast<double>(a.size());
 }
 
-double SpecDistance(std::vector<std::vector<double> > &a, std::vector<std::vector<double> > &b){
+double SpecDistance(std::vector<std::vector<double> > &a,
+                    std::vector<std::vector<double> > &b){
   if (a.size() != b.size())
     throw "Spectra Fit Error";
   double distance = 0;
@@ -134,23 +158,19 @@ std::vector<std::vector<double> > Merge(const std::vector<std::vector<double> > 
 
 double IRSpecFitness(const reparm::ParameterGroup &param_group,
                      const std::vector<reparm::GaussianOutput> &high_level_outputs){
-  // Get AM1 IR Frequencies and Intensities
+  // Get AM1 IR Frequencies
   std::vector<std::vector<double> > am1_ir_frequencies;
-  std::vector<std::vector<double> > am1_ir_intensities;
   for (const auto &i: param_group.GetOutputs()){
     am1_ir_frequencies.push_back(i.GetFrequencies());
-    am1_ir_intensities.push_back(i.GetIntensities());
   }
-  std::vector<std::vector<double> > am1_spec{Merge(am1_ir_frequencies, am1_ir_intensities)};
-  // Get DFT IR Frequencies and Intensities
+
+  // Get DFT IR Frequencies
   std::vector<std::vector<double> > hlt_ir_frequencies;
-  std::vector<std::vector<double> > hlt_ir_intensities;
   for (const auto &i: high_level_outputs){
     hlt_ir_frequencies.push_back(i.GetFrequencies());
-    hlt_ir_intensities.push_back(i.GetIntensities());
   }
-  std::vector<std::vector<double> > hlt_spec{Merge(hlt_ir_frequencies, hlt_ir_intensities)};
-  return SpecDistance(am1_spec, hlt_spec);
+
+  return 0.0;
 }
 
 double Average3dDistance(std::vector<double> a, std::vector<double> b){
