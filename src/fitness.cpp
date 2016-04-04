@@ -14,6 +14,8 @@ double MergeDistance(const std::vector<double> &a, const std::vector<double> &b)
 double SpecDistance(std::vector<std::vector<double> > &a,
                     std::vector<std::vector<double> > &b);
 std::vector<double> Differences(const std::vector<double> v);
+double AverageRMSDifferences(const std::vector<std::vector<double> > &a,
+                             const std::vector<std::vector<double> > &b);
 double EnergyFitness(const reparm::ParameterGroup &param_group,
                      const std::vector<reparm::GaussianOutput> &high_level_outputs);
 double DipoleFitness(const reparm::ParameterGroup &param_group,
@@ -81,6 +83,17 @@ double SpecDistance(std::vector<std::vector<double> > &a,
   for (size_t i = 0; i != a.size(); ++i)
     distance += MergeDistance(a[i], b[i]);
   return distance / static_cast<double>(a.size());
+}
+
+double AverageRMSDifferences(const std::vector<std::vector<double> > &a,
+                             const std::vector<std::vector<double> > &b){
+  double average_rms = 0;
+  for (size_t i = 0; i != a.size(); ++i){
+    auto am1_differences = Differences(a[i]);
+    auto hlt_differences = Differences(b[i]);
+    average_rms += RMS(am1_differences, hlt_differences);
+  }
+  return average_rms / static_cast<double>(a.size());
 }
 
 std::vector<double> Differences(const std::vector<double> v){
@@ -170,7 +183,7 @@ double IRSpecFitness(const reparm::ParameterGroup &param_group,
     hlt_ir_frequencies.push_back(i.GetFrequencies());
   }
 
-  return 0.0;
+  return AverageRMSDifferences(am1_ir_frequencies, hlt_ir_frequencies);
 }
 
 double Average3dDistance(std::vector<double> a, std::vector<double> b){
