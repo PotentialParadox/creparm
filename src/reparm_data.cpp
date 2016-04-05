@@ -77,7 +77,7 @@ void reparm::ReparmData::RunBest(){
                          std::to_string(GetReparmInput().GetNumberExcitedStates()) +
                          ") pop(full) freq geom=Checkpoint\n\nbest1\n"};
   input2.SetHeader(header2);
-
+  input2.ClearCoordinates();
   input1.Link(input2);
   std::ofstream fout{"best.com"};
   fout << input1.str();
