@@ -149,26 +149,6 @@ double ExcitedStateFitness(const reparm::ParameterGroup &param_group,
   return AverageRMSDifferences(am1_excited_states, hlt_excited_states);
 }
 
-// Merges <X_00, X_01><X_10, X_11> and <Y_00, Y_01><Y_10, Y_11> to
-// <X_00, Y_00, X_01, Y_01><X_10, Y_10, X_11, Y_11>
-std::vector<std::vector<double> > Merge(const std::vector<std::vector<double> > &a,
-                                        const std::vector<std::vector<double> > &b){
-  if (a.size() != b.size())
-    throw "Spectra Fit Error";
-  std::vector<std::vector<double> > c;
-  for (size_t i = 0; i != a.size(); ++i){
-    if (a[i].size() != b[i].size())
-      throw "Spectra Fit Error";
-    std::vector<double> c_temp;
-    for (size_t j = 0; j != a[i].size(); ++j){
-      c_temp.push_back(a[i][j]);
-      c_temp.push_back(b[i][j]);
-    }
-    c.push_back(c_temp);
-  }
-  return c;
-}
-
 double IRSpecFitness(const reparm::ParameterGroup &param_group,
                      const std::vector<reparm::GaussianOutput> &high_level_outputs){
   // Get AM1 IR Frequencies
@@ -281,17 +261,17 @@ double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
     f_fitness = (ForceFitness(rhs, high_level_outputs_) / original_f_fitness_);
     ir_fitness = (IRSpecFitness(rhs, high_level_outputs_) / original_es_fitness_);
     double fit_sum = ( e_fitness
-                     + d_fitness
-                     + es_fitness
-                     + f_fitness
-                     + ir_fitness
+                     //+ d_fitness
+                     //+ es_fitness
+                     //+ f_fitness
+                     //+ ir_fitness
                      );
     fitness = (
                 (e_fitness / fit_sum) * e_fitness 
-                + (d_fitness / fit_sum) * d_fitness 
-                + (es_fitness / fit_sum) * es_fitness
-                + (f_fitness / fit_sum) * f_fitness
-                + (ir_fitness / fit_sum) * ir_fitness
+                //+ (d_fitness / fit_sum) * d_fitness 
+                //+ (es_fitness / fit_sum) * es_fitness
+                //+ (f_fitness / fit_sum) * f_fitness
+                //+ (ir_fitness / fit_sum) * ir_fitness
               );
   }
   catch(const char* e){

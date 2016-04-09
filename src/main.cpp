@@ -42,6 +42,7 @@ int main(){
     initial_output = reparm_data.population_[0].GetOutputs()[0].str();
 
     fout << "Calculating High Level Theory" << endl;
+    fout << "This could take a lot of time" << endl;
     reparm_data.CalculateHighLevel();
     fout << "Finished with High Level Theory" << endl;
 
