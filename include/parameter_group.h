@@ -35,7 +35,7 @@ class ParameterGroup{
     reparm::ParameterGroup Cross(const reparm::ParameterGroup&);
     void SetParameters(const reparm::Parameters&);
 
-    bool operator < (const reparm::ParameterGroup &rhs){
+    bool operator < (const reparm::ParameterGroup &rhs) const{
       return fitness_ < rhs.fitness_;
     }
 };
