@@ -154,13 +154,13 @@ string
 iostream
 -
 
-/Users/dustin/Documents/research/creparm/src/aristocratic_cloning.cpp
+/home/dustin/Documents/Research/creparm/src/aristocratic_cloning.cpp
 iostream
 -
 aristocratic_cloning.h
 -
 
-/Users/dustin/Documents/research/creparm/src/breed.cpp
+/home/dustin/Documents/Research/creparm/src/breed.cpp
 breed.h
 -
 chrono
@@ -170,7 +170,7 @@ iostream
 random
 -
 
-/Users/dustin/Documents/research/creparm/src/coordinates.cpp
+/home/dustin/Documents/Research/creparm/src/coordinates.cpp
 coordinates.h
 -
 string
@@ -190,7 +190,7 @@ cmath
 map
 -
 
-/Users/dustin/Documents/research/creparm/src/fitness.cpp
+/home/dustin/Documents/Research/creparm/src/fitness.cpp
 fitness.h
 -
 vector
@@ -204,7 +204,7 @@ cmath
 sstream
 -
 
-/Users/dustin/Documents/research/creparm/src/gaussian.cpp
+/home/dustin/Documents/Research/creparm/src/gaussian.cpp
 gaussian.h
 -
 iostream
@@ -224,7 +224,7 @@ thread
 gaussian_output.h
 -
 
-/Users/dustin/Documents/research/creparm/src/gaussian_input.cpp
+/home/dustin/Documents/Research/creparm/src/gaussian_input.cpp
 gaussian_input.h
 -
 regex
@@ -234,7 +234,7 @@ iostream
 fstream
 -
 
-/Users/dustin/Documents/research/creparm/src/gaussian_output.cpp
+/home/dustin/Documents/Research/creparm/src/gaussian_output.cpp
 gaussian_output.h
 -
 iostream
@@ -244,7 +244,7 @@ regex
 sstream
 -
 
-/Users/dustin/Documents/research/creparm/src/genetic_algorithm.cpp
+/home/dustin/Documents/Research/creparm/src/genetic_algorithm.cpp
 genetic_algorithm.h
 -
 gaussian_input.h
@@ -260,7 +260,7 @@ header.h
 regex
 -
 
-/Users/dustin/Documents/research/creparm/src/header.cpp
+/home/dustin/Documents/Research/creparm/src/header.cpp
 header.h
 -
 string
@@ -270,7 +270,7 @@ iostream
 regex
 -
 
-/Users/dustin/Documents/research/creparm/src/main.cpp
+/home/dustin/Documents/Research/creparm/src/main.cpp
 iostream
 -
 stdexcept
@@ -308,7 +308,7 @@ breed.h
 aristocratic_cloning.h
 -
 
-/Users/dustin/Documents/research/creparm/src/mutate.cpp
+/home/dustin/Documents/Research/creparm/src/mutate.cpp
 mutate.h
 -
 parameter_group.h
@@ -320,13 +320,13 @@ algorithm
 gaussian.h
 -
 
-/Users/dustin/Documents/research/creparm/src/parameter_group.cpp
+/home/dustin/Documents/Research/creparm/src/parameter_group.cpp
 parameter_group.h
 -
 parameters.h
 -
 
-/Users/dustin/Documents/research/creparm/src/parameters.cpp
+/home/dustin/Documents/Research/creparm/src/parameters.cpp
 parameters.h
 -
 iostream
@@ -340,7 +340,7 @@ chrono
 random
 -
 
-/Users/dustin/Documents/research/creparm/src/reparm_data.cpp
+/home/dustin/Documents/Research/creparm/src/reparm_data.cpp
 reparm_data.h
 -
 system_tools.hpp
@@ -362,7 +362,7 @@ gaussian.h
 fstream
 -
 
-/Users/dustin/Documents/research/creparm/src/reparm_input.cpp
+/home/dustin/Documents/Research/creparm/src/reparm_input.cpp
 reparm_input.h
 -
 iostream
@@ -374,7 +374,7 @@ fstream
 regex
 -
 
-/Users/dustin/Documents/research/creparm/src/survivor.cpp
+/home/dustin/Documents/Research/creparm/src/survivor.cpp
 survivor.h
 -
 algorithm
