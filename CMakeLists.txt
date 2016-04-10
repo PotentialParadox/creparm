@@ -1,7 +1,7 @@
 # 3.1 is needed for the set CXX_STANDARD
 cmake_minimum_required (VERSION 3.1)
 set (CMAKE_CXX_STANDARD 11)
-set (CMAKE_CXX_FLAGS "-pthreads")
+set (CMAKE_CXX_FLAGS "-pthread")
 project(reparm)
 # Bring in the headers
 include_directories(include)
