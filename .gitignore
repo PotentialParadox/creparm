@@ -29,3 +29,6 @@
 
 # Vim Backups
 *.swp
+CMakeCache.txt
+Makefile
+reparm
