@@ -47,20 +47,14 @@ int main(){
     fout << "Finished with High Level Theory" << endl;
 
     // Initialize the functors
-    fout << "Ininitializing Fitness" << endl;
     Fitness fitness(reparm_data.population_[0], reparm_data.GetHighLevelOutputs());
-    fout << "Ininitializing Mutate" << endl;
     Mutate mutate(reparm_data, fitness);
-    fout << "Ininitializing Survivor" << endl;
     Survivor survivor(reparm_data);
-    fout << "Ininitializing Breed" << endl;
     Breed breed(reparm_data);
-    fout << "Ininitializing Clone" << endl;
     AristocraticCloning aristocratic_clone(reparm_data, fitness);
 
     // Index starts at one, guarenteeing that at least member is at least as good as
     // the user's input
-    fout << "Mutating" << endl;
     mutate(reparm_data.population_, 1, reparm_data.GetReparmInput().GetPopulationSize());
 
     // ******* Begin the main loop *********
@@ -81,8 +75,8 @@ int main(){
     }
   }
   catch(const char *e){
-    cerr << "An Error was Found" << endl;
-    cerr << e << endl;
+    fout << "An Error was Found" << endl;
+    fout << e << endl;
   }
   // Create a function for this
   reparm_data.RunBest();

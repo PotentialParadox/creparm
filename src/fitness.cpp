@@ -207,10 +207,10 @@ reparm::Fitness::Fitness(const reparm::ParameterGroup &param_group,
   : high_level_outputs_{high_level_outputs}
 {
   original_e_fitness_ = EnergyFitness(param_group, high_level_outputs_);
-  original_d_fitness_ = DipoleFitness(param_group, high_level_outputs_);
-  original_es_fitness_ = ExcitedStateFitness(param_group, high_level_outputs_);
-  original_f_fitness_ = ForceFitness(param_group, high_level_outputs_);
-  original_ir_fitness_ = IRSpecFitness(param_group, high_level_outputs_);
+  //original_d_fitness_ = DipoleFitness(param_group, high_level_outputs_);
+  //original_es_fitness_ = ExcitedStateFitness(param_group, high_level_outputs_);
+  //original_f_fitness_ = ForceFitness(param_group, high_level_outputs_);
+  //original_ir_fitness_ = IRSpecFitness(param_group, high_level_outputs_);
 } 
 
 std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_group) const{
@@ -221,23 +221,23 @@ std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_grou
     ss << "Energy Fitness: ";
     ss << e_fitness << std::endl;
 
-    double d_fitness = (DipoleFitness(param_group, high_level_outputs_) / original_d_fitness_);
-    ss << "Dipole Fitness: ";
-    ss << d_fitness << std::endl;
+    //double d_fitness = (DipoleFitness(param_group, high_level_outputs_) / original_d_fitness_);
+    //ss << "Dipole Fitness: ";
+    //ss << d_fitness << std::endl;
 
-    double es_fitness = (ExcitedStateFitness(param_group, high_level_outputs_) / 
-                         original_es_fitness_);
-    ss << "Excited State Fitness: ";
-    ss << es_fitness << std::endl;
+    //double es_fitness = (ExcitedStateFitness(param_group, high_level_outputs_) / 
+                         //original_es_fitness_);
+    //ss << "Excited State Fitness: ";
+    //ss << es_fitness << std::endl;
 
-    double f_fitness = (ForceFitness(param_group, high_level_outputs_) / 
-                         original_f_fitness_);
-    ss << "Force Fitness: ";
-    ss << f_fitness << std::endl;
+    //double f_fitness = (ForceFitness(param_group, high_level_outputs_) / 
+                         //original_f_fitness_);
+    //ss << "Force Fitness: ";
+    //ss << f_fitness << std::endl;
 
-    double ir_fitness = (IRSpecFitness(param_group, high_level_outputs_) / original_ir_fitness_);
-    ss << "IR Spec Fitness: ";
-    ss << ir_fitness << std::endl;
+    //double ir_fitness = (IRSpecFitness(param_group, high_level_outputs_) / original_ir_fitness_);
+    //ss << "IR Spec Fitness: ";
+    //ss << ir_fitness << std::endl;
 
   }
   catch(const char* e){
@@ -256,10 +256,10 @@ double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
   double ir_fitness = 0;
   try{
     e_fitness = (EnergyFitness(rhs, high_level_outputs_) / original_e_fitness_);
-    d_fitness = (DipoleFitness(rhs, high_level_outputs_) / original_d_fitness_);
-    es_fitness = (ExcitedStateFitness(rhs, high_level_outputs_) / original_es_fitness_);
-    f_fitness = (ForceFitness(rhs, high_level_outputs_) / original_f_fitness_);
-    ir_fitness = (IRSpecFitness(rhs, high_level_outputs_) / original_es_fitness_);
+    //d_fitness = (DipoleFitness(rhs, high_level_outputs_) / original_d_fitness_);
+    //es_fitness = (ExcitedStateFitness(rhs, high_level_outputs_) / original_es_fitness_);
+    //f_fitness = (ForceFitness(rhs, high_level_outputs_) / original_f_fitness_);
+    //ir_fitness = (IRSpecFitness(rhs, high_level_outputs_) / original_es_fitness_);
     double fit_sum = ( e_fitness
                      //+ d_fitness
                      //+ es_fitness
