@@ -1,3 +1,8 @@
+/* Parameter group objects are treated as the indivuals in a genetic algorithm.
+In this program, the parameter values are treated as genes. 
+Since this class is a collection of all inputs with the same gene,
+treating it as an indivual made since.
+Create by Dustin Tracy (dtracy.uf@gmail.com) April 11, 2016 */
 #ifndef PARAMETER_GROUP_H
 #define PARAMETER_GROUP_H
 
