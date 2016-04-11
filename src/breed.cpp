@@ -4,7 +4,7 @@
 #include <random>
 
 void reparm::Breed::operator()(std::vector<reparm::ParameterGroup> &population){
-  if (population.size() != 1){
+  if (population.size() > 1){
     std::vector<reparm::ParameterGroup> child_population;
     int number_parents{static_cast<int>(population.size())};
     for (int i = 0; i < number_elites_; ++i)
