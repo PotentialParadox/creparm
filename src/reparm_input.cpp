@@ -19,13 +19,13 @@ void ReparmInput::ReadInputFile(){
     if(std::regex_search (file, m,  p)){
       this->SetMoleculeName(m[1]);
     }
-    else {throw "Molecule name not found in input";}
+    else {throw "\"Input File:\" not found in input";}
 
     p = "High Level Theory:\\s+(.+)";
     if(std::regex_search (file, m,  p)){
       this->high_level_theory_ = m[1];
     }
-    else {throw "high level theory not specified";}
+    else {throw "\"High Level Theory:\" not found in input";}
 
     p = "Number of Excited States:\\s+(.+)";
     if(std::regex_search (file, m,  p)){
