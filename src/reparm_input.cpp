@@ -14,7 +14,7 @@ void ReparmInput::ReadInputFile(){
       file += line + "\n";
     }
 
-    std::regex p{"Molecule Name:\\s+(.+)"};
+    std::regex p{"Input File:\\s+(.+).com"};
     std::smatch m;
     if(std::regex_search (file, m,  p)){
       this->SetMoleculeName(m[1]);
