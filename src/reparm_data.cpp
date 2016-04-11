@@ -24,14 +24,19 @@ reparm::ReparmData::CreatePopulation(reparm::GaussianInput &input){
   std::stringstream ss;
   ss << reparm_input_.GetNumberExcitedStates();
   std::string ne = ss.str();
-  reparm::Header header{"#P AM1(Input,Print) freq\n\nhi\n"};
+  reparm::Parameters empty_params{""};
+  reparm::Header first_header{"#P AM1(Input,Print) CIS(Singlets,NStates=" + ne + ") pop(full)\n\nhi\n"};
+  reparm::Header second_header{"#P AM1(Input, Print) freq\n\nhi\n"};
   double pert = reparm_input_.GetGeometricPerturbation();
   std::vector<reparm::GaussianInput> inputs;
   for (int i = 0; i != ng; ++i){
-    reparm::GaussianInput in = input;
-    in.SetHeader(header);
-    in.PerturbCoordinates(pert);
-    inputs.push_back(in);
+    reparm::GaussianInput input_es = input;
+    input_es.SetHeader(first_header);
+    input_es.PerturbCoordinates(pert);
+    reparm::GaussianInput input_freq{input_es};
+    input_freq.SetHeader(second_header);
+    input_es.Link(input_freq);
+    inputs.push_back(input_es);
   }
   int ps = reparm_input_.GetPopulationSize();
   for (int i = 0; i != ps; ++i){
