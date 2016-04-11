@@ -70,27 +70,30 @@ reparm::Parameters reparm::GaussianInput::ReadParameters(const std::string &file
 }
 
 void reparm::GaussianInput::SetHeader(const reparm::Header &header){
-  this->header_[0] = header;
+  for (auto &i: this->header_) {i = header;}
 }
 
 void reparm::GaussianInput::SetCoordinates(const reparm::Coordinates &coordinates){
-  this->coordinates_[0] = coordinates;
+  for (auto &i: this->coordinates_) {i = coordinates;}
 }
 
 void reparm::GaussianInput::SetParameters(const reparm::Parameters &parameters){
-  this->parameters_[0] = parameters;
+  for (auto &i : this->parameters_) {i = parameters;}
 }
 
 void reparm::GaussianInput::PerturbCoordinates(const float &p){
   this->coordinates_[0].Perturb(p);
+  for (auto &i: this->coordinates_) {i = coordinates_[0];}
 }
 
 void reparm::GaussianInput::MutateParameters(const double &p, const float &r){
   this->parameters_[0].Mutate(p, r);
+  for (auto &i: this->parameters_) {i = parameters_[0];}
 }
 
 reparm::Parameters reparm::GaussianInput::Cross(const reparm::Parameters &params){
   return parameters_[0].Cross(params);
+  for (auto &i: this->parameters_) {i = parameters_[0];}
 }
 
 reparm::Header reparm::GaussianInput::GetHeader() const{
