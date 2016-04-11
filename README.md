@@ -51,3 +51,11 @@ Survival Chance            0.5
 Geometric Perturbation     0.10
 ```
 The number of elites represent how many members of a generation you want to mutate only if their mutation is an improvement.
+
+With these two files in the directory, simply run reparm
+```
+reparm
+```
+Progress will be kept in a file called reparm.out.
+Once completed, the program will output 4 new files.
+best_freq.com, best_freq.log, best_es.com, best_es.log
