@@ -1,3 +1,7 @@
+/* This is the source file you were looking for.
+Well at least most likely. This file contains the implimentations
+of the objective function of the genetic algorithm.
+Created by Dustin Tracy (dtracy.uf@gmail.com) April 11, 2016 */
 #include <fitness.h>
 #include <vector>
 #include <iostream>
@@ -5,17 +9,27 @@
 #include <cmath>
 #include <sstream>
 
+
+/* ============================================
+   Math Functions
+   ==========================================*/
+
 double Average(std::vector<double> &a);
 double RMS(const std::vector<double> &a,const std::vector<double> &b);
 double AverageRMS(const std::vector<std::vector<double> > &a,
                   const std::vector<std::vector<double> > &b);
 double Distance(std::vector<double> s1, std::vector<double> s2);
-double MergeDistance(const std::vector<double> &a, const std::vector<double> &b);
-double SpecDistance(std::vector<std::vector<double> > &a,
-                    std::vector<std::vector<double> > &b);
+/* returns the differnces of the values of the vector.
+   example <1, 4, 9> -> <3, 5> */
 std::vector<double> Differences(const std::vector<double> v);
 double AverageRMSDifferences(const std::vector<std::vector<double> > &a,
                              const std::vector<std::vector<double> > &b);
+double Average3dDistance(std::vector<double> a, std::vector<double> b);
+double AverageForceDistance(std::vector<std::vector<double> > a,
+                            std::vector<std::vector<double> > b);
+/* ============================================
+   Objective Functions
+   ==========================================*/
 double EnergyFitness(const reparm::ParameterGroup &param_group,
                      const std::vector<reparm::GaussianOutput> &high_level_outputs);
 double DipoleFitness(const reparm::ParameterGroup &param_group,
@@ -24,11 +38,93 @@ double ExcitedStateFitness(const reparm::ParameterGroup &param_group,
                            const std::vector<reparm::GaussianOutput> &high_level_outputs);
 double IRSpecFitness(const reparm::ParameterGroup &param_group,
                      const std::vector<reparm::GaussianOutput> &high_level_outputs);
-double Average3dDistance(std::vector<double> a, std::vector<double> b);
-double AverageForceDistance(std::vector<std::vector<double> > a,
-                            std::vector<std::vector<double> > b);
 double ForceFitness(const reparm::ParameterGroup &param_group,
                     const std::vector<reparm::GaussianOutput> &high_level_outputs);
+
+/* ============================================
+   Member Functions
+   ==========================================*/
+
+reparm::Fitness::Fitness(const reparm::ParameterGroup &param_group,
+                         const std::vector<reparm::GaussianOutput> &high_level_outputs)
+  : high_level_outputs_{high_level_outputs}
+{
+  original_e_fitness_ = EnergyFitness(param_group, high_level_outputs_);
+  original_d_fitness_ = DipoleFitness(param_group, high_level_outputs_);
+  //original_es_fitness_ = ExcitedStateFitness(param_group, high_level_outputs_);
+  //original_f_fitness_ = ForceFitness(param_group, high_level_outputs_);
+  //original_ir_fitness_ = IRSpecFitness(param_group, high_level_outputs_);
+} 
+
+std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_group) const{
+  std::stringstream ss;
+
+  try{
+    double e_fitness = (EnergyFitness(param_group, high_level_outputs_) / original_e_fitness_);
+    ss << "Energy Fitness: ";
+    ss << e_fitness << std::endl;
+
+    double d_fitness = (DipoleFitness(param_group, high_level_outputs_) / original_d_fitness_);
+    ss << "Dipole Fitness: ";
+    ss << d_fitness << std::endl;
+
+    //double es_fitness = (ExcitedStateFitness(param_group, high_level_outputs_) / 
+                         //original_es_fitness_);
+    //ss << "Excited State Fitness: ";
+    //ss << es_fitness << std::endl;
+
+    //double f_fitness = (ForceFitness(param_group, high_level_outputs_) / 
+                         //original_f_fitness_);
+    //ss << "Force Fitness: ";
+    //ss << f_fitness << std::endl;
+
+    //double ir_fitness = (IRSpecFitness(param_group, high_level_outputs_) / original_ir_fitness_);
+    //ss << "IR Spec Fitness: ";
+    //ss << ir_fitness << std::endl;
+
+  }
+  catch(const char* e){
+    std::cout << "Ignoring Step" << std::endl;
+  }
+
+  return ss.str();
+}
+
+double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
+  double fitness;
+  double e_fitness = 0;
+  double d_fitness = 0;
+  double es_fitness = 0;
+  double f_fitness = 0;
+  double ir_fitness = 0;
+  try{
+    e_fitness = (EnergyFitness(rhs, high_level_outputs_) / original_e_fitness_);
+    d_fitness = (DipoleFitness(rhs, high_level_outputs_) / original_d_fitness_);
+    //es_fitness = (ExcitedStateFitness(rhs, high_level_outputs_) / original_es_fitness_);
+    //f_fitness = (ForceFitness(rhs, high_level_outputs_) / original_f_fitness_);
+    //ir_fitness = (IRSpecFitness(rhs, high_level_outputs_) / original_es_fitness_);
+    double fit_sum = (
+		     e_fitness
+                     + d_fitness
+                     //+ es_fitness
+                     //+ f_fitness
+                     //+ ir_fitness
+                     );
+    fitness = (
+                (e_fitness / fit_sum) * e_fitness 
+                + (d_fitness / fit_sum) * d_fitness 
+                //+ (es_fitness / fit_sum) * es_fitness
+                //+ (f_fitness / fit_sum) * f_fitness
+                //+ (ir_fitness / fit_sum) * ir_fitness
+              );
+  }
+  catch(const char* e){
+    std::cout << e << std::endl;
+    fitness = 10;
+  }
+  rhs.SetFitness(fitness);
+  return fitness;
+}
 
 double Average(std::vector<double> &a){
   double value{0.0};
@@ -63,26 +159,6 @@ double Distance(std::vector<double> s1, std::vector<double> s2){
   for (size_t i = 0; i != s1.size(); ++i)
     sum += std::pow(s1[i] - s2[i], 2); 
   return std::sqrt(sum);
-}
-
-double MergeDistance(const std::vector<double> &a, const std::vector<double> &b){
-  double distance = 0;
-  for (size_t i = 0; i != a.size(); i += 2){
-    std::vector<double> s1{a[i], a[i+1]}; 
-    std::vector<double> s2{b[i], b[i+1]};
-    distance += Distance(s1, s2);
-  }
-  return distance / static_cast<double>(a.size());
-}
-
-double SpecDistance(std::vector<std::vector<double> > &a,
-                    std::vector<std::vector<double> > &b){
-  if (a.size() != b.size())
-    throw "Spectra Fit Error";
-  double distance = 0;
-  for (size_t i = 0; i != a.size(); ++i)
-    distance += MergeDistance(a[i], b[i]);
-  return distance / static_cast<double>(a.size());
 }
 
 double AverageRMSDifferences(const std::vector<std::vector<double> > &a,
@@ -200,85 +276,4 @@ double ForceFitness(const reparm::ParameterGroup &param_group,
   for (const auto &i: high_level_outputs)
     hlt_forces.push_back(i.GetForces());
   return AverageForceDistance(am1_forces, hlt_forces);
-}
-
-reparm::Fitness::Fitness(const reparm::ParameterGroup &param_group,
-                         const std::vector<reparm::GaussianOutput> &high_level_outputs)
-  : high_level_outputs_{high_level_outputs}
-{
-  original_e_fitness_ = EnergyFitness(param_group, high_level_outputs_);
-  original_d_fitness_ = DipoleFitness(param_group, high_level_outputs_);
-  //original_es_fitness_ = ExcitedStateFitness(param_group, high_level_outputs_);
-  //original_f_fitness_ = ForceFitness(param_group, high_level_outputs_);
-  //original_ir_fitness_ = IRSpecFitness(param_group, high_level_outputs_);
-} 
-
-std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_group) const{
-  std::stringstream ss;
-
-  try{
-    double e_fitness = (EnergyFitness(param_group, high_level_outputs_) / original_e_fitness_);
-    ss << "Energy Fitness: ";
-    ss << e_fitness << std::endl;
-
-    double d_fitness = (DipoleFitness(param_group, high_level_outputs_) / original_d_fitness_);
-    ss << "Dipole Fitness: ";
-    ss << d_fitness << std::endl;
-
-    //double es_fitness = (ExcitedStateFitness(param_group, high_level_outputs_) / 
-                         //original_es_fitness_);
-    //ss << "Excited State Fitness: ";
-    //ss << es_fitness << std::endl;
-
-    //double f_fitness = (ForceFitness(param_group, high_level_outputs_) / 
-                         //original_f_fitness_);
-    //ss << "Force Fitness: ";
-    //ss << f_fitness << std::endl;
-
-    //double ir_fitness = (IRSpecFitness(param_group, high_level_outputs_) / original_ir_fitness_);
-    //ss << "IR Spec Fitness: ";
-    //ss << ir_fitness << std::endl;
-
-  }
-  catch(const char* e){
-    std::cout << "Ignoring Step" << std::endl;
-  }
-
-  return ss.str();
-}
-
-double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
-  double fitness;
-  double e_fitness = 0;
-  double d_fitness = 0;
-  double es_fitness = 0;
-  double f_fitness = 0;
-  double ir_fitness = 0;
-  try{
-    e_fitness = (EnergyFitness(rhs, high_level_outputs_) / original_e_fitness_);
-    d_fitness = (DipoleFitness(rhs, high_level_outputs_) / original_d_fitness_);
-    //es_fitness = (ExcitedStateFitness(rhs, high_level_outputs_) / original_es_fitness_);
-    //f_fitness = (ForceFitness(rhs, high_level_outputs_) / original_f_fitness_);
-    //ir_fitness = (IRSpecFitness(rhs, high_level_outputs_) / original_es_fitness_);
-    double fit_sum = (
-		     e_fitness
-                     + d_fitness
-                     //+ es_fitness
-                     //+ f_fitness
-                     //+ ir_fitness
-                     );
-    fitness = (
-                (e_fitness / fit_sum) * e_fitness 
-                + (d_fitness / fit_sum) * d_fitness 
-                //+ (es_fitness / fit_sum) * es_fitness
-                //+ (f_fitness / fit_sum) * f_fitness
-                //+ (ir_fitness / fit_sum) * ir_fitness
-              );
-  }
-  catch(const char* e){
-    std::cout << e << std::endl;
-    fitness = 10;
-  }
-  rhs.SetFitness(fitness);
-  return fitness;
 }

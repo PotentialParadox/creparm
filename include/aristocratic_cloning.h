@@ -1,3 +1,8 @@
+/* Slightly mutated clones of the elites are created.
+Since elites are notoriously narcissistic, the clones rebel.
+The members of the pairs of host and clone that are most fit
+survive.
+Created by Dustin Tracy (dtracy.uf@gmail.com) April 11, 2016 */
 #ifndef ARISTOCRATIC_CLONING_H
 #define ARISTOCRATIC_CLONING_H
 
