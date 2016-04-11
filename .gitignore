@@ -31,3 +31,6 @@ test
 
 # Vim Backups
 *.swp
+
+# Emacs
+*~
