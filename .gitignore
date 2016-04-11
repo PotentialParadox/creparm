@@ -1,6 +1,6 @@
 # Compiled Object files
-bin/
-test/
+bin
+test
 *.slo
 *.lo
 *.o
