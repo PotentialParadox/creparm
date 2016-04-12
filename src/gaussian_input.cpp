@@ -3,7 +3,6 @@
 #include <iostream>
 #include <fstream>
 
-
 reparm::GaussianInput::GaussianInput(const std::string &s){
   try{
   std::string file{ReadFile(s)};
@@ -70,14 +69,20 @@ reparm::Parameters reparm::GaussianInput::ReadParameters(const std::string &file
 }
 
 void reparm::GaussianInput::SetHeader(const reparm::Header &header){
+  if (header_.empty())
+    header_.push_back(header);
   for (auto &i: this->header_) {i = header;}
 }
 
 void reparm::GaussianInput::SetCoordinates(const reparm::Coordinates &coordinates){
+  if (coordinates_.empty())
+    coordinates_.push_back(coordinates);
   for (auto &i: this->coordinates_) {i = coordinates;}
 }
 
 void reparm::GaussianInput::SetParameters(const reparm::Parameters &parameters){
+  if (parameters_.empty())
+    parameters_.push_back(parameters);
   for (auto &i : this->parameters_) {i = parameters;}
 }
 
