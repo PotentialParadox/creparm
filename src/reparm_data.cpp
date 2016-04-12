@@ -53,16 +53,20 @@ void reparm::ReparmData::CalculateHighLevel(){
   reparm::Parameters empty_params{""};
   reparm::Header first_header{"#P " + hlt + " CIS(Singlets,NStates=" + ne + ") pop(full)\n\nhi\n"};
   reparm::Header second_header{"#P " + hlt + " freq\n\nhi\n"};
-  reparm::ParameterGroup hlgroup{population_[0]};
-  std::vector<reparm::GaussianInput> inputs{hlgroup.GetInputs()};
-  for (auto &&i: inputs){
-    i.SetHeader(first_header);
-    i.SetParameters(empty_params);
-    reparm::GaussianInput freq{i};
+  reparm::ParameterGroup am1_group{population_[0]};
+  std::vector<reparm::GaussianInput> am1_inputs = am1_group.GetInputs();
+  std::vector<reparm::GaussianInput> hlt_inputs;
+  for (auto &&i: am1_inputs){
+    reparm::GaussianInput hlt_input;
+    hlt_input.SetHeader(first_header);
+    hlt_input.SetCoordinates(i.GetCoordinates());
+    hlt_input.SetParameters(empty_params);
+    reparm::GaussianInput freq{hlt_input};
     freq.SetHeader(second_header);
-    i.Link(freq);
+    hlt_input.Link(freq);
+    hlt_inputs.push_back(hlt_input);
   }
-  hlgroup.SetInputs(inputs);
+  reparm::ParameterGroup hlgroup{hlt_inputs};
   reparm::Gaussian gaussian{hlgroup};
   try{
     high_level_outputs_ = gaussian.RunGaussian();
