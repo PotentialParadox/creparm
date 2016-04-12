@@ -223,8 +223,7 @@ double ExcitedStateFitness(const reparm::ParameterGroup &param_group,
   std::vector<std::vector<double> > hlt_excited_states;
   for (const auto &i: high_level_outputs)
     hlt_excited_states.push_back(i.GetExcitedStates());
-  // return AverageRMSDifferences(am1_excited_states, hlt_excited_states);
-  return 1;
+  return AverageRMSDifferences(am1_excited_states, hlt_excited_states);
 }
 
 double IRSpecFitness(const reparm::ParameterGroup &param_group,
