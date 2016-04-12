@@ -91,7 +91,7 @@ std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_grou
 }
 
 double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
-  double fitness;
+  double fitness = 0;
   double e_fitness = 0;
   double d_fitness = 0;
   // double es_fitness = 0;
@@ -102,7 +102,7 @@ double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
     d_fitness = (DipoleFitness(rhs, high_level_outputs_) / original_d_fitness_);
     // es_fitness = (ExcitedStateFitness(rhs, high_level_outputs_) / original_es_fitness_);
     f_fitness = (ForceFitness(rhs, high_level_outputs_) / original_f_fitness_);
-    ir_fitness = (IRSpecFitness(rhs, high_level_outputs_) / original_es_fitness_);
+    ir_fitness = (IRSpecFitness(rhs, high_level_outputs_) / original_ir_fitness_);
     double fit_sum = (
 		     e_fitness
                      + d_fitness
