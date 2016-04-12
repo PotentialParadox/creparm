@@ -25,6 +25,7 @@ class GaussianInput{
     std::vector<reparm::Parameters> parameters_;
 
   public:
+    GaussianInput(){};
     GaussianInput(const std::string&);
 
     std::string ReadFile(const std::string&) const;
