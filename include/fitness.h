@@ -14,16 +14,19 @@ class Fitness{
   friend class Mutate;
 
   private:
-    double original_e_fitness_;  // Energy Fitness
-    double original_d_fitness_;  // Dipole Fitness
-    double original_es_fitness_; // Excited State Fitness
-    double original_f_fitness_;  // Force Fitness
-    double original_ir_fitness_; // IR Spectra Fitness
     std::vector<reparm::GaussianOutput> high_level_outputs_;
+    double energy_sigma_;  // Energy Fitness
+    double dipole_average_sigma_;  // Dipole Fitness
+    double EnergyFitness(const reparm::ParameterGroup &param_group) const;
+    double DipoleAverageFitness(const reparm::ParameterGroup &param_group) const;
+    double ExcitedStateFitness(const reparm::ParameterGroup &param_group) const;
+    double IRSpecFitness(const reparm::ParameterGroup &param_group) const;
+    double ForceFitness(const reparm::ParameterGroup &param_group) const;
+    
     Fitness(){};
 
   public:
-    Fitness(const ParameterGroup &population,
+    Fitness(const std::vector<reparm::ParameterGroup> &population,
             const std::vector<reparm::GaussianOutput> &high_level_outputs);
 
     std::string StringList(const reparm::ParameterGroup &param_group) const;

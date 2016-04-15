@@ -47,7 +47,7 @@ int main(){
     fout << "Finished with High Level Theory" << endl;
 
     // Initialize the functors
-    Fitness fitness(reparm_data.population_[0], reparm_data.GetHighLevelOutputs());
+    Fitness fitness(reparm_data.population_, reparm_data.GetHighLevelOutputs());
     Mutate mutate(reparm_data, fitness);
     Survivor survivor(reparm_data);
     Breed breed(reparm_data);
