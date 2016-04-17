@@ -41,7 +41,16 @@ reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
   : high_level_outputs_{high_level_outputs}
   , energy_sigma_{0.0}
   , dipole_average_sigma_{0.0}
-    {}
+    {
+      std::vector<double> energy_values;
+      for (const auto &i: population)
+	energy_values.emplace_back(EnergyFitness(i));
+      energy_sigma_ = dmath::STDEV(energy_values.begin(), energy_values.end());
+      // std::vector<double> dipole_avg_vals;
+      // for (const auto &i: population)
+      // 	dipole_avg_vals.emplace_back(DipoleAverageFitness(i));
+      // dipole_average_sigma_ = dmath::STDEV(dipole_avg_vals.begin(), dipole_avg_vals.end());
+    }
 
 std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_group) const{
   std::stringstream ss;

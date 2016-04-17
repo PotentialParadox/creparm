@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <parameter_group.h>
+#include <functional>
 
 namespace reparm{
 
@@ -22,6 +23,10 @@ class Fitness{
     double ExcitedStateFitness(const reparm::ParameterGroup &param_group) const;
     double IRSpecFitness(const reparm::ParameterGroup &param_group) const;
     double ForceFitness(const reparm::ParameterGroup &param_group) const;
+    double FindSTDEV(const reparm::Fitness&,
+		     const std::vector<reparm::ParameterGroup> &population,
+		     const std::function<double (const reparm::ParameterGroup)>&);
+		      
     
     Fitness(){};
 
