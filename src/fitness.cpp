@@ -123,7 +123,7 @@ void reparm::Fitness::operator () (std::vector<reparm::ParameterGroup> &rhs) con
       d_fitness = DipoleAverageFitness(i);
       fitness = (
 		 e_fitness / energy_sigma_
-		 + d_fitness
+		 + d_fitness / dipole_average_sigma_
 		 );
     }
     catch(const char* e){
