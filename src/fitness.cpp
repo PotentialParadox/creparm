@@ -44,7 +44,7 @@ double reparm::Fitness::DipoleAverageFitness
   }
   for (auto &i: am1_average) i /= static_cast<double>(am1_dipoles.size());
   std::vector<std::vector<double> > hlt_dipoles;
-  for (auto &i: param_group.GetOutputs())
+  for (auto &i: high_level_outputs_)
     hlt_dipoles.push_back(i.GetDipole());
   std::vector<double> hlt_average(3);
   for (auto &i: hlt_dipoles){
@@ -53,7 +53,8 @@ double reparm::Fitness::DipoleAverageFitness
     }
   }
   for (auto &i: hlt_average) i /= static_cast<double>(hlt_dipoles.size());
-  return 0.0;
+  return dmath::Distance(am1_average.begin(), am1_average.end(),
+			 hlt_average.begin());
 }
 
 reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
@@ -101,7 +102,7 @@ double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
     d_fitness = DipoleAverageFitness(rhs);
     fitness = (
 	       e_fitness / energy_sigma_
-               + d_fitness
+               + d_fitness / dipole_average_sigma_
               );
   }
   catch(const char* e){
