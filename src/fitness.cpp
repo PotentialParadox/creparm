@@ -33,7 +33,27 @@ double reparm::Fitness::EnergyFitness
 
 double reparm::Fitness::DipoleAverageFitness
 (const reparm::ParameterGroup &param_group)const{
-  return 1;
+  std::vector<std::vector<double> > am1_dipoles;
+  for (auto &i: param_group.GetOutputs())
+    am1_dipoles.push_back(i.GetDipole());
+  std::vector<double> am1_average(3);
+  for (auto &i: am1_dipoles){
+    for (size_t j = 0; j != i.size(); ++j){
+      am1_average[j] += i[j];
+    }
+  }
+  for (auto &i: am1_average) i /= static_cast<double>(am1_dipoles.size());
+  std::vector<std::vector<double> > hlt_dipoles;
+  for (auto &i: param_group.GetOutputs())
+    hlt_dipoles.push_back(i.GetDipole());
+  std::vector<double> hlt_average(3);
+  for (auto &i: hlt_dipoles){
+    for (size_t j = 0; j != i.size(); ++j){
+      hlt_average[j] += i[j];
+    }
+  }
+  for (auto &i: hlt_average) i /= static_cast<double>(hlt_dipoles.size());
+  return 0.0;
 }
 
 reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
@@ -46,10 +66,10 @@ reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
       for (const auto &i: population)
 	energy_values.emplace_back(EnergyFitness(i));
       energy_sigma_ = dmath::STDEV(energy_values.begin(), energy_values.end());
-      // std::vector<double> dipole_avg_vals;
-      // for (const auto &i: population)
-      // 	dipole_avg_vals.emplace_back(DipoleAverageFitness(i));
-      // dipole_average_sigma_ = dmath::STDEV(dipole_avg_vals.begin(), dipole_avg_vals.end());
+      std::vector<double> dipole_avg_vals;
+      for (const auto &i: population)
+      	dipole_avg_vals.emplace_back(DipoleAverageFitness(i));
+      dipole_average_sigma_ = dmath::STDEV(dipole_avg_vals.begin(), dipole_avg_vals.end());
     }
 
 std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_group) const{
@@ -62,7 +82,7 @@ std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_grou
 
     double dipole_average_fitness = DipoleAverageFitness(param_group);
     ss << "Dipole Fitness: ";
-    ss << dipole_average_fitness << std::endl;
+    ss << dipole_average_fitness / dipole_average_sigma_ << std::endl;
 
   }
   catch(const char* e){
