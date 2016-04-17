@@ -80,8 +80,8 @@ double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
     e_fitness = EnergyFitness(rhs);
     d_fitness = DipoleAverageFitness(rhs);
     fitness = (
-                e_fitness
-                + d_fitness
+	       e_fitness / energy_sigma_
+               + d_fitness
               );
   }
   catch(const char* e){
@@ -101,7 +101,7 @@ void reparm::Fitness::operator () (std::vector<reparm::ParameterGroup> &rhs) con
       e_fitness = EnergyFitness(i);
       d_fitness = DipoleAverageFitness(i);
       fitness = (
-		 e_fitness
+		 e_fitness / energy_sigma_
 		 + d_fitness
 		 );
     }
