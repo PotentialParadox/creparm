@@ -36,6 +36,7 @@ class Fitness{
 
     std::string StringList(const reparm::ParameterGroup &param_group) const;
     double operator () (reparm::ParameterGroup &rhs) const;
+    void operator () (std::vector<reparm::ParameterGroup> &rhs) const;
 };
 
 }

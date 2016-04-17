@@ -26,8 +26,8 @@ double reparm::Fitness::EnergyFitness
     throw "Energy vectors are not the same size";
   /* Convert to Differences */
   auto hlt_differences = dmath::Difference<double>(hlt_energies.begin(), hlt_energies.end());
-  auto distance = dmath::Distance(am1_energies.begin(), am1_energies.end(),
-				  hlt_energies.begin());
+  auto distance = dmath::Distance(am1_differences.begin(), am1_differences.end(),
+				  hlt_differences.begin());
   return std::sqrt(distance/am1_energies.size());
 }
 
@@ -58,7 +58,7 @@ std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_grou
   try{
     double energy_fitness = EnergyFitness(param_group);
     ss << "Energy Fitness: ";
-    ss << energy_fitness << std::endl;
+    ss << energy_fitness / energy_sigma_ << std::endl;
 
     double dipole_average_fitness = DipoleAverageFitness(param_group);
     ss << "Dipole Fitness: ";
@@ -90,4 +90,26 @@ double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
   }
   rhs.SetFitness(fitness);
   return fitness;
+}
+
+void reparm::Fitness::operator () (std::vector<reparm::ParameterGroup> &rhs) const{
+  for (auto &i: rhs){
+    double fitness = 0;
+    double e_fitness = 0;
+    double d_fitness = 0;
+    try{
+      e_fitness = EnergyFitness(i);
+      d_fitness = DipoleAverageFitness(i);
+      fitness = (
+		 e_fitness
+		 + d_fitness
+		 );
+    }
+    catch(const char* e){
+      std::cout << e << std::endl;
+      fitness = 10;
+    }
+    i.SetFitness(fitness);
+  }
+  sort(rhs.begin(), rhs.end());
 }
