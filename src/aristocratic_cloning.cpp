@@ -17,9 +17,11 @@ reparm::AristocraticCloning::AristocraticCloning(reparm::ReparmData &reparm_data
   mutate_ = mutate;
 }
 
-void reparm::AristocraticCloning::operator()(std::vector<reparm::ParameterGroup> & population){
+void reparm::AristocraticCloning::operator()(std::vector<reparm::ParameterGroup> & population
+					     , reparm::Fitness& fitness){
   auto clones = population;
   mutate_(clones, 0, number_elites_);
+  fitness(clones);
   for (size_t i = 0; i < population.size(); ++i)
     if (!(population[i] < clones[i]))
       population[i] = clones[i];

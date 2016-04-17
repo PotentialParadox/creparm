@@ -23,7 +23,7 @@ class AristocraticCloning{
   public:
     AristocraticCloning(reparm::ReparmData&);
 
-    void operator () (std::vector<reparm::ParameterGroup>&);
+    void operator () (std::vector<reparm::ParameterGroup>&, reparm::Fitness&);
 
 };
 
