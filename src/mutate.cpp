@@ -20,9 +20,7 @@ void reparm::Mutate::operator()(std::vector<reparm::ParameterGroup> &population)
       *it = backup;
     }
     it->SetOutputs(gouts);
-    fitness_(*it);
   }
-  std::sort(population.begin(), population.end());
 }
 
 void reparm::Mutate::operator()(std::vector<reparm::ParameterGroup> &population,
@@ -45,8 +43,6 @@ void reparm::Mutate::operator()(std::vector<reparm::ParameterGroup> &population,
       *it = backup;
     }
     it->SetOutputs(gouts);
-    fitness_(*it);
   }
-  std::sort(population.begin(), population.end());
 }
 

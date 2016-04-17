@@ -19,15 +19,13 @@ private:
   double mutation_rate_;
   double mutation_perturbation_;
   int number_elites_;
-  reparm::Fitness fitness_;
   Mutate(){};
 
 public:
-  Mutate(reparm::ReparmData reparm_data, reparm::Fitness fitness)
+  Mutate(reparm::ReparmData reparm_data)
     : mutation_rate_{reparm_data.GetReparmInput().GetMutationRate()}
     , mutation_perturbation_{reparm_data.GetReparmInput().GetMutationPerturbations()}
     , number_elites_{reparm_data.GetReparmInput().GetNumberElites()}
-    , fitness_{fitness}
   {}
 
   void operator () (std::vector<reparm::ParameterGroup> &population);

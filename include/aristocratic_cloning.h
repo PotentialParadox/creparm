@@ -21,7 +21,7 @@ class AristocraticCloning{
     reparm::Mutate mutate_;
 
   public:
-    AristocraticCloning(reparm::ReparmData&, const reparm::Fitness&);
+    AristocraticCloning(reparm::ReparmData&);
 
     void operator () (std::vector<reparm::ParameterGroup>&);
 

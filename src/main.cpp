@@ -47,15 +47,18 @@ int main(){
     fout << "Finished with High Level Theory" << endl;
 
     // Initialize the functors
-    Fitness fitness(reparm_data.population_, reparm_data.GetHighLevelOutputs());
-    Mutate mutate(reparm_data, fitness);
+    Mutate mutate(reparm_data);
     Survivor survivor(reparm_data);
     Breed breed(reparm_data);
-    AristocraticCloning aristocratic_clone(reparm_data, fitness);
+    AristocraticCloning aristocratic_clone(reparm_data);
 
     // Index starts at one, guarenteeing that at least member is at least as good as
     // the user's input
     mutate(reparm_data.population_, 1, reparm_data.GetReparmInput().GetPopulationSize());
+
+
+    Fitness fitness(reparm_data.population_, reparm_data.GetHighLevelOutputs());
+
 
     // ******* Begin the main loop *********
     double best_fitness = 1;

@@ -1,8 +1,7 @@
 #include <iostream>
 #include <aristocratic_cloning.h>
 
-reparm::AristocraticCloning::AristocraticCloning(reparm::ReparmData &reparm_data,
-                                                 const reparm::Fitness &fitness)
+reparm::AristocraticCloning::AristocraticCloning(reparm::ReparmData &reparm_data)
   : number_elites_{reparm_data.GetReparmInput().GetNumberElites()}
 {
   // How much smaller we want the mutation rate to be
@@ -14,7 +13,7 @@ reparm::AristocraticCloning::AristocraticCloning(reparm::ReparmData &reparm_data
   reparm::ReparmData reparm_mod{reparm_data};
   reparm_data.GetReparmInput().SetMutationRate(mutation_rate);
   reparm_data.GetReparmInput().SetMutationPerturbation(mutation_perturbation);
-  reparm::Mutate mutate{reparm_mod, fitness};
+  reparm::Mutate mutate{reparm_mod};
   mutate_ = mutate;
 }
 
