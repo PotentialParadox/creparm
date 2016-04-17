@@ -66,7 +66,7 @@ int main(){
 
       fout << "Step: " << i << endl;
       survivor(reparm_data.population_);
-      aristocratic_clone(reparm_data.population_);
+      aristocratic_clone(reparm_data.population_, fitness);
       fitness(reparm_data.population_);
       breed(reparm_data.population_);
       mutate(reparm_data.population_);
