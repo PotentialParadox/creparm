@@ -64,7 +64,7 @@ int main(){
     double original_fitness = fitness(reparm_data.population_[0]);
     double best_fitness = original_fitness;
     fout << "Original Fitness" << endl;
-    fout << fitness.StringList(reparm_data.population_[0]);
+    fout << fitness.StringList(reparm_data.population_[0]) << endl;
     for (int i = 0; i < reparm_data.GetReparmInput().GetNumberGenerations(); ++i){
 
       fout << "Step: " << i << endl;
@@ -79,7 +79,7 @@ int main(){
         fout << "New Best Fitness Found at Step " << i <<  endl;
         fout << fitness.StringList(reparm_data.population_[0]) << endl;
         best_fitness = reparm_data.population_[0].GetFitness();
-	fout << "Total Fitness: " << best_fitness / original_fitness << endl;
+	fout << "Total Fitness: " << best_fitness / original_fitness << "\n" << endl;
       }
     }
   }
