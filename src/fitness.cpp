@@ -71,7 +71,7 @@ double reparm::Fitness::DipoleDifferenceFitness
   auto it = am1_dipoles.begin();
   auto it1 = next(it, 1);
   auto end = am1_dipoles.end();
-  for (; it != end; ++it, ++it1){
+  for (; it1 != end; ++it, ++it1){
     am1_differences.emplace_back(dmath::VectorDifference<double>(
 								 it->begin(),
 								 it->end(),
@@ -87,7 +87,7 @@ double reparm::Fitness::DipoleDifferenceFitness
   it = hlt_dipoles.begin();
   it1 = next(it, 1);
   end = hlt_dipoles.end();
-  for (; it != end; ++it, ++it1){
+  for (; it1 != end; ++it, ++it1){
     hlt_differences.emplace_back(dmath::VectorDifference<double>(
 								 it->begin(),
 								 it->end(),
@@ -106,8 +106,7 @@ double reparm::Fitness::DipoleDifferenceFitness
     distances.emplace_back(dmath::Distance(it->begin(), it->end(), it1->begin()));
   }
   auto average = dmath::Average(distances.begin(), distances.end());
-  std::cout << "Dipole_Average_Fitness: " << average << std::endl;
-  return 1;
+  return average;
 }
 
 reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
