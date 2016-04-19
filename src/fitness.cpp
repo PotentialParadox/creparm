@@ -122,12 +122,23 @@ reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
   , dipole_average_sigma_{0.0}
     {
       std::vector<double> energy_values;
-      for (const auto &i: population)
-	energy_values.emplace_back(EnergyFitness(i));
+      for (const auto &i: population){
+	try{
+	  auto energy = EnergyFitness(i);
+	  energy_values.push_back(energy);
+	}catch(...){}
+      }
+      if (energy_values.size() <= 1)
+	throw "Not enough energies. Try lowering the mutation rate.";
       energy_sigma_ = dmath::STDEV(energy_values.begin(), energy_values.end());
       std::vector<double> dipole_avg_vals;
       for (const auto &i: population)
-      	dipole_avg_vals.emplace_back(DipoleAverageFitness(i));
+	try{
+	  auto dipole = DipoleAverageFitness(i);
+	  dipole_avg_vals.push_back(dipole);
+	}catch(...){}
+      if (dipole_avg_vals.size() <= 1)
+	throw "Not enough dipoles. Try lowering the mutation rate.";
       dipole_average_sigma_ = dmath::STDEV(dipole_avg_vals.begin(), dipole_avg_vals.end());
     }
 
