@@ -15,6 +15,8 @@ namespace dmath{
   //////////////////////////////////////////////
   template <typename Iter>
     double Average(Iter it, Iter end){
+    if (it == end)
+      throw "Cannot perform Average on empty container";
     double sum{0.0};
     int count{0};
     for (; it != end; ++it){
@@ -31,6 +33,8 @@ namespace dmath{
   //////////////////////////////////////////////
   template <typename Iter>
     double STDEV(Iter it, Iter end){
+    if (it == end)
+      throw "Cannot perform STDEV on empty container";
     double average = Average(it, end);
     double variance{0};
     int count{0};
@@ -48,6 +52,8 @@ namespace dmath{
   //////////////////////////////////////////////
   template <typename Iter>
     double Distance(Iter it1, Iter end1, Iter it2){
+    if (it1 == end1)
+      throw "Cannot perform Distance on empty container";
     double variance{0};
     for (; it1 != end1; ++it1, ++it2){
       variance += pow(*it1 - *it2, 2);
@@ -65,6 +71,8 @@ namespace dmath{
   //////////////////////////////////////////////
   template <typename T, typename Iter>
     std::vector<T> Differences(Iter it, Iter end){
+    if (it == end)
+      throw "Cannot perform Differences on empty container";
     std::vector<T> v;
     Iter it1 = std::next(it, 1);
     for (; it1 != end; ++it, ++it1){
@@ -80,6 +88,8 @@ namespace dmath{
   //////////////////////////////////////////////
   template <typename T, typename Iter>
     std::vector<T> VectorDifference(Iter it, Iter end, Iter it1){
+    if (it == end)
+      throw "Cannot perform VectorDifference on empty container";
     std::vector<T> v;
     for (; it != end; ++it, ++it1)
       v.emplace_back(*it - *it1);
