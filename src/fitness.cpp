@@ -67,6 +67,8 @@ double reparm::Fitness::DipoleDifferenceFitness
   std::vector<std::vector<double> > am1_dipoles;
   for (auto &i: param_group.GetOutputs())
     am1_dipoles.push_back(i.GetDipole());
+  if (am1_dipoles.empty())
+    throw "Dipoles not found";
   std::vector<std::vector<double> > am1_differences;
   auto it = am1_dipoles.begin();
   auto it1 = next(it, 1);
@@ -83,6 +85,8 @@ double reparm::Fitness::DipoleDifferenceFitness
   std::vector<std::vector<double> > hlt_dipoles;
   for (auto &i: high_level_outputs_)
     hlt_dipoles.push_back(i.GetDipole());
+  if (hlt_dipoles.empty())
+    throw "Dipoles not found";
   std::vector<std::vector<double> > hlt_differences;
   it = hlt_dipoles.begin();
   it1 = next(it, 1);
@@ -98,6 +102,8 @@ double reparm::Fitness::DipoleDifferenceFitness
 
   /* Now Calculate the average distance between the distance vectors in
      the am1 and hlt calculations */
+  if (am1_differences.size() != hlt_differences.size())
+    throw "Dipole differences sizes differ";
   std::vector<double> distances;
   it = am1_differences.begin();
   it1 = hlt_differences.begin();
