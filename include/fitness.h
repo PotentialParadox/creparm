@@ -20,6 +20,7 @@ class Fitness{
     double dipole_average_sigma_;  // Dipole Fitness
     double EnergyFitness(const reparm::ParameterGroup &param_group) const;
     double DipoleAverageFitness(const reparm::ParameterGroup &param_group) const;
+    double DipoleDifferenceFitness(const reparm::ParameterGroup &param_group) const;
     double ExcitedStateFitness(const reparm::ParameterGroup &param_group) const;
     double IRSpecFitness(const reparm::ParameterGroup &param_group) const;
     double ForceFitness(const reparm::ParameterGroup &param_group) const;

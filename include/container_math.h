@@ -56,7 +56,7 @@ namespace dmath{
   }
 
   //////////////////////////////////////////////
-// Distance 
+// Differences
 // Reads a one dimensional container
 // and returns a size - 1 container with
 // values equal to the difference of the
@@ -64,7 +64,7 @@ namespace dmath{
 // {1 , 2, 5} -> {1, 3}
   //////////////////////////////////////////////
   template <typename T, typename Iter>
-    std::vector<T> Difference(Iter it, Iter end){
+    std::vector<T> Differences(Iter it, Iter end){
     std::vector<T> v;
     Iter it1 = std::next(it, 1);
     for (; it1 != end; ++it, ++it1){
@@ -73,6 +73,18 @@ namespace dmath{
     return v;
   }
 
+  //////////////////////////////////////////////
+// VectorDistance 
+// Returns a vector representing the difference
+// between two vectors
+  //////////////////////////////////////////////
+  template <typename T, typename Iter>
+    std::vector<T> VectorDifference(Iter it, Iter end, Iter it1){
+    std::vector<T> v;
+    for (; it != end; ++it, ++it1)
+      v.emplace_back(*it - *it1);
+    return v;
+  }
   
 }
 
