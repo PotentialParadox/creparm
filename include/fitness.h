@@ -17,7 +17,8 @@ class Fitness{
   private:
     std::vector<reparm::GaussianOutput> high_level_outputs_;
     double energy_sigma_;  // Energy Fitness
-    double dipole_average_sigma_;  // Dipole Fitness
+    double dipole_average_sigma_;  // Dipole Average Fitness
+    double dipole_difference_sigma_;  // Dipole Difference Fitness
     double EnergyFitness(const reparm::ParameterGroup &param_group) const;
     double DipoleAverageFitness(const reparm::ParameterGroup &param_group) const;
     double DipoleDifferenceFitness(const reparm::ParameterGroup &param_group) const;

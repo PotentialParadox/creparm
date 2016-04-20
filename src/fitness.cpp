@@ -121,6 +121,7 @@ reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
   , energy_sigma_{0.0}
   , dipole_average_sigma_{0.0}
     {
+      /* Energy Values */
       std::vector<double> energy_values;
       for (const auto &i: population){
 	try{
@@ -131,6 +132,8 @@ reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
       if (energy_values.size() <= 1)
 	throw "Not enough energies. Try lowering the mutation rate.";
       energy_sigma_ = dmath::STDEV(energy_values.begin(), energy_values.end());
+
+      /* Dipole Average Values */
       std::vector<double> dipole_avg_vals;
       for (const auto &i: population)
 	try{
@@ -140,6 +143,17 @@ reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
       if (dipole_avg_vals.size() <= 1)
 	throw "Not enough dipoles. Try lowering the mutation rate.";
       dipole_average_sigma_ = dmath::STDEV(dipole_avg_vals.begin(), dipole_avg_vals.end());
+
+      /* Dipole Differences Values */
+      std::vector<double> dipole_diff_vals;
+      for (const auto &i: population)
+	try{
+	  auto dipole = DipoleDifferenceFitness(i);
+	  dipole_diff_vals.push_back(dipole);
+	}catch(...){}
+      if (dipole_diff_vals.size() <= 1)
+	throw "Not enough dipoles. Try lowering the mutation rate.";
+      dipole_difference_sigma_ = dmath::STDEV(dipole_diff_vals.begin(), dipole_diff_vals.end());
     }
 
 std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_group) const{
@@ -156,7 +170,7 @@ std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_grou
 
     double dipole_difference_fitness = DipoleDifferenceFitness(param_group);
     ss << "Dipole Differnce Fitness: ";
-    ss << dipole_difference_fitness << std::endl;
+    ss << dipole_difference_fitness / dipole_difference_sigma_ << std::endl;
 
   }
   catch(const char* e){
@@ -170,12 +184,15 @@ double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
   double fitness = 0;
   double e_fitness = 0;
   double d_fitness = 0;
+  double dd_fitness = 0;
   try{
     e_fitness = EnergyFitness(rhs);
     d_fitness = DipoleAverageFitness(rhs);
+    dd_fitness = DipoleDifferenceFitness(rhs);
     fitness = (
 	       e_fitness / energy_sigma_
                + d_fitness / dipole_average_sigma_
+	       + dd_fitness / dipole_difference_sigma_
               );
   }
   catch(const char* e){
@@ -191,12 +208,15 @@ void reparm::Fitness::operator () (std::vector<reparm::ParameterGroup> &rhs) con
     double fitness = 0;
     double e_fitness = 0;
     double d_fitness = 0;
+    double dd_fitness = 0;
     try{
       e_fitness = EnergyFitness(i);
       d_fitness = DipoleAverageFitness(i);
+      dd_fitness = DipoleDifferenceFitness(i);
       fitness = (
 		 e_fitness / energy_sigma_
 		 + d_fitness / dipole_average_sigma_
+		 + dd_fitness / dipole_difference_sigma_
 		 );
     }
     catch(const char* e){
