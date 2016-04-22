@@ -219,6 +219,12 @@ std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_grou
     ss << "Dipole Differnce Fitness: ";
     ss << dipole_difference_fitness / dipole_difference_sigma_ << std::endl;
 
+    double excited_freq_average = ExcitedFreqAverageFitness(param_group);
+    ss << "Excited State Average Fitness: ";
+    ss << excited_freq_average << std::endl;
+    ss << "Excited State Average Sigma: ";
+    ss << excited_freq_avg_sigma_ << std::endl;
+
   }
   catch(const char* e){
     std::cout << "Ignoring Step" << std::endl;
