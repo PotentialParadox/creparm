@@ -146,11 +146,12 @@ std::string reparm::GaussianOutput::str() const{
   for (auto i: es_intensities_){ ss << i << " ";}
   ss << "\n"; 
   ss << "Dipole:\t\t";
-  ss << "Dipole:\t\t";
   for (auto i: dipole_){ ss << i << " ";}
   ss << "\n"; 
-  ss << "Forces:\t\t";
-  for (auto i: forces_){ ss << i << " ";}
+  ss << "Forces:" << std::endl;
+  for (size_t i = 0; i != forces_.size(); i+=3)
+    ss << i/3 << "\t\t\t" << forces_[i] << "\t" << forces_[i+1]
+       << "\t" << forces_[i+2] << std::endl;
   ss << "\n"; 
   ss << "IR Frequencies:\t";
   for (auto i: frequencies_){ ss << i << " ";}
