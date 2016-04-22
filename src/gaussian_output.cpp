@@ -123,6 +123,7 @@ reparm::GaussianOutput::GaussianOutput(const std::string &output_string){
   try{
     this->energy_ = FindEnergy(output_string);
     this->es_frequencies_ = FindESFrequencies(output_string);
+    this->es_intensities_ = FindESIntensities(output_string);
     this->dipole_ = FindDipole(output_string);
     this->forces_ = FindForces(output_string);
     this->frequencies_ = FindFrequencies(output_string);
