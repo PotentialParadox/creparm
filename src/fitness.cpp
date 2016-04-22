@@ -377,8 +377,7 @@ std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_grou
 
     double excited_int_differences = ExcitedIntDiffFitness(param_group);
     ss << "Excited State Intensities Difference Fitness: ";
-    ss << excited_int_differences << std::endl;
-    ss << excited_int_diff_sigma_ << std::endl;
+    ss << excited_int_differences / excited_int_diff_sigma_ << std::endl;
 
   }
   catch(const char* e){
@@ -396,6 +395,7 @@ double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
   double efa_fitness = 0;  // Excited State Frequncy Average
   double efd_fitness = 0;  // Excited State Frequency Difference
   double eia_fitness = 0; // Excited State Intensity Average
+  double eid_fitness = 0;  // Excited State Intensity Difference
   try{
     e_fitness = EnergyFitness(rhs);
     d_fitness = DipoleAverageFitness(rhs);
@@ -403,6 +403,7 @@ double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
     efa_fitness = ExcitedFreqAverageFitness(rhs);
     efd_fitness = ExcitedFreqDiffFitness(rhs);
     eia_fitness = ExcitedIntAverageFitness(rhs);
+    eid_fitness = ExcitedIntDiffFitness(rhs);
     fitness = (
 	       e_fitness / energy_sigma_
                + d_fitness / dipole_average_sigma_
@@ -410,6 +411,7 @@ double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
 	       + efa_fitness / excited_freq_avg_sigma_
 	       + efd_fitness / excited_freq_diff_sigma_
 	       + eia_fitness / excited_int_avg_sigma_
+	       + eid_fitness / excited_int_diff_sigma_
               );
   }
   catch(const char* e){
@@ -429,6 +431,7 @@ void reparm::Fitness::operator () (std::vector<reparm::ParameterGroup> &rhs) con
     double efa_fitness = 0;  // Excited State Frequncy Average
     double efd_fitness = 0;  // Excited State Frequency Difference
     double eia_fitness = 0; // Excited State Intensity Average
+    double eid_fitness = 0;  // Excited State Intensity Difference
     try{
       e_fitness = EnergyFitness(i);
       d_fitness = DipoleAverageFitness(i);
@@ -436,6 +439,7 @@ void reparm::Fitness::operator () (std::vector<reparm::ParameterGroup> &rhs) con
       efa_fitness = ExcitedFreqAverageFitness(i);
       efd_fitness = ExcitedFreqDiffFitness(i);
       eia_fitness = ExcitedIntAverageFitness(i);
+      eid_fitness = ExcitedIntDiffFitness(i);
       fitness = (
 		 e_fitness / energy_sigma_
 		 + d_fitness / dipole_average_sigma_
@@ -443,6 +447,7 @@ void reparm::Fitness::operator () (std::vector<reparm::ParameterGroup> &rhs) con
 		 + efa_fitness / excited_freq_avg_sigma_
 		 + efd_fitness / excited_freq_diff_sigma_
 		 + eia_fitness / excited_int_avg_sigma_
+		 + eid_fitness / excited_int_diff_sigma_
 		 );
     }
     catch(const char* e){
