@@ -19,6 +19,8 @@ double reparm::Fitness::EnergyFitness
   for (auto &i: param_group.GetOutputs())
     am1_energies.push_back(i.GetEnergy());
   /* Convert to Differences */ 
+  if (am1_energies.size() <= 1)
+    throw "Cannot find energy differences";
   auto am1_differences = dmath::Differences<double>(am1_energies.begin(), am1_energies.end());
   // Get HLT Energies
   std::vector<double> hlt_energies;
@@ -27,6 +29,8 @@ double reparm::Fitness::EnergyFitness
   if (am1_energies.size() != hlt_energies.size())
     throw "Energy vectors are not the same size";
   /* Convert to Differences */
+  if (hlt_energies.size() <= 1)
+    throw "Cannot find energy differences";
   auto hlt_differences = dmath::Differences<double>(hlt_energies.begin(), hlt_energies.end());
   auto distance = dmath::Distance(am1_differences.begin(), am1_differences.end(),
 				  hlt_differences.begin());
@@ -312,7 +316,7 @@ double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
   }
   catch(const char* e){
     std::cout << e << std::endl;
-    fitness = 10;
+    fitness = 100000;
   }
   rhs.SetFitness(fitness);
   return fitness;
@@ -342,7 +346,7 @@ void reparm::Fitness::operator () (std::vector<reparm::ParameterGroup> &rhs) con
     }
     catch(const char* e){
       std::cout << e << std::endl;
-      fitness = 10;
+      fitness = 100000;
     }
     i.SetFitness(fitness);
   }

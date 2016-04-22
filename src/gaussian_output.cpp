@@ -53,6 +53,7 @@ std::vector<double> FindForces(const std::string &s){
   for (; pos1 != end1; ++pos1){
     forces.push_back(stod(pos1->str(0)));
   }
+  if (forces.empty()) throw "Cannot find forces";
   return forces;
 }
 
@@ -71,6 +72,7 @@ std::vector<double> FindFrequencies(const std::string &s){
   for (; pos1 !=end1; ++pos1){
     frequencies.push_back(stod(pos1->str(0)));
   }
+  if (frequencies.empty()) throw "Cannot find frequencies";
   return frequencies;
 }
 
@@ -89,6 +91,7 @@ std::vector<double> FindIntensities(const std::string &s){
   for (; pos1 !=end1; ++pos1){
     intensities.push_back(stod(pos1->str(0)));
   }
+  if (intensities.empty()) throw "Cannot find intensities";
   return intensities;
 }
 
@@ -96,11 +99,24 @@ std::vector<double> FindESFrequencies(const std::string &s){
   std::regex p_excited{"\n\\s*Excited\\s+State.*(-?\\d+\\.\\d+)\\s+eV"};
   std::sregex_iterator pos(s.cbegin(), s.cend(), p_excited);
   std::sregex_iterator end;
-  std::vector<double> excited_states;
+  std::vector<double> es_freqs;
   for (; pos != end; ++pos){
-    excited_states.push_back(std::stod(pos->str(1)));
+    es_freqs.push_back(std::stod(pos->str(1)));
   }
-  return excited_states;
+  if (es_freqs.empty()) throw "cannot find es_freqs";
+  return es_freqs;
+}
+
+std::vector<double> FindESIntensities(const std::string &s){
+  std::regex p_excited{"\n\\s*Excited\\s+State.*f=(-?\\d+\\.\\d+)\\s"};
+  std::sregex_iterator pos(s.cbegin(), s.cend(), p_excited);
+  std::sregex_iterator end;
+  std::vector<double> es_intensities;
+  for (; pos != end; ++pos){
+    es_intensities.push_back(std::stod(pos->str(1)));
+  }
+  if (es_intensities.empty()) throw "cannot find es_intensities";
+  return es_intensities;
 }
 
 reparm::GaussianOutput::GaussianOutput(const std::string &output_string){
@@ -122,19 +138,23 @@ std::string reparm::GaussianOutput::str() const{
   std::stringstream ss;
   ss << "*****Printing Gaussian Output*****\n";
   ss << "Energy:\t\t" << this->energy_ << "\n";
-  ss << "Excited States:\t";
+  ss << "Excited States Frequencies:\t";
   for (auto i: es_frequencies_){ ss << i << " ";}
   ss << "\n"; 
+  ss << "Excited States Intensities:\t";
+  for (auto i: es_intensities_){ ss << i << " ";}
+  ss << "\n"; 
+  ss << "Dipole:\t\t";
   ss << "Dipole:\t\t";
   for (auto i: dipole_){ ss << i << " ";}
   ss << "\n"; 
   ss << "Forces:\t\t";
   for (auto i: forces_){ ss << i << " ";}
   ss << "\n"; 
-  ss << "Frequencies:\t";
+  ss << "IR Frequencies:\t";
   for (auto i: frequencies_){ ss << i << " ";}
   ss << "\n"; 
-  ss << "Intensities:\t";
+  ss << "IR Intensities:\t";
   for (auto i: intensities_){ ss << i << " ";}
   ss << "\n"; 
   return ss.str();
