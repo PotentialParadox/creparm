@@ -375,6 +375,11 @@ std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_grou
     ss << "Excited State Intensities Average Fitness: ";
     ss << excited_int_average / excited_int_avg_sigma_ << std::endl;
 
+    double excited_int_differences = ExcitedIntDiffFitness(param_group);
+    ss << "Excited State Intensities Difference Fitness: ";
+    ss << excited_int_differences << std::endl;
+    ss << excited_int_diff_sigma_ << std::endl;
+
   }
   catch(const char* e){
     std::cout << "Ignoring Step" << std::endl;
