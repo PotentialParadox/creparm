@@ -219,6 +219,43 @@ double reparm::Fitness::ExcitedIntAverageFitness
   return dmath::Distance(am1_averages.begin(), am1_averages.end(), hlt_averages.begin());
 }
 
+double reparm::Fitness::ExcitedIntDiffFitness
+(const reparm::ParameterGroup &param_group) const{
+  /* Get the data */
+  std::vector<std::vector<double> > am1_es_intensities;
+  for (auto &i: param_group.GetOutputs())
+    am1_es_intensities.push_back(i.GetESIntensities());
+  std::vector<std::vector<double> > hlt_es_intensities;
+  for (auto &i: high_level_outputs_)
+    hlt_es_intensities.push_back(i.GetESIntensities());
+  if (am1_es_intensities.empty() || hlt_es_intensities.empty())
+    throw "Cannot not obtain es_intensities";
+
+  /* Create vectors of the differences */
+  std::vector<std::vector<double> > am1_differences;
+  for (auto &i: am1_es_intensities)
+    am1_differences.emplace_back(dmath::Differences<double>(i.begin(), i.end()));
+  std::vector<std::vector<double> > hlt_differences;
+  for (auto &i: hlt_es_intensities)
+    hlt_differences.emplace_back(dmath::Differences<double>(i.begin(), i.end()));
+  if (hlt_differences.size() != am1_differences.size())
+    throw "amount of excited states differ";
+
+  /* Now make a vector of the distances between hlt and am1 */
+  std::vector<double> distances;
+  auto am1_it = am1_differences.begin();
+  auto hlt_it = hlt_differences.begin();
+  auto end = am1_differences.end();
+  for (; am1_it != end; ++am1_it, ++hlt_it){
+    if (am1_it->size() != hlt_it->size())
+      throw "excited intensities differences differ";
+    distances.emplace_back(dmath::Distance(am1_it->begin()
+					   , am1_it->end(), hlt_it->begin()));
+  }
+
+  return dmath::Average(distances.begin(), distances.end());
+}
+
 reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
                          const std::vector<reparm::GaussianOutput> &high_level_outputs)
   : high_level_outputs_{high_level_outputs}
@@ -228,6 +265,7 @@ reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
   , excited_freq_avg_sigma_(0.0)
   , excited_freq_diff_sigma_(0.0)
   , excited_int_avg_sigma_(0.0)
+  , excited_int_diff_sigma_(0.0)
     {
       /* Energy Values */
       std::vector<double> energy_values;
@@ -295,6 +333,17 @@ reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
       if (es_int_avg_vals.size() <= 1)
 	throw "Not enough excited state intensities.";
       excited_int_avg_sigma_ = dmath::STDEV(es_int_avg_vals.begin(), es_int_avg_vals.end());
+
+      /* Excited State Intensities Difference Values */
+      std::vector<double> es_int_diff_vals;
+      for (const auto &i: population)
+	try{
+	  auto es = ExcitedIntDiffFitness(i);
+	  es_int_diff_vals.push_back(es);
+	}catch(...){}
+      if (es_int_diff_vals.size() <= 1)
+	throw "Not enough excited state intensities.";
+      excited_int_diff_sigma_ = dmath::STDEV(es_int_diff_vals.begin(), es_int_diff_vals.end());
       
     }
 
