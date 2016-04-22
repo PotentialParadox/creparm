@@ -21,7 +21,7 @@ class Fitness{
     double dipole_difference_sigma_;  // Dipole Difference Fitness
     double excited_freq_avg_sigma_;  // Exctied State Frequencies average
     double excited_freq_diff_sigma_;  // Excited State Frequencies differences
-    double excited_int_diff_sigma_;  // Exctied State Intensities average
+    double excited_int_avg_sigma_;  // Exctied State Intensities average
     double EnergyFitness(const reparm::ParameterGroup &param_group) const;
     double DipoleAverageFitness(const reparm::ParameterGroup &param_group) const;
     double DipoleDifferenceFitness(const reparm::ParameterGroup &param_group) const;

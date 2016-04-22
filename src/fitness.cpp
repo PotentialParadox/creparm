@@ -227,7 +227,7 @@ reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
   , dipole_difference_sigma_(0.0)
   , excited_freq_avg_sigma_(0.0)
   , excited_freq_diff_sigma_(0.0)
-  , excited_int_diff_sigma_(0.0)
+  , excited_int_avg_sigma_(0.0)
     {
       /* Energy Values */
       std::vector<double> energy_values;
@@ -294,7 +294,7 @@ reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
 	}catch(...){}
       if (es_int_avg_vals.size() <= 1)
 	throw "Not enough excited state intensities.";
-      excited_int_diff_sigma_ = dmath::STDEV(es_int_avg_vals.begin(), es_int_avg_vals.end());
+      excited_int_avg_sigma_ = dmath::STDEV(es_int_avg_vals.begin(), es_int_avg_vals.end());
       
     }
 
@@ -324,8 +324,7 @@ std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_grou
 
     double excited_int_average = ExcitedIntAverageFitness(param_group);
     ss << "Excited State Intensities Average Fitness: ";
-    ss << excited_int_average << std::endl;
-    ss << excited_int_diff_sigma_ << std::endl;
+    ss << excited_int_average / excited_int_avg_sigma_ << std::endl;
 
   }
   catch(const char* e){
@@ -342,18 +341,21 @@ double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
   double dd_fitness = 0;
   double efa_fitness = 0;  // Excited State Frequncy Average
   double efd_fitness = 0;  // Excited State Frequency Difference
+  double eia_fitness = 0; // Excited State Intensity Average
   try{
     e_fitness = EnergyFitness(rhs);
     d_fitness = DipoleAverageFitness(rhs);
     dd_fitness = DipoleDifferenceFitness(rhs);
     efa_fitness = ExcitedFreqAverageFitness(rhs);
     efd_fitness = ExcitedFreqDiffFitness(rhs);
+    eia_fitness = ExcitedIntAverageFitness(rhs);
     fitness = (
 	       e_fitness / energy_sigma_
                + d_fitness / dipole_average_sigma_
 	       + dd_fitness / dipole_difference_sigma_
 	       + efa_fitness / excited_freq_avg_sigma_
 	       + efd_fitness / excited_freq_diff_sigma_
+	       + eia_fitness / excited_int_avg_sigma_
               );
   }
   catch(const char* e){
@@ -372,18 +374,21 @@ void reparm::Fitness::operator () (std::vector<reparm::ParameterGroup> &rhs) con
     double dd_fitness = 0;
     double efa_fitness = 0;  // Excited State Frequncy Average
     double efd_fitness = 0;  // Excited State Frequency Difference
+    double eia_fitness = 0; // Excited State Intensity Average
     try{
       e_fitness = EnergyFitness(i);
       d_fitness = DipoleAverageFitness(i);
       dd_fitness = DipoleDifferenceFitness(i);
       efa_fitness = ExcitedFreqAverageFitness(i);
       efd_fitness = ExcitedFreqDiffFitness(i);
+      eia_fitness = ExcitedIntAverageFitness(i);
       fitness = (
 		 e_fitness / energy_sigma_
 		 + d_fitness / dipole_average_sigma_
 		 + dd_fitness / dipole_difference_sigma_
 		 + efa_fitness / excited_freq_avg_sigma_
 		 + efd_fitness / excited_freq_diff_sigma_
+		 + eia_fitness / excited_int_avg_sigma_
 		 );
     }
     catch(const char* e){
