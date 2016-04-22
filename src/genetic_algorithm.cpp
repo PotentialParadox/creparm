@@ -52,12 +52,12 @@ reparm::GaussianInput reparm::CreateReparmGaussian(std::string s){
 
 std::string reparm::PrintTitle(){
   std::stringstream ss;
-  ss << "/////////////////////////////////////////";
-  ss << "//                                     //";
-  ss << "//         AM1 Reparameterization      //";
-  ss << "//             Dustin Tracy            //";
-  ss << "//                 2016                //";
-  ss << "/////////////////////////////////////////";
+  ss << "/////////////////////////////////////////" << std::endl;
+  ss << "//                                     //" << std::endl;
+  ss << "//         AM1 Reparameterization      //" << std::endl;
+  ss << "//             Dustin Tracy            //" << std::endl;
+  ss << "//                 2016                //" << std::endl;
+  ss << "/////////////////////////////////////////" << std::endl;
   ss << "\n" << std::endl;
   return ss.str();
 }
