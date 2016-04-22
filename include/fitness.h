@@ -20,10 +20,12 @@ class Fitness{
     double dipole_average_sigma_;  // Dipole Average Fitness
     double dipole_difference_sigma_;  // Dipole Difference Fitness
     double excited_freq_avg_sigma_;
+    double excited_freq_diff_sigma_;
     double EnergyFitness(const reparm::ParameterGroup &param_group) const;
     double DipoleAverageFitness(const reparm::ParameterGroup &param_group) const;
     double DipoleDifferenceFitness(const reparm::ParameterGroup &param_group) const;
     double ExcitedFreqAverageFitness(const reparm::ParameterGroup &param_group) const;
+    double ExcitedFreqDiffFitness(const reparm::ParameterGroup &param_group) const;
     double FindSTDEV(const reparm::Fitness&,
 		     const std::vector<reparm::ParameterGroup> &population,
 		     const std::function<double (const reparm::ParameterGroup)>&);
