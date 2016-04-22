@@ -15,7 +15,7 @@ class GaussianOutput{
   private:
     double energy_;
     std::vector<double> dipole_;
-    std::vector<double> excited_states_;
+    std::vector<double> es_frequencies_;
     std::vector<double> forces_;
     std::vector<double> frequencies_;
     std::vector<double> intensities_;
@@ -29,7 +29,7 @@ class GaussianOutput{
     GaussianOutput(const std::string&);
     double GetEnergy() const {return energy_;}
     std::vector<double> GetDipole() const {return dipole_;}
-    std::vector<double> GetExcitedStates() const {return excited_states_;}
+    std::vector<double> GetESFrequencies() const {return es_frequencies_;}
     std::vector<double> GetForces() const {return forces_;}
     std::vector<double> GetFrequencies() const {return frequencies_;}
     std::vector<double> GetIntensities() const {return intensities_;}

@@ -115,11 +115,47 @@ double reparm::Fitness::DipoleDifferenceFitness
   return average;
 }
 
+double reparm::Fitness::ExcitedFreqAverageFitness
+(const reparm::ParameterGroup &param_group) const{
+  /* Get the data */
+  std::vector<std::vector<double> > am1_es_freqs;
+  for (auto &i: param_group.GetOutputs())
+    am1_es_freqs.push_back(i.GetESFrequencies());
+  std::vector<std::vector<double> > hlt_es_freqs;
+  for (auto &i: high_level_outputs_)
+    hlt_es_freqs.push_back(i.GetESFrequencies());
+
+  /* Convert to vector of averages */
+  std::vector<double> am1_es_averages;
+  for (auto &i: am1_es_freqs){
+    double average = 0;
+    average = dmath::Average(i.begin(), i.end());
+    am1_es_averages.push_back(average);
+  }
+  std::vector<double> hlt_es_averages;
+  for (auto &i: hlt_es_freqs){
+    double average = 0;
+    average = dmath::Average(i.begin(), i.end());
+    hlt_es_averages.push_back(average);
+  }
+
+  /* Return the differences between the averages */
+  if (am1_es_averages.size() != hlt_es_averages.size())
+    throw "excited state sizes differ";
+  return dmath::Distance(am1_es_averages.begin(),
+			 am1_es_averages.end(),
+			 hlt_es_averages.begin());
+}
+  
+  
+
 reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
                          const std::vector<reparm::GaussianOutput> &high_level_outputs)
   : high_level_outputs_{high_level_outputs}
   , energy_sigma_{0.0}
   , dipole_average_sigma_{0.0}
+  , dipole_difference_sigma_(0.0)
+  , excited_freq_avg_sigma_(0.0)
     {
       /* Energy Values */
       std::vector<double> energy_values;
@@ -154,6 +190,17 @@ reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
       if (dipole_diff_vals.size() <= 1)
 	throw "Not enough dipoles. Try lowering the mutation rate.";
       dipole_difference_sigma_ = dmath::STDEV(dipole_diff_vals.begin(), dipole_diff_vals.end());
+
+      /* Excited State Frequency Average Values */
+      std::vector<double> es_freq_avg_vals;
+      for (const auto &i: population)
+	try{
+	  auto es = ExcitedFreqAverageFitness(i);
+	  es_freq_avg_vals.push_back(es);
+	}catch(...){}
+      if (es_freq_avg_vals.size() <= 1)
+	throw "Not enough excited states. Try lowering the mutation rate.";
+      excited_freq_avg_sigma_ = dmath::STDEV(es_freq_avg_vals.begin(), es_freq_avg_vals.end());
     }
 
 std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_group) const{

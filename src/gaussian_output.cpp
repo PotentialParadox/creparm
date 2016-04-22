@@ -92,7 +92,7 @@ std::vector<double> FindIntensities(const std::string &s){
   return intensities;
 }
 
-std::vector<double> FindExcitedStates(const std::string &s){
+std::vector<double> FindESFrequencies(const std::string &s){
   std::regex p_excited{"\n\\s*Excited\\s+State.*(-?\\d+\\.\\d+)\\s+eV"};
   std::sregex_iterator pos(s.cbegin(), s.cend(), p_excited);
   std::sregex_iterator end;
@@ -106,7 +106,7 @@ std::vector<double> FindExcitedStates(const std::string &s){
 reparm::GaussianOutput::GaussianOutput(const std::string &output_string){
   try{
     this->energy_ = FindEnergy(output_string);
-    this->excited_states_ = FindExcitedStates(output_string);
+    this->es_frequencies_ = FindESFrequencies(output_string);
     this->dipole_ = FindDipole(output_string);
     this->forces_ = FindForces(output_string);
     this->frequencies_ = FindFrequencies(output_string);
@@ -123,7 +123,7 @@ std::string reparm::GaussianOutput::str() const{
   ss << "*****Printing Gaussian Output*****\n";
   ss << "Energy:\t\t" << this->energy_ << "\n";
   ss << "Excited States:\t";
-  for (auto i: excited_states_){ ss << i << " ";}
+  for (auto i: es_frequencies_){ ss << i << " ";}
   ss << "\n"; 
   ss << "Dipole:\t\t";
   for (auto i: dipole_){ ss << i << " ";}
