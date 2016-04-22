@@ -10,6 +10,7 @@
 namespace reparm{
 
   reparm::GaussianInput CreateReparmGaussian(std::string);
+  std::string PrintTitle();
 
 }
 #endif /* GENETIC_ALGORITHM_H */

@@ -28,6 +28,7 @@ int main(){
   high_resolution_clock::time_point t1 = high_resolution_clock::now();
   ReparmData reparm_data{"reparm.in"};
   ofstream fout{"reparm.out"};
+  fout << PrintTitle();
   try{
     ReparmInput reparm_input{reparm_data.GetReparmInput()};
     string starter_file{reparm_input.GetMoleculeName() + ".com"};

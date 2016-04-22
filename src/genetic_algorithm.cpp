@@ -5,6 +5,7 @@
 #include <gaussian.h>
 #include <header.h>
 #include <regex>
+#include <sstream>
 
 std::string CreateInput(std::string &s){
   std::ifstream fin(s);
@@ -49,3 +50,15 @@ reparm::GaussianInput reparm::CreateReparmGaussian(std::string s){
   return g_input;
 }
 
+std::string reparm::PrintTitle(){
+  std::stringstream ss;
+  ss << "/////////////////////////////////////////";
+  ss << "//                                     //";
+  ss << "//         AM1 Reparameterization      //";
+  ss << "//             Dustin Tracy            //";
+  ss << "//                 2016                //";
+  ss << "/////////////////////////////////////////";
+  ss << "\n" << std::endl;
+  return ss.str();
+}
+  
