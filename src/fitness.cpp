@@ -324,14 +324,14 @@ void reparm::Fitness::operator () (std::vector<reparm::ParameterGroup> &rhs) con
     double e_fitness = 0;
     double d_fitness = 0;
     double dd_fitness = 0;
-    double efa_fitness = 0;
+    double efa_fitness = 0;  // Excited State Frequncy Average
     double efd_fitness = 0;  // Excited State Frequency Difference
     try{
       e_fitness = EnergyFitness(i);
       d_fitness = DipoleAverageFitness(i);
-      dd_fitness = DipoleDifferenceFitness(
+      dd_fitness = DipoleDifferenceFitness(i);
       efa_fitness = ExcitedFreqAverageFitness(i);
-      efd_fitness = ExcitedFreqDiffFitness
+      efd_fitness = ExcitedFreqDiffFitness(i);
       fitness = (
 		 e_fitness / energy_sigma_
 		 + d_fitness / dipole_average_sigma_
