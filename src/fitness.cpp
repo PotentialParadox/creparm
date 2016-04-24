@@ -583,7 +583,8 @@ std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_grou
 
   }
   catch(const char* e){
-    std::cout << "Ignoring Step" << std::endl;
+    std::cout << "Ignoring Step because" << std::endl;
+    std::cout << e << std::endl;
   }
 
   return ss.str();

@@ -64,8 +64,8 @@ int main(){
     // ******* Begin the main loop *********
     double original_fitness = fitness(reparm_data.population_[0]);
     double best_fitness = original_fitness;
-    fout << "Original Fitness" << endl;
-    fout << fitness.StringList(reparm_data.population_[0]);
+    fout << "\nOriginal Fitness" << endl;
+    fout << fitness.StringList(reparm_data.population_[0]) << endl;
     for (int i = 0; i < reparm_data.GetReparmInput().GetNumberGenerations(); ++i){
 
       fout << "Step: " << i << endl;
