@@ -256,6 +256,89 @@ double reparm::Fitness::ExcitedIntDiffFitness
   return dmath::Average(distances.begin(), distances.end());
 }
 
+double reparm::Fitness::IRFreqAverageFitness
+(const reparm::ParameterGroup &param_group) const{
+  /* Get the data */
+  std::vector<std::vector<double> > am1_ir_freqs;
+  for (auto &i: param_group.GetOutputs())
+    am1_ir_freqs.push_back(i.GetFrequencies());
+  std::vector<std::vector<double> > hlt_ir_freqs;
+  for (auto &i: high_level_outputs_)
+    hlt_ir_freqs.push_back(i.GetFrequencies());
+  if (am1_ir_freqs.empty() || hlt_ir_freqs.empty())
+    throw "IR frequencies not found";
+
+  /* Convert to vector of averages */
+  std::vector<double> am1_ir_averages;
+  for (auto &i: am1_ir_freqs){
+    double average = 0;
+    average = dmath::Average(i.begin(), i.end());
+    am1_ir_averages.push_back(average);
+  }
+  std::vector<double> hlt_ir_averages;
+  for (auto &i: hlt_ir_freqs){
+    double average = 0;
+    average = dmath::Average(i.begin(), i.end());
+    hlt_ir_averages.push_back(average);
+  }
+
+  /* Return the differences between the averages */
+  if (am1_ir_averages.size() != hlt_ir_averages.size())
+    throw "infrared sizes differ";
+  return dmath::Distance(am1_ir_averages.begin(),
+			 am1_ir_averages.end(),
+			 hlt_ir_averages.begin());
+}
+
+double reparm::Fitness::IRFreqDiffFitness
+(const reparm::ParameterGroup &param_group) const{
+  /* Get the data */
+  std::vector<std::vector<double> > am1_ir_freqs;
+  for (auto &i: param_group.GetOutputs())
+    am1_ir_freqs.push_back(i.GetFrequencies());
+  std::vector<std::vector<double> > hlt_ir_freqs;
+  for (auto &i: high_level_outputs_)
+    hlt_ir_freqs.push_back(i.GetFrequencies());
+
+  /* Convert to vector of differences */
+  std::vector<std::vector<double> > am1_differences;
+  for (auto &i: am1_ir_freqs){
+    if (i.size() <= 1)
+      throw "IR Freq vector does not have enough elements";
+    std::vector<double> differences;
+    differences = dmath::Differences<double>(i.begin(), i.end());
+    am1_differences.push_back(differences);
+  }
+  std::vector<std::vector<double> > hlt_differences;
+  for (auto &i: hlt_ir_freqs){
+    if (i.size() <= 1)
+      throw "IR Freq vector does not have enough elements";
+    std::vector<double> differences;
+    differences = dmath::Differences<double>(i.begin(), i.end());
+    hlt_differences.push_back(differences);
+  }
+
+  /* Create a vector of distances */
+  if (am1_differences.size() != hlt_differences.size())
+    throw "IR Frequency sizes differ";
+  std::vector<double> distances(am1_differences.size());
+  auto am1_it = am1_differences.begin();
+  auto end = am1_differences.end();
+  auto hlt_it = hlt_differences.begin();
+  for (; am1_it != end; ++am1_it, ++hlt_it){
+    double distance = dmath::Distance(am1_it->begin(), am1_it->end(), hlt_it->begin());
+    distances.push_back(distance);
+  }
+
+  return dmath::Average(distances.begin(), distances.end());
+}
+
+double reparm::Fitness::IRIntensityAverageFitness
+(const reparm::ParameterGroup &param_group) const{return 1;}
+
+double reparm::Fitness::IRIntensityDiffFitness
+(const reparm::ParameterGroup &param_group) const{return 1;}
+
 reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
                          const std::vector<reparm::GaussianOutput> &high_level_outputs)
   : high_level_outputs_{high_level_outputs}
@@ -266,6 +349,10 @@ reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
   , excited_freq_diff_sigma_(0.0)
   , excited_int_avg_sigma_(0.0)
   , excited_int_diff_sigma_(0.0)
+  , ir_freq_avg_sigma_(0.0)
+  , ir_freq_diff_sigma_(0.0)
+  , ir_int_avg_sigma_(0.0)
+  , ir_int_diff_sigma_(0.0)
     {
       /* Energy Values */
       std::vector<double> energy_values;
@@ -345,6 +432,49 @@ reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
 	throw "Not enough excited state intensities.";
       excited_int_diff_sigma_ = dmath::STDEV(es_int_diff_vals.begin(), es_int_diff_vals.end());
       
+      /* IR Frequency Average Values */
+      std::vector<double> ir_freq_avg_vals;
+      for (const auto &i: population)
+	try{
+	  auto ir = IRFreqAverageFitness(i);
+	  ir_freq_avg_vals.push_back(ir);
+	}catch(...){}
+      if (ir_freq_avg_vals.size() <= 1)
+	throw "Not enough normal modes. Try lowering the mutation rate.";
+      ir_freq_avg_sigma_ = dmath::STDEV(ir_freq_avg_vals.begin(), ir_freq_avg_vals.end());
+
+      /* IR Frequency Difference Values */
+      std::vector<double> ir_freq_diff_vals;
+      for (const auto &i: population)
+	try{
+	  auto ir = IRFreqDiffFitness(i);
+	  ir_freq_diff_vals.push_back(ir);
+	}catch(...){}
+      if (ir_freq_diff_vals.size() <= 1)
+	throw "Not enough normal modes. Try lowering the mutation rate.";
+      ir_freq_diff_sigma_ = dmath::STDEV(ir_freq_diff_vals.begin(), ir_freq_diff_vals.end());
+
+      /* IR Intensities Average Values */
+      std::vector<double> ir_int_avg_vals;
+      for (const auto &i: population)
+	try{
+	  auto ir = IRIntensityAverageFitness(i);
+	  ir_int_avg_vals.push_back(ir);
+	}catch(...){}
+      if (ir_int_avg_vals.size() <= 1)
+	throw "Not enough normal modes. Try lowering the mutation rate.";
+      ir_int_avg_sigma_ = dmath::STDEV(ir_int_avg_vals.begin(), ir_int_avg_vals.end());
+
+      /* IR Intensities Difference Values */
+      std::vector<double> ir_int_diff_vals;
+      for (const auto &i: population)
+	try{
+	  auto ir = IRIntensityDiffFitness(i);
+	  ir_int_diff_vals.push_back(ir);
+	}catch(...){}
+      if (ir_int_diff_vals.size() <= 1)
+	throw "Not enough normal modes. Try lowering the mutation rate.";
+      ir_int_diff_sigma_ = dmath::STDEV(ir_int_diff_vals.begin(), ir_int_diff_vals.end());
     }
 
 std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_group) const{
@@ -378,6 +508,22 @@ std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_grou
     double excited_int_differences = ExcitedIntDiffFitness(param_group);
     ss << "Excited State Intensities Difference Fitness: ";
     ss << excited_int_differences / excited_int_diff_sigma_ << std::endl;
+
+    double ir_freq_average = IRFreqAverageFitness(param_group);
+    ss << "IR Frequency Average Fitness: ";
+    ss << ir_freq_average / ir_freq_avg_sigma_ << std::endl;
+
+    double ir_freq_difference = IRFreqDiffFitness(param_group);
+    ss << "IR Frequency Differences Fitness: ";
+    ss << ir_freq_difference / ir_freq_diff_sigma_ << std::endl;
+
+    double ir_int_average = IRIntensityAverageFitness(param_group);
+    ss << "IR Intensities Average Fitness: ";
+    ss << ir_int_average / ir_int_avg_sigma_ << std::endl;
+
+    double ir_int_differences = IRIntensityDiffFitness(param_group);
+    ss << "IR Intensities Difference Fitness: ";
+    ss << ir_int_differences / ir_int_diff_sigma_ << std::endl;
 
   }
   catch(const char* e){

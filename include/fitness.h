@@ -23,6 +23,10 @@ class Fitness{
     double excited_freq_diff_sigma_;  // Excited State Frequencies differences
     double excited_int_avg_sigma_;  // Exctied State Intensities average
     double excited_int_diff_sigma_;  // Excited State Intensities differences
+    double ir_freq_avg_sigma_;  // Infrared frequencies average
+    double ir_freq_diff_sigma_;  // Infrared frequencies differences
+    double ir_int_avg_sigma_;  //  Infrared intensities average
+    double ir_int_diff_sigma_;  // Infrared intensities differences
     double EnergyFitness(const reparm::ParameterGroup &param_group) const;
     double DipoleAverageFitness(const reparm::ParameterGroup &param_group) const;
     double DipoleDifferenceFitness(const reparm::ParameterGroup &param_group) const;
@@ -30,6 +34,10 @@ class Fitness{
     double ExcitedFreqDiffFitness(const reparm::ParameterGroup &param_group) const;
     double ExcitedIntAverageFitness(const reparm::ParameterGroup &param_group) const;
     double ExcitedIntDiffFitness(const reparm::ParameterGroup &param_group) const;
+    double IRFreqAverageFitness(const reparm::ParameterGroup &param_group) const;
+    double IRFreqDiffFitness(const reparm::ParameterGroup &param_group) const;
+    double IRIntensityAverageFitness(const reparm::ParameterGroup &param_group) const;
+    double IRIntensityDiffFitness(const reparm::ParameterGroup &param_group) const;
     double FindSTDEV(const reparm::Fitness&,
 		     const std::vector<reparm::ParameterGroup> &population,
 		     const std::function<double (const reparm::ParameterGroup)>&);
