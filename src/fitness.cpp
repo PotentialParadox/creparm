@@ -334,10 +334,66 @@ double reparm::Fitness::IRFreqDiffFitness
 }
 
 double reparm::Fitness::IRIntensityAverageFitness
-(const reparm::ParameterGroup &param_group) const{return 1;}
+(const reparm::ParameterGroup &param_group) const{
+  /* Get the data */
+  std::vector<std::vector<double> > am1_ir_intensities;
+  for (auto &i: param_group.GetOutputs())
+    am1_ir_intensities.push_back(i.GetIntensities());
+  std::vector<std::vector<double> > hlt_ir_intensities;
+  for (auto &i: high_level_outputs_)
+    hlt_ir_intensities.push_back(i.GetIntensities());
+  if (am1_ir_intensities.empty() || hlt_ir_intensities.empty())
+    throw "Cannot not obtain ir_intensities";
+
+  /* Make the vectors of averages */
+  std::vector<double> am1_averages;
+  for (auto &i: am1_ir_intensities)
+    am1_averages.emplace_back(dmath::Average(i.begin(), i.end()));
+  std::vector<double> hlt_averages;
+  for (auto &i: hlt_ir_intensities)
+    hlt_averages.emplace_back(dmath::Average(i.begin(), i.end()));
+
+  if (am1_averages.size() != hlt_averages.size())
+    throw "am1 and hlt ir intensities sizes differ";
+  return dmath::Distance(am1_averages.begin(), am1_averages.end(), hlt_averages.begin());
+}
 
 double reparm::Fitness::IRIntensityDiffFitness
-(const reparm::ParameterGroup &param_group) const{return 1;}
+(const reparm::ParameterGroup &param_group) const{
+  /* Get the data */
+  std::vector<std::vector<double> > am1_ir_intensities;
+  for (auto &i: param_group.GetOutputs())
+    am1_ir_intensities.push_back(i.GetIntensities());
+  std::vector<std::vector<double> > hlt_ir_intensities;
+  for (auto &i: high_level_outputs_)
+    hlt_ir_intensities.push_back(i.GetIntensities());
+  if (am1_ir_intensities.empty() || hlt_ir_intensities.empty())
+    throw "Cannot not obtain ir_intensities";
+
+  /* Create vectors of the differences */
+  std::vector<std::vector<double> > am1_differences;
+  for (auto &i: am1_ir_intensities)
+    am1_differences.emplace_back(dmath::Differences<double>(i.begin(), i.end()));
+  std::vector<std::vector<double> > hlt_differences;
+  for (auto &i: hlt_ir_intensities)
+    hlt_differences.emplace_back(dmath::Differences<double>(i.begin(), i.end()));
+  if (hlt_differences.size() != am1_differences.size())
+    throw "amount of normal modes differ";
+
+  /* Now make a vector of the distances between hlt and am1 */
+  std::vector<double> distances;
+  auto am1_it = am1_differences.begin();
+  auto hlt_it = hlt_differences.begin();
+  auto end = am1_differences.end();
+  for (; am1_it != end; ++am1_it, ++hlt_it){
+    if (am1_it->size() != hlt_it->size())
+      throw "ir intensities differences differ";
+    distances.emplace_back(dmath::Distance(am1_it->begin()
+					   , am1_it->end(), hlt_it->begin()));
+  }
+
+  return dmath::Average(distances.begin(), distances.end());
+}
 
 reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
                          const std::vector<reparm::GaussianOutput> &high_level_outputs)
@@ -511,19 +567,23 @@ std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_grou
 
     double ir_freq_average = IRFreqAverageFitness(param_group);
     ss << "IR Frequency Average Fitness: ";
-    ss << ir_freq_average / ir_freq_avg_sigma_ << std::endl;
+    ss << ir_freq_average << std::endl;
+    ss << ir_freq_avg_sigma_ << std::endl;
 
     double ir_freq_difference = IRFreqDiffFitness(param_group);
     ss << "IR Frequency Differences Fitness: ";
-    ss << ir_freq_difference / ir_freq_diff_sigma_ << std::endl;
+    ss << ir_freq_difference << std::endl;
+    ss << ir_freq_diff_sigma_ << std::endl;
 
     double ir_int_average = IRIntensityAverageFitness(param_group);
     ss << "IR Intensities Average Fitness: ";
     ss << ir_int_average << std::endl;
+    ss << ir_int_avg_sigma_ << std::endl;
 
     double ir_int_differences = IRIntensityDiffFitness(param_group);
     ss << "IR Intensities Difference Fitness: ";
     ss << ir_int_differences << std::endl;
+    ss << ir_int_diff_sigma_ << std::endl;
 
   }
   catch(const char* e){
