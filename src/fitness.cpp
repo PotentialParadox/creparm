@@ -519,11 +519,11 @@ std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_grou
 
     double ir_int_average = IRIntensityAverageFitness(param_group);
     ss << "IR Intensities Average Fitness: ";
-    ss << ir_int_average / ir_int_avg_sigma_ << std::endl;
+    ss << ir_int_average << std::endl;
 
     double ir_int_differences = IRIntensityDiffFitness(param_group);
     ss << "IR Intensities Difference Fitness: ";
-    ss << ir_int_differences / ir_int_diff_sigma_ << std::endl;
+    ss << ir_int_differences << std::endl;
 
   }
   catch(const char* e){
