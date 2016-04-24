@@ -20,7 +20,7 @@ double reparm::Fitness::EnergyFitness
     am1_energies.push_back(i.GetEnergy());
   /* Convert to Differences */ 
   if (am1_energies.size() <= 1)
-    throw "Cannot find energy differences";
+    throw "Cannot find am1 energy differences";
   auto am1_differences = dmath::Differences<double>(am1_energies.begin(), am1_energies.end());
   // Get HLT Energies
   std::vector<double> hlt_energies;
@@ -30,7 +30,7 @@ double reparm::Fitness::EnergyFitness
     throw "Energy vectors are not the same size";
   /* Convert to Differences */
   if (hlt_energies.size() <= 1)
-    throw "Cannot find energy differences";
+    throw "Cannot find hlt energy differences";
   auto hlt_differences = dmath::Differences<double>(hlt_energies.begin(), hlt_energies.end());
   auto distance = dmath::Distance(am1_differences.begin(), am1_differences.end(),
 				  hlt_differences.begin());
