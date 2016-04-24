@@ -567,23 +567,19 @@ std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_grou
 
     double ir_freq_average = IRFreqAverageFitness(param_group);
     ss << "IR Frequency Average Fitness: ";
-    ss << ir_freq_average << std::endl;
-    ss << ir_freq_avg_sigma_ << std::endl;
+    ss << ir_freq_average / ir_freq_avg_sigma_ << std::endl;
 
     double ir_freq_difference = IRFreqDiffFitness(param_group);
     ss << "IR Frequency Differences Fitness: ";
-    ss << ir_freq_difference << std::endl;
-    ss << ir_freq_diff_sigma_ << std::endl;
+    ss << ir_freq_difference / ir_freq_diff_sigma_ << std::endl;
 
     double ir_int_average = IRIntensityAverageFitness(param_group);
     ss << "IR Intensities Average Fitness: ";
-    ss << ir_int_average << std::endl;
-    ss << ir_int_avg_sigma_ << std::endl;
+    ss << ir_int_average / ir_int_avg_sigma_ << std::endl;
 
     double ir_int_differences = IRIntensityDiffFitness(param_group);
     ss << "IR Intensities Difference Fitness: ";
-    ss << ir_int_differences << std::endl;
-    ss << ir_int_diff_sigma_ << std::endl;
+    ss << ir_int_differences / ir_int_diff_sigma_ << std::endl;
 
   }
   catch(const char* e){
@@ -602,6 +598,10 @@ double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
   double efd_fitness = 0;  // Excited State Frequency Difference
   double eia_fitness = 0; // Excited State Intensity Average
   double eid_fitness = 0;  // Excited State Intensity Difference
+  double irfa_fitness = 0;  // IR Frequncy Average
+  double irfd_fitness = 0;  // IR Frequency Difference
+  double iria_fitness = 0; // IR Intensity Average
+  double irid_fitness = 0;  // IR Intensity Difference
   try{
     e_fitness = EnergyFitness(rhs);
     d_fitness = DipoleAverageFitness(rhs);
@@ -610,6 +610,10 @@ double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
     efd_fitness = ExcitedFreqDiffFitness(rhs);
     eia_fitness = ExcitedIntAverageFitness(rhs);
     eid_fitness = ExcitedIntDiffFitness(rhs);
+    irfa_fitness = IRFreqAverageFitness(rhs);
+    irfd_fitness = IRFreqDiffFitness(rhs);
+    iria_fitness = IRIntensityAverageFitness(rhs);
+    irid_fitness = IRIntensityDiffFitness(rhs);
     fitness = (
 	       e_fitness / energy_sigma_
                + d_fitness / dipole_average_sigma_
@@ -618,6 +622,10 @@ double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
 	       + efd_fitness / excited_freq_diff_sigma_
 	       + eia_fitness / excited_int_avg_sigma_
 	       + eid_fitness / excited_int_diff_sigma_
+	       + irfa_fitness / ir_freq_avg_sigma_
+	       + irfd_fitness / ir_freq_diff_sigma_
+	       + iria_fitness / ir_int_avg_sigma_
+	       + irid_fitness / ir_int_diff_sigma_
               );
   }
   catch(const char* e){
@@ -638,6 +646,10 @@ void reparm::Fitness::operator () (std::vector<reparm::ParameterGroup> &rhs) con
     double efd_fitness = 0;  // Excited State Frequency Difference
     double eia_fitness = 0; // Excited State Intensity Average
     double eid_fitness = 0;  // Excited State Intensity Difference
+    double irfa_fitness = 0;  // IR Frequncy Average
+    double irfd_fitness = 0;  // IR Frequency Difference
+    double iria_fitness = 0; // IR Intensity Average
+    double irid_fitness = 0;  // IR Intensity Difference
     try{
       e_fitness = EnergyFitness(i);
       d_fitness = DipoleAverageFitness(i);
@@ -646,6 +658,10 @@ void reparm::Fitness::operator () (std::vector<reparm::ParameterGroup> &rhs) con
       efd_fitness = ExcitedFreqDiffFitness(i);
       eia_fitness = ExcitedIntAverageFitness(i);
       eid_fitness = ExcitedIntDiffFitness(i);
+      irfa_fitness = IRFreqAverageFitness(i);
+      irfd_fitness = IRFreqDiffFitness(i);
+      iria_fitness = IRIntensityAverageFitness(i);
+      irid_fitness = IRIntensityDiffFitness(i);
       fitness = (
 		 e_fitness / energy_sigma_
 		 + d_fitness / dipole_average_sigma_
@@ -654,6 +670,10 @@ void reparm::Fitness::operator () (std::vector<reparm::ParameterGroup> &rhs) con
 		 + efd_fitness / excited_freq_diff_sigma_
 		 + eia_fitness / excited_int_avg_sigma_
 		 + eid_fitness / excited_int_diff_sigma_
+		 + irfa_fitness / ir_freq_avg_sigma_
+		 + irfd_fitness / ir_freq_diff_sigma_
+		 + iria_fitness / ir_int_avg_sigma_
+		 + irid_fitness / ir_int_diff_sigma_
 		 );
     }
     catch(const char* e){
