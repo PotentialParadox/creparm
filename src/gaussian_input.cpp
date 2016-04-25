@@ -7,11 +7,11 @@ reparm::GaussianInput::GaussianInput(const std::string &s){
   try{
   std::string file{ReadFile(s)};
   reparm::Header header{ReadHeader(file)};
-  this->header_.push_back(header);
+  header_->push_back(header);
   reparm::Coordinates coordinates{ReadCoordinates(file)};
-  this->coordinates_.push_back(coordinates);
+  coordinates_->push_back(coordinates);
   reparm::Parameters parameters{ReadParameters(file)};
-  this->parameters_.push_back(parameters);
+  parameters_->push_back(parameters);
   }
   catch(...){
     std::cerr << "Gaussian Input Read Error" << std::endl;
@@ -19,6 +19,23 @@ reparm::GaussianInput::GaussianInput(const std::string &s){
     throw e;
   }
 }
+
+reparm::GaussianInput::GaussianInput(const reparm::GaussianInput& rhs){
+  *header_ = *(rhs.header_);
+  *coordinates_ = *(rhs.coordinates_);
+  *parameters_ = *(rhs.parameters_);
+}
+
+reparm::GaussianInput& reparm::GaussianInput::operator=
+(const reparm::GaussianInput& rhs){
+  if (&rhs == this)
+    return *this;
+  *header_ = *(rhs.header_);
+  *coordinates_ = *(rhs.coordinates_);
+  *parameters_ = *(rhs.parameters_);
+  return *this;
+}
+  
 
 std::string reparm::GaussianInput::ReadFile(const std::string &file_name) const{
   using namespace std;
@@ -69,66 +86,66 @@ reparm::Parameters reparm::GaussianInput::ReadParameters(const std::string &file
 }
 
 void reparm::GaussianInput::SetHeader(const reparm::Header &header){
-  if (header_.empty())
-    header_.push_back(header);
-  for (auto &i: this->header_) {i = header;}
+  if (header_->empty())
+    header_->push_back(header);
+  for (auto &i: *header_) {i = header;}
 }
 
 void reparm::GaussianInput::SetCoordinates(const reparm::Coordinates &coordinates){
-  if (coordinates_.empty())
-    coordinates_.push_back(coordinates);
-  for (auto &i: this->coordinates_) {i = coordinates;}
+  if (coordinates_->empty())
+    coordinates_->push_back(coordinates);
+  for (auto &i: *coordinates_) {i = coordinates;}
 }
 
 void reparm::GaussianInput::SetParameters(const reparm::Parameters &parameters){
-  if (parameters_.empty())
-    parameters_.push_back(parameters);
-  for (auto &i : this->parameters_) {i = parameters;}
+  if (parameters_->empty())
+    parameters_->push_back(parameters);
+  for (auto &i : *parameters_) {i = parameters;}
 }
 
 void reparm::GaussianInput::PerturbCoordinates(const float &p){
-  this->coordinates_[0].Perturb(p);
-  for (auto &i: this->coordinates_) {i = coordinates_[0];}
+  (*coordinates_)[0].Perturb(p);
+  for (auto &i: *coordinates_) {i = (*coordinates_)[0];}
 }
 
 void reparm::GaussianInput::MutateParameters(const double &p, const float &r){
-  this->parameters_[0].Mutate(p, r);
-  for (auto &i: this->parameters_) {i = parameters_[0];}
+  (*parameters_)[0].Mutate(p, r);
+  for (auto &i: *parameters_) {i = (*parameters_)[0];}
 }
 
 reparm::Parameters reparm::GaussianInput::Cross(const reparm::Parameters &params){
-  return parameters_[0].Cross(params);
-  for (auto &i: this->parameters_) {i = parameters_[0];}
+  return (*parameters_)[0].Cross(params);
+  for (auto &i: *parameters_) {i = (*parameters_)[0];}
 }
 
 reparm::Header reparm::GaussianInput::GetHeader() const{
-  return this->header_[0];
+  return (*header_)[0];
 }
 
 reparm::Coordinates reparm::GaussianInput::GetCoordinates() const{
-  return this->coordinates_[0];
+  return (*coordinates_)[0];
 }
 
 reparm::Parameters reparm::GaussianInput::GetParameters() const{
-  return this->parameters_[0];
+  return (*parameters_)[0];
 }
 
 std::string reparm::GaussianInput::str() {
-  std::string input = (this->header_[0].str() + this->coordinates_[0].str()
-                       + this->parameters_[0].str());
-  for (size_t i = 1; i < this->header_.size(); ++i){
-    input += ("--Link1--\n" + this->header_[i].str() + this->coordinates_[i].str()
-              + this->parameters_[i].str());
+  std::string input = ((*header_)[0].str() + (*coordinates_)[0].str()
+                       + (*parameters_)[0].str());
+  for (size_t i = 1; i < this->header_->size(); ++i){
+    input += ("--Link1--\n" + (*header_)[i].str() + (*coordinates_)[i].str()
+              + (*parameters_)[i].str());
   }
   return input;
 }
 
 void reparm::GaussianInput::ClearCoordinates(){
-  for (auto &i: coordinates_){ i.ClearCoordinates(); }
+  for (auto &i: *coordinates_){ i.ClearCoordinates(); }
 }
 
 void reparm::GaussianInput::Link(const reparm::GaussianInput& rhs){
-  this->header_.push_back(rhs.GetHeader());
-  this->coordinates_.push_back(rhs.GetCoordinates());
-  this->parameters_.push_back(rhs.GetParameters());
+  this->header_->push_back(rhs.GetHeader());
+  this->coordinates_->push_back(rhs.GetCoordinates());
+  this->parameters_->push_back(rhs.GetParameters());
 }

@@ -15,18 +15,21 @@
 #include <coordinates.h>
 #include <parameters.h>
 #include <reparm_exceptions.h>
+#include <memory>
 
 namespace reparm{
 
 class GaussianInput{
   private:
-    std::vector<reparm::Header> header_;
-    std::vector<reparm::Coordinates> coordinates_;
-    std::vector<reparm::Parameters> parameters_;
+  std::unique_ptr<std::vector<reparm::Header> > header_;
+  std::unique_ptr<std::vector<reparm::Coordinates> > coordinates_;
+  std::unique_ptr<std::vector<reparm::Parameters> > parameters_;
 
   public:
     GaussianInput(){};
     GaussianInput(const std::string&);
+    GaussianInput(const GaussianInput&);
+    GaussianInput& operator=(const GaussianInput&);
 
     std::string ReadFile(const std::string&) const;
     reparm::Coordinates ReadCoordinates(const std::string&);
