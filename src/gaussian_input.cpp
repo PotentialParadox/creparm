@@ -30,11 +30,11 @@ reparm::GaussianInput::GaussianInput(const std::string &s)
   }
 }
 
-reparm::GaussianInput::GaussianInput(const reparm::GaussianInput& rhs){
-  *header_ = *(rhs.header_);
-  *coordinates_ = *(rhs.coordinates_);
-  *parameters_ = *(rhs.parameters_);
-}
+reparm::GaussianInput::GaussianInput(const reparm::GaussianInput& rhs)
+  : header_(new std::vector<reparm::Header>(*(rhs.header_)))
+  , coordinates_(new std::vector<reparm::Coordinates>(*(rhs.coordinates_))) 
+  , parameters_(new std::vector<reparm::Parameters>(*(rhs.parameters_)))
+{}
 
 reparm::GaussianInput& reparm::GaussianInput::operator=
 (const reparm::GaussianInput& rhs){
