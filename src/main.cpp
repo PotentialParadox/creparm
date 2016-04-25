@@ -50,15 +50,27 @@ int main(){
 
     // Initialize the functors
     Mutate mutate(reparm_data);
+    fout << "Initialized mutate" << endl;
+    initial_output = reparm_data->population_[0].GetOutputs()[0].str();
     Survivor survivor(reparm_data);
+    fout << "Initialized survivor" << endl;
+    initial_output = reparm_data->population_[0].GetOutputs()[0].str();
     Breed breed(reparm_data);
+    fout << "Initialized breed" << endl;
+    initial_output = reparm_data->population_[0].GetOutputs()[0].str();
     AristocraticCloning aristocratic_clone(reparm_data);
+    fout << "Initialized ac" << endl;
+    initial_output = reparm_data->population_[0].GetOutputs()[0].str();
 
     // Index starts at one, guarenteeing that at least member is at least as good as
     // the user's input
     mutate(reparm_data->population_, 1, reparm_data->GetReparmInput().GetPopulationSize());
+    fout << "Finished first mutation" << endl;
+    initial_output = reparm_data->population_[0].GetOutputs()[0].str();
 
     Fitness fitness(reparm_data->population_, reparm_data->GetHighLevelOutputs());
+    fout << "Determined fitnesss" << endl;
+    initial_output = reparm_data->population_[0].GetOutputs()[0].str();
 
     // ******* Begin the main loop *********
     double original_fitness = fitness(reparm_data->population_[0]);
