@@ -3,7 +3,11 @@
 #include <iostream>
 #include <fstream>
 
-reparm::GaussianInput::GaussianInput(const std::string &s){
+reparm::GaussianInput::GaussianInput(const std::string &s)
+  : header_(new std::vector<reparm::Header>)
+  , coordinates_(new std::vector<reparm::Coordinates>)
+  , parameters_(new std::vector<reparm::Parameters>)
+{
   try{
   std::string file{ReadFile(s)};
   reparm::Header header{ReadHeader(file)};
