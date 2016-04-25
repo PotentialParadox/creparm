@@ -3,6 +3,12 @@
 #include <iostream>
 #include <fstream>
 
+reparm::GaussianInput::GaussianInput()
+  : header_(new std::vector<reparm::Header>)
+  , coordinates_(new std::vector<reparm::Coordinates>)
+  , parameters_(new std::vector<reparm::Parameters>)
+{}
+
 reparm::GaussianInput::GaussianInput(const std::string &s)
   : header_(new std::vector<reparm::Header>)
   , coordinates_(new std::vector<reparm::Coordinates>)
