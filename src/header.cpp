@@ -16,6 +16,12 @@ Header::Header(const std::string& header){
   }
 }
 
+Header::Header(const reparm::Header& rhs)
+  : command_(rhs.command_)
+  , title_(rhs.title_)
+{}
+  
+
 std::string Header::ReadCommand(const std::string &header){
   using namespace std;
   try{

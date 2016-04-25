@@ -22,6 +22,7 @@ class Header{
       {}
 
     Header(const std::string&);
+    Header(const reparm::Header&);
     void SetCommand(const std::string&);
     void SetTitle(const std::string&);
     std::string ReadCommand(const std::string&);
