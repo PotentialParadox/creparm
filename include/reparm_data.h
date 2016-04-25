@@ -21,7 +21,7 @@ namespace reparm{
       ReparmData(std::string s)
         : reparm_input_{s}
         {}
-
+      
       // population_ should be modifiable
       std::vector<GaussianOutput> high_level_outputs_;
       std::vector<ParameterGroup> population_;

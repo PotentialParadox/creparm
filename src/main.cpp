@@ -49,10 +49,10 @@ int main(){
     fout << "Finished with High Level Theory" << endl;
 
     // Initialize the functors
-    Mutate mutate(*reparm_data);
-    Survivor survivor(*reparm_data);
-    Breed breed(*reparm_data);
-    AristocraticCloning aristocratic_clone(*reparm_data);
+    Mutate mutate(reparm_data);
+    Survivor survivor(reparm_data);
+    Breed breed(reparm_data);
+    AristocraticCloning aristocratic_clone(reparm_data);
 
     // Index starts at one, guarenteeing that at least member is at least as good as
     // the user's input

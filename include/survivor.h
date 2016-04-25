@@ -7,22 +7,23 @@
 #include <vector>
 #include <reparm_data.h>
 #include <parameter_group.h>
+#include <memory>
 
 namespace reparm{
 
   class Survivor{
-    private:
-      int number_elites_;
-      float survival_chance_;
-      Survivor();
+  private:
+    int number_elites_;
+    float survival_chance_;
+    Survivor();
 
-    public:
-      Survivor(reparm::ReparmData reparm_data)
-        : number_elites_{reparm_data.GetReparmInput().GetNumberElites()}
-        , survival_chance_{reparm_data.GetReparmInput().GetSurvivalChance()}
-        {}
+  public:
+  Survivor(const std::unique_ptr<reparm::ReparmData>  &reparm_data)
+    : number_elites_{reparm_data->GetReparmInput().GetNumberElites()}
+    , survival_chance_{reparm_data->GetReparmInput().GetSurvivalChance()}
+    {}
 
-      void operator () (std::vector<reparm::ParameterGroup>&);
+    void operator () (std::vector<reparm::ParameterGroup>&);
 
   };
 

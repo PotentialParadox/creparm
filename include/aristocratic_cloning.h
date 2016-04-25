@@ -11,6 +11,7 @@ Created by Dustin Tracy (dtracy.uf@gmail.com) April 11, 2016 */
 #include <mutate.h>
 #include <parameter_group.h>
 #include <fitness.h>
+#include <memory>
 
 namespace reparm{
 
@@ -21,7 +22,7 @@ class AristocraticCloning{
     reparm::Mutate mutate_;
 
   public:
-    AristocraticCloning(reparm::ReparmData&);
+    AristocraticCloning(std::unique_ptr<reparm::ReparmData>&);
 
     void operator () (std::vector<reparm::ParameterGroup>&, reparm::Fitness&);
 

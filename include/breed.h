@@ -9,20 +9,21 @@ Created by Dustin Tracy (dtracy.ufl.edu) April 11 2016*/
 #include<vector>
 #include<reparm_data.h>
 #include<parameter_group.h>
+#include<memory>
 
 namespace reparm{
 
-class Breed{
+  class Breed{
   private:
     int population_size_;
     int number_elites_;
     Breed();
 
   public:
-    Breed(reparm::ReparmData &reparm_data)
-      : population_size_{reparm_data.GetReparmInput().GetPopulationSize()}
-      , number_elites_{reparm_data.GetReparmInput().GetNumberElites()}
-      {}
+  Breed(const std::unique_ptr<reparm::ReparmData> &reparm_data)
+    : population_size_{reparm_data->GetReparmInput().GetPopulationSize()}
+    , number_elites_{reparm_data->GetReparmInput().GetNumberElites()}
+    {}
 
     void operator () (std::vector<reparm::ParameterGroup> &population);
 };

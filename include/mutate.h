@@ -9,6 +9,7 @@
 #include <parameter_group.h>
 #include <fitness.h>
 #include <gaussian.h>
+#include <memory>
 
 namespace reparm{
 
@@ -22,10 +23,10 @@ private:
   Mutate(){};
 
 public:
-  Mutate(reparm::ReparmData reparm_data)
-    : mutation_rate_{reparm_data.GetReparmInput().GetMutationRate()}
-    , mutation_perturbation_{reparm_data.GetReparmInput().GetMutationPerturbations()}
-    , number_elites_{reparm_data.GetReparmInput().GetNumberElites()}
+ Mutate(const std::unique_ptr<reparm::ReparmData> &reparm_data)
+    : mutation_rate_{reparm_data->GetReparmInput().GetMutationRate()}
+    , mutation_perturbation_{reparm_data->GetReparmInput().GetMutationPerturbations()}
+    , number_elites_{reparm_data->GetReparmInput().GetNumberElites()}
   {}
 
   void operator () (std::vector<reparm::ParameterGroup> &population);
