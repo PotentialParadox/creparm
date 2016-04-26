@@ -68,6 +68,7 @@ int main(){
     fout << "Finished first mutation" << endl;
     initial_output = reparm_data->population_[0].GetOutputs()[0].str();
 
+    fout << "Determining fitnesss" << endl;
     Fitness fitness(reparm_data->population_, reparm_data->GetHighLevelOutputs());
     fout << "Determined fitnesss" << endl;
     initial_output = reparm_data->population_[0].GetOutputs()[0].str();

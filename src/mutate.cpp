@@ -27,10 +27,6 @@ void reparm::Mutate::operator()(std::vector<reparm::ParameterGroup> &population,
                                 unsigned int start, unsigned int finish){
   if (start > population.size() || start > finish || finish > population.size())
     throw "Error with mutate indices\n";
-  std::cout << "sorting the mutated groups" << std::endl;
-  sort(population.begin() + start, population.end());
-  auto initial_output = population[0].GetOutputs()[0].str();
-  std::cout << "sorted the mutated groups" << std::endl;
   auto it = population.begin() + start;
   auto end = population.begin() + finish;
   Gaussian gaussian;
@@ -47,7 +43,5 @@ void reparm::Mutate::operator()(std::vector<reparm::ParameterGroup> &population,
     }
     it->SetOutputs(gouts);
   }
-  initial_output = population[0].GetOutputs()[0].str();
-  std::cout << "ran gaussian" << std::endl;
 }
 
