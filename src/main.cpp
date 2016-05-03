@@ -30,11 +30,18 @@ int main(){
   auto reparm_data = unique_ptr<ReparmData>(new ReparmData("reparm.in"));
   ofstream fout{"reparm.out"};
   fout << PrintTitle();
+  GaussianInput input;
   try{
     ReparmInput reparm_input{reparm_data->GetReparmInput()};
-    string starter_file{reparm_input.GetMoleculeName() + ".com"};
-    GaussianInput input{CreateReparmGaussian(starter_file)};
-
+    if (reparm_input.GetShouldContinue()){
+      input = GaussianInput{"best_eq.com"};
+      Header header{"#P AM1(Input,print)\n"};
+      input.SetHeader(header);
+    }
+    else{
+      string starter_file{reparm_input.GetMoleculeName() + ".com"};
+      input = GaussianInput{CreateReparmGaussian(starter_file)};
+    }
     fout << "Creating AM1 population" << endl;
     reparm_data->CreatePopulation(input);
     // Since the entire population is the same, we only run the first
