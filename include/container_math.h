@@ -82,7 +82,7 @@ namespace dmath{
   }
 
   //////////////////////////////////////////////
-// VectorDistance 
+// VectorDifference 
 // Returns a vector representing the difference
 // between two vectors
   //////////////////////////////////////////////
@@ -95,7 +95,26 @@ namespace dmath{
       v.emplace_back(*it - *it1);
     return v;
   }
-  
+
+
+  //////////////////////////////////////////////
+// VectorOneToTwo 
+// Converts a one dimensional vector into two
+  //////////////////////////////////////////////
+  template <typename T>
+    std::vector<std::vector<T> > VectorOneToTwo(const std::vector<T> &v, const int columns){
+    std::vector<std::vector<T> > array;
+    if ((v.size() % columns) || columns <= 0)
+      throw "cannot not convert dimensions";
+    for (size_t i = 0; i < v.size(); i+=columns){
+      std::vector<T> temp_v;
+      for (size_t j = 0; j != static_cast<size_t>(columns); ++j){
+	temp_v.push_back(v[i+j]);
+      }
+      array.push_back(temp_v);
+    }
+    return array;
+  }
 }
 
 #endif /* CONTAINER_MATH_H */

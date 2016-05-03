@@ -57,6 +57,7 @@ std::string reparm::PrintTitle(){
   ss << "//         AM1 Reparameterization      //" << std::endl;
   ss << "//             Dustin Tracy            //" << std::endl;
   ss << "//                 2016                //" << std::endl;
+  ss << "//                                     //" << std::endl;
   ss << "/////////////////////////////////////////" << std::endl;
   ss << "\n" << std::endl;
   return ss.str();
