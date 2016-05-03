@@ -77,6 +77,11 @@ void ReparmInput::ReadInputFile(){
       this->geometric_perturbation_ = stof(m[1]);
     }
 
+    p = "Continue From Last Run:\\s+(.+)";
+    if(std::regex_search (file, m,  p)){
+      this->should_continue_ = stof(m[1]);
+    }
+
   } catch(const char *e){
     std::cerr << "Exception occured: " << e << ".\n";
     throw "Reparm Input Error";
@@ -177,4 +182,12 @@ void ReparmInput::SetGeometricPerturbation(float N){
 
 float ReparmInput::GetGeometricPerturbation() const{
   return this->geometric_perturbation_;
+}
+
+void ReparmInput::SetShouldContinue(bool should_continue){
+  should_continue_ = should_continue;
+}
+
+bool ReparmInput::GetShouldContinue() const{
+  return should_continue_;
 }

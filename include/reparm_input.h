@@ -63,7 +63,7 @@ class ReparmInput {
   float GetSurvivalChance() const;
   void SetGeometricPerturbation(float N);
   float GetGeometricPerturbation() const;
-  void SetShouldContinue(bool);
+  void SetShouldContinue(bool should_continue);
   bool GetShouldContinue() const;
 
   void ReadInputFile();
