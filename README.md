@@ -37,18 +37,19 @@ S      -1.61     0.04   -0.13
 Inside this same folder you need to create an input file called reparm.in.
 Here is an example
 ```
-Input File:                Thiophene.com
-High Level Theory          B3LYP/3-21G
-Number of Excited States   10
-Number of Generations      200
-Number of Processors       4
-Number of Geometries       128
-Number of Elites           2
-Population Size            8
-Mutation Rate              0.10
-Mutation Perturbation      0.05
-Survival Chance            0.5
-Geometric Perturbation     0.10
+Input File:                    Thiophene.com
+High Level Theory              B3LYP/3-21G
+Number of Excited States       10
+Number of Generations          200
+Number of Processors           4
+Number of Geometries           128
+Number of Elites               2
+Population Size                8
+Mutation Rate                  0.10
+Mutation Perturbation          0.05
+Survival Chance                0.5
+Geometric Perturbation         0.10
+Continue From Last Run         True
 ```
 The number of elites represent how many members of a generation you want to mutate only if their mutation is an improvement.
 
