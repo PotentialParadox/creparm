@@ -31,6 +31,7 @@ int main(){
   ofstream fout{"reparm.out"};
   fout << PrintTitle();
   GaussianInput input;
+  double original_fitness = 0;
   try{
     ReparmInput reparm_input{reparm_data->GetReparmInput()};
     if (reparm_input.GetShouldContinue()){
@@ -82,7 +83,7 @@ int main(){
     initial_output = reparm_data->population_[0].GetOutputs()[0].str();
 
     // ******* Begin the main loop *********
-    double original_fitness = fitness(reparm_data->population_[0]);
+    original_fitness = fitness(reparm_data->population_[0]);
     double best_fitness = original_fitness;
     fout << "\nOriginal Fitness" << endl;
     fout << fitness.StringList(reparm_data->population_[0]) << endl;
@@ -116,7 +117,8 @@ int main(){
   fout << reparm_data->population_[0].GetOutputs()[0].str() << endl;
   fout << "Corresponding DFT" << endl;
   fout << reparm_data->high_level_outputs_[0].str() << endl;
-  fout << "Fitness: " << reparm_data->population_[0].GetFitness() << endl;
+  fout << "Fitness: " << reparm_data->population_[0].GetFitness()
+    / original_fitness << endl;
   high_resolution_clock::time_point t2 = high_resolution_clock::now();
   duration<double> time_span = duration_cast<duration<double> >(t2 - t1);
   int time = static_cast<int>(time_span.count());
