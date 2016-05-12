@@ -79,7 +79,8 @@ void ReparmInput::ReadInputFile(){
 
     p = "Continue From Last Run:\\s+(.+)";
     if(std::regex_search (file, m,  p)){
-      this->should_continue_ = stof(m[1]);
+      if (m[1] == "true" || m[1] == "True")
+	this->should_continue_ = true;
     }
 
   } catch(const char *e){

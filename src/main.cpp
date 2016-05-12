@@ -34,6 +34,7 @@ int main(){
   try{
     ReparmInput reparm_input{reparm_data->GetReparmInput()};
     if (reparm_input.GetShouldContinue()){
+      fout << "Continuing from last run" << endl;
       input = GaussianInput{"best_eq.com"};
       Header header{"#P AM1(Input,print)\n"};
       input.SetHeader(header);
