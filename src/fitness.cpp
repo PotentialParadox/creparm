@@ -395,6 +395,60 @@ double reparm::Fitness::IRIntensityDiffFitness
   return dmath::Average(distances.begin(), distances.end());
 }
 
+double reparm::Fitness::ForceGeomDiffFitness
+(const reparm::ParameterGroup &param_group) const{
+  /* Get the data */
+  std::vector<std::vector<double> > am1_raw_forces;
+  for (auto &i: param_group.GetOutputs())
+    am1_raw_forces.push_back(i.GetForces());
+  std::vector<std::vector<double> > hlt_raw_forces;
+  for (auto &i: high_level_outputs_)
+    hlt_raw_forces.push_back(i.GetForces());
+  if (am1_raw_forces.size() < 2)
+    throw "not enough geometries";
+
+  /* Currently forces are stored as a one 3n long
+     array, where n is that number of force vectors.
+     I now calculate the vector differences between
+     these geometries */
+  auto it = am1_raw_forces.begin();
+  auto it1 = it + 1;
+  auto end = am1_raw_forces.end();
+  std::vector<std::vector<double> > am1_differences;
+  for (; it1 != end; ++it, ++it1){
+    auto difference = dmath::VectorDifference<double>(it->begin(),
+						      it->end(),
+						      it1->begin());
+    am1_differences.push_back(difference);
+  }
+
+  it = am1_raw_forces.begin();
+  it1 = it + 1;
+  end = am1_raw_forces.end();
+  std::vector<std::vector<double> > hlt_differences;
+  for (; it1 != end; ++it, ++it1){
+    auto difference = dmath::VectorDifference<double>(it->begin(),
+						      end->end(),
+						      it1->begin());
+    hlt_differences.push_back(difference);
+  }
+
+  /* We now need to find the distance between
+     the difference vectors of am1 and the hlt */
+  std::vector<double> distances;
+  it = am1_differences.begin();
+  it1 = hlt_differences.begin();
+  end = am1_differences.end();
+  for (; it1 != end; it++, it1++){
+    auto distance = dmath::Distance(it->begin(),
+				    end->begin(),
+				    it1->begin());
+    distances.push_back(distance);
+  }
+
+  return dmath::Average(distances.begin(), distances.end());
+}
+
 reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
                          const std::vector<reparm::GaussianOutput> &high_level_outputs)
   : high_level_outputs_{high_level_outputs}
@@ -409,6 +463,8 @@ reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
   , ir_freq_diff_sigma_(0.0)
   , ir_int_avg_sigma_(0.0)
   , ir_int_diff_sigma_(0.0)
+  , force_geom_diff_(0.0)
+  , force_geom_avg_(0.0)
     {
       /* Energy Values */
       std::vector<double> energy_values;
