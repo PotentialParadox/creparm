@@ -41,7 +41,7 @@ std::string Header::ReadTitle(const std::string &header){
   try{
     regex p_title{"^(.+\n)+\n(.+\n)"};
     smatch m;
-    if (!regex_search(header, m, p_title)){throw "Can't find command in inputfile";}
+    if (!regex_search(header, m, p_title)){throw "Can't find title in inputfile";}
     return m[2];
   }
   catch(const char *e){
