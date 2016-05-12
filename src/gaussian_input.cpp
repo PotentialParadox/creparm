@@ -88,7 +88,7 @@ reparm::Coordinates reparm::GaussianInput::ReadCoordinates(const std::string &fi
 
 reparm::Parameters reparm::GaussianInput::ReadParameters(const std::string &file){
   using namespace std;
-  regex p_parameters{"Method=(.|\n)*$"};
+  regex p_parameters{"Method=(.|\n)*?(?=\\-\\-Link1)"};
   smatch m;
   regex_search(file, m, p_parameters);
   reparm::Parameters parameters{m[0]};
