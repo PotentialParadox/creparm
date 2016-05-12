@@ -36,7 +36,7 @@ int main(){
     if (reparm_input.GetShouldContinue()){
       fout << "Continuing from last run" << endl;
       input = GaussianInput{"best_es.com"};
-      Header header{"#P AM1(Input,print)\n"};
+      Header header{"#P AM1(Input,print)\n\nContinuing\n"};
       input.SetHeader(header);
     }
     else{
