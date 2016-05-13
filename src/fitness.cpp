@@ -630,6 +630,18 @@ reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
       if (ir_int_diff_vals.size() <= 1)
 	throw "Not enough normal modes. Try lowering the mutation rate.";
       ir_int_diff_sigma_ = dmath::STDEV(ir_int_diff_vals.begin(), ir_int_diff_vals.end());
+
+      /* Force Geometry Difference Values */
+      std::vector<double> force_geom_diff_vals;
+      for (const auto &i: population)
+	try{
+	  auto force = ForceGeomDiffFitness(i);
+	  force_geom_diff_vals.push_back(force);
+	}catch(...){}
+      if (force_geom_diff_vals.size() <= 1)
+	throw "Not enough forces. Try lowering the mutation rate.";
+      force_geom_diff_sigma_ = dmath::STDEV(force_geom_diff_vals.begin(), force_geom_diff_vals.end());
+
     }
 
 std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_group) const{
