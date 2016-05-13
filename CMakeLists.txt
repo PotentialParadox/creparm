@@ -5,6 +5,7 @@ set (CMAKE_CXX_STANDARD 14)
 set (THREADS_PREFER_PTHREADS_FLAG ON)
 set (CMAKE_EXPORT_COMPILE_COMMANDS 1)
 find_package(Threads REQUIRED)
+find_package(Armadillo REQUIRED)
 # Bring in the headers
 include_directories(include)
 # Glob the sources since I'm lazy

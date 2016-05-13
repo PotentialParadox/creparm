@@ -5,6 +5,7 @@
 #include <cmath>
 #include <algorithm>
 #include <vector>
+#include <armadillo>
 
 namespace dmath{
 
@@ -115,6 +116,25 @@ namespace dmath{
     }
     return array;
   }
+
+  //////////////////////////////////////////////
+// DifferenceMatrix
+// Converts a one dimensional vector into a
+// two dimensional array representing the
+// differences between each member of the vector
+  //////////////////////////////////////////////
+  template <typename T>
+    arma::Mat<T> DifferenceMatrix(const std::vector<T> &v){
+    std::vector<T> v_temp(v.size() * v.size());
+    for (size_t i = 0; i != v.end(); ++i){
+      for (size_t j = 0; j != v.end(); ++j){
+	/* Armadillo matrices are column major. */
+	v_temp[i + v.size() * j] = std::abs(v[i] - v[j]);
+      }
+    }
+    return arma::Mat<T>(v_temp);
+  }
+  
 }
 
 #endif /* CONTAINER_MATH_H */

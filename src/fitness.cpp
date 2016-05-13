@@ -10,6 +10,7 @@ Created by Dustin Tracy (dtracy.uf@gmail.com) April 11, 2016 */
 #include <parameter_group.h>
 #include <cmath>
 #include <sstream>
+#include <armadillo>
 #include "container_math.h"
 
 double reparm::Fitness::EnergyFitness
@@ -21,7 +22,7 @@ double reparm::Fitness::EnergyFitness
   /* Convert to Differences */ 
   if (am1_energies.size() <= 1)
     throw "Cannot find am1 energy differences";
-  auto am1_differences = dmath::Differences<double>(am1_energies.begin(), am1_energies.end());
+  auto am1_differences = dmath::DifferenceMatrix<double>(am1_energies);
   // Get HLT Energies
   std::vector<double> hlt_energies;
   for (auto &i: high_level_outputs_)
@@ -31,10 +32,10 @@ double reparm::Fitness::EnergyFitness
   /* Convert to Differences */
   if (hlt_energies.size() <= 1)
     throw "Cannot find hlt energy differences";
-  auto hlt_differences = dmath::Differences<double>(hlt_energies.begin(), hlt_energies.end());
+  auto hlt_differences = dmath::DifferenceMatrix<double>(hlt_energies);
   auto distance = dmath::Distance(am1_differences.begin(), am1_differences.end(),
 				  hlt_differences.begin());
-  return std::sqrt(distance/am1_energies.size());
+  return distance;
 }
 
 double reparm::Fitness::DipoleAverageFitness
