@@ -694,7 +694,7 @@ std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_grou
 
     double force_geom_differences = ForceGeomDiffFitness(param_group);
     ss << "Force Geometry Difference Fitness: ";
-    ss << force_geom_differences / force_geom_diff_sigma_;
+    ss << force_geom_differences / force_geom_diff_sigma_ << std::endl;
 
   }
   catch(const char* e){
