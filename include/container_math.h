@@ -126,8 +126,8 @@ namespace dmath{
   template <typename T>
     arma::Mat<T> DifferenceMatrix(const std::vector<T> &v){
     std::vector<T> v_temp(v.size() * v.size());
-    for (size_t i = 0; i != v.end(); ++i){
-      for (size_t j = 0; j != v.end(); ++j){
+    for (size_t i = 0; i != v.size(); ++i){
+      for (size_t j = 0; j != v.size(); ++j){
 	/* Armadillo matrices are column major. */
 	v_temp[i + v.size() * j] = std::abs(v[i] - v[j]);
       }
