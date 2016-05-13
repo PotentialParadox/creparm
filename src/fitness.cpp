@@ -506,8 +506,8 @@ reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
   , ir_freq_diff_sigma_(0.0)
   , ir_int_avg_sigma_(0.0)
   , ir_int_diff_sigma_(0.0)
-  , force_geom_diff_(0.0)
-  , force_geom_avg_(0.0)
+  , force_geom_diff_sigma_(0.0)
+  , force_geom_avg_sigma_(0.0)
     {
       /* Energy Values */
       std::vector<double> energy_values;
@@ -679,6 +679,10 @@ std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_grou
     double ir_int_differences = IRIntensityDiffFitness(param_group);
     ss << "IR Intensities Difference Fitness: ";
     ss << ir_int_differences / ir_int_diff_sigma_ << std::endl;
+
+    double force_geom_differences = ForceGeomDiffFitness(param_group);
+    ss << "Force Geometry Difference Fitness: ";
+    ss << force_geom_differences / force_geom_diff_sigma_;
 
   }
   catch(const char* e){

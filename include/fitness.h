@@ -39,9 +39,9 @@ class Fitness{
     /* Infrared intensities differences */
     double ir_int_diff_sigma_;
     /* The force difference between atoms of differenct geometries */
-    double force_geom_diff_;  
+    double force_geom_diff_sigma_;  
     /* The average force for each atom among the geometriees */
-    double force_geom_avg_;
+    double force_geom_avg_sigma_;
     double EnergyFitness(const reparm::ParameterGroup &param_group) const;
     double DipoleAverageFitness(const reparm::ParameterGroup &param_group) const;
     double DipoleDifferenceFitness(const reparm::ParameterGroup &param_group) const;
