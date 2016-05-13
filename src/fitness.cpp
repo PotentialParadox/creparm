@@ -461,7 +461,7 @@ double reparm::Fitness::ForceGeomDiffFitness
       force difference;
       difference = dmath::VectorDifference<double>(force1->begin(), force1->end(), force2->begin());
       force_differences.push_back(difference);
-    }
+    
     hlt_differences.push_back(force_differences);
   }
 
