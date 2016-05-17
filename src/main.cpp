@@ -41,8 +41,9 @@ int main(){
       input.SetHeader(header);
     }
     else{
+      fout << "Starting new job" << endl;
       string starter_file{reparm_input.GetMoleculeName() + ".com"};
-      input = GaussianInput{CreateReparmGaussian(starter_file)};
+      input = GaussianInput{CreateReparmGaussian(starter_file, reparm_input)};
     }
     fout << "Creating AM1 population" << endl;
     reparm_data->CreatePopulation(input);

@@ -68,12 +68,19 @@ double reparm::Fitness::DipoleAverageFitness
 
 double reparm::Fitness::DipoleDifferenceFitness
 (const reparm::ParameterGroup &param_group) const{
-  /* Get AM1 Dipole */
+  /* Get The Dipoles */
   std::vector<std::vector<double> > am1_dipoles;
   for (auto &i: param_group.GetOutputs())
     am1_dipoles.push_back(i.GetDipole());
   if (am1_dipoles.empty())
     throw "Dipoles not found";
+  std::vector<std::vector<double> > hlt_dipoles;
+  for (auto &i: high_level_outputs_)
+    hlt_dipoles.push_back(i.GetDipole());
+  if (hlt_dipoles.empty())
+    throw "Dipoles not found";
+
+  /* Convert into difference matrix */
   std::vector<std::vector<double> > am1_differences;
   auto it = am1_dipoles.begin();
   auto it1 = next(it, 1);
@@ -86,12 +93,6 @@ double reparm::Fitness::DipoleDifferenceFitness
 								 )
 				 );
   }
-  /* Get HLT Dipole */
-  std::vector<std::vector<double> > hlt_dipoles;
-  for (auto &i: high_level_outputs_)
-    hlt_dipoles.push_back(i.GetDipole());
-  if (hlt_dipoles.empty())
-    throw "Dipoles not found";
   std::vector<std::vector<double> > hlt_differences;
   it = hlt_dipoles.begin();
   it1 = next(it, 1);

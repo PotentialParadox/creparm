@@ -4,6 +4,8 @@
 #include <string>
 #include <reparm_exceptions.h>
 
+namespace reparm{
+
 class ReparmInput {
  private:
   std::string file_name_;
@@ -69,5 +71,7 @@ class ReparmInput {
   void ReadInputFile();
 
 };
+
+}
 
 #endif /* REPARM_INPUT_H */
