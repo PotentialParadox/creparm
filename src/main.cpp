@@ -102,7 +102,7 @@ int main(){
         fout << "New Best Fitness Found at Step " << i <<  endl;
         fout << fitness.StringList(reparm_data->population_[0]);
         best_fitness = reparm_data->population_[0].GetFitness();
-	fout << "Total Fitness: " << best_fitness / original_fitness << "\n" << endl;
+  	fout << "Total Fitness: " << best_fitness / original_fitness << "\n" << endl;
       }
     }
   }

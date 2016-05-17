@@ -4,7 +4,7 @@
 #include <fstream>
 #include <regex>
 
-void ReparmInput::ReadInputFile(){
+void reparm::ReparmInput::ReadInputFile(){
   std::string file;
   std::ifstream fin(this->file_name_);
   try{
@@ -89,106 +89,106 @@ void ReparmInput::ReadInputFile(){
   }
 }
 
-void ReparmInput::SetHighLevelTheory(std::string s){
+void reparm::ReparmInput::SetHighLevelTheory(std::string s){
   this->high_level_theory_ = s;
 }
 
-std::string ReparmInput::GetHighLevelTheory() const{
+std::string reparm::ReparmInput::GetHighLevelTheory() const{
   return this->high_level_theory_;
 }
 
-void ReparmInput::SetMoleculeName(std::string s){
+void reparm::ReparmInput::SetMoleculeName(std::string s){
   this->molecule_name_ = s;
 }
 
-std::string ReparmInput::GetMoleculeName() const{
+std::string reparm::ReparmInput::GetMoleculeName() const{
   return this->molecule_name_;
 }
 
-void ReparmInput::SetNumberExcitedStates(int N){
+void reparm::ReparmInput::SetNumberExcitedStates(int N){
   this->number_excited_states_ = N;
 }
 
-int ReparmInput::GetNumberExcitedStates() const{
+int reparm::ReparmInput::GetNumberExcitedStates() const{
   return this->number_excited_states_;
 }
 
-void ReparmInput::SetNumberGenerations(int N){
+void reparm::ReparmInput::SetNumberGenerations(int N){
   this->number_generations_ = N;
 }
 
-int ReparmInput::GetNumberGenerations() const{
+int reparm::ReparmInput::GetNumberGenerations() const{
   return this->number_generations_;
 }
 
-void ReparmInput::SetNumberProcessors(int N){
+void reparm::ReparmInput::SetNumberProcessors(int N){
   this->number_processors_ = N;
 }
 
-int ReparmInput::GetNumberProcessors() const{
+int reparm::ReparmInput::GetNumberProcessors() const{
   return this->number_processors_;
 }
 
-void ReparmInput::SetNumberGeometries(int N){
+void reparm::ReparmInput::SetNumberGeometries(int N){
   this->number_geometries_ = N;
 }
 
-int ReparmInput::GetNumberGeometries() const{
+int reparm::ReparmInput::GetNumberGeometries() const{
   return this->number_geometries_;
 }
 
-void ReparmInput::SetNumberElites(int N){
+void reparm::ReparmInput::SetNumberElites(int N){
   this->number_elites_ = N;
 }
 
-int ReparmInput::GetNumberElites() const{
+int reparm::ReparmInput::GetNumberElites() const{
   return this->number_elites_;
 }
 
-void ReparmInput::SetPopulationSize(int N){
+void reparm::ReparmInput::SetPopulationSize(int N){
   this->population_size_ = N;
 }
 
-int ReparmInput::GetPopulationSize() const{
+int reparm::ReparmInput::GetPopulationSize() const{
   return this->population_size_;
 }
 
-void ReparmInput::SetMutationRate(float N){
+void reparm::ReparmInput::SetMutationRate(float N){
   this->mutation_rate_ = N;
 }
 
-float ReparmInput::GetMutationRate() const{
+float reparm::ReparmInput::GetMutationRate() const{
   return this->mutation_rate_;
 }
 
-void ReparmInput::SetMutationPerturbation(float N){
+void reparm::ReparmInput::SetMutationPerturbation(float N){
   this->mutation_perturbation_ = N;
 }
 
-float ReparmInput::GetMutationPerturbations() const{
+float reparm::ReparmInput::GetMutationPerturbations() const{
   return this->mutation_perturbation_;
 }
 
-void ReparmInput::SetSurvivalChance(float N){
+void reparm::ReparmInput::SetSurvivalChance(float N){
   this->survival_chance_ = N;
 }
 
-float ReparmInput::GetSurvivalChance() const{
+float reparm::ReparmInput::GetSurvivalChance() const{
   return this->survival_chance_;
 }
 
-void ReparmInput::SetGeometricPerturbation(float N){
+void reparm::ReparmInput::SetGeometricPerturbation(float N){
   this->geometric_perturbation_ = N;
 }
 
-float ReparmInput::GetGeometricPerturbation() const{
+float reparm::ReparmInput::GetGeometricPerturbation() const{
   return this->geometric_perturbation_;
 }
 
-void ReparmInput::SetShouldContinue(bool should_continue){
+void reparm::ReparmInput::SetShouldContinue(bool should_continue){
   should_continue_ = should_continue;
 }
 
-bool ReparmInput::GetShouldContinue() const{
+bool reparm::ReparmInput::GetShouldContinue() const{
   return should_continue_;
 }

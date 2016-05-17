@@ -9,7 +9,7 @@
 #include <gaussian.h>
 #include <fstream>
 
-ReparmInput reparm::ReparmData::GetReparmInput() const{
+reparm::ReparmInput reparm::ReparmData::GetReparmInput() const{
   return reparm_input_;
 }
 
