@@ -46,6 +46,21 @@ reparm::GaussianInput& reparm::GaussianInput::operator=
   return *this;
 }
   
+void reparm::GaussianInput::ImportString(const std::string &file){
+  try{
+  reparm::Header header{ReadHeader(file)};
+  header_->push_back(header);
+  reparm::Coordinates coordinates{ReadCoordinates(file)};
+  coordinates_->push_back(coordinates);
+  reparm::Parameters parameters{ReadParameters(file)};
+  parameters_->push_back(parameters);
+  }
+  catch(...){
+    std::cerr << "Gaussian Input Read Error" << std::endl;
+    gaussian_input_error e;
+    throw e;
+  }
+}
 
 std::string reparm::GaussianInput::ReadFile(const std::string &file_name) const{
   using namespace std;

@@ -48,63 +48,63 @@ int main(){
     fout << "Creating AM1 population" << endl;
     reparm_data->CreatePopulation(input);
     // Since the entire population is the same, we only run the first
-    Gaussian gaussian{reparm_data->population_[0]};
-    vector<GaussianOutput> gouts{gaussian.RunGaussian()};
-    reparm_data->population_[0].SetOutputs(gouts);
-    initial_output = reparm_data->population_[0].GetOutputs()[0].str();
+    // Gaussian gaussian{reparm_data->population_[0]};
+    // vector<GaussianOutput> gouts{gaussian.RunGaussian()};
+    // reparm_data->population_[0].SetOutputs(gouts);
+    // initial_output = reparm_data->population_[0].GetOutputs()[0].str();
 
-    fout << "Calculating High Level Theory" << endl;
-    fout << "This could take a lot of time" << endl;
-    reparm_data->CalculateHighLevel();
-    fout << "Finished with High Level Theory" << endl;
+    // fout << "Calculating High Level Theory" << endl;
+    // fout << "This could take a lot of time" << endl;
+    // reparm_data->CalculateHighLevel();
+    // fout << "Finished with High Level Theory" << endl;
 
-    // Initialize the functors
-    Mutate mutate(reparm_data);
-    fout << "Initialized mutate" << endl;
-    initial_output = reparm_data->population_[0].GetOutputs()[0].str();
-    Survivor survivor(reparm_data);
-    fout << "Initialized survivor" << endl;
-    initial_output = reparm_data->population_[0].GetOutputs()[0].str();
-    Breed breed(reparm_data);
-    fout << "Initialized breed" << endl;
-    initial_output = reparm_data->population_[0].GetOutputs()[0].str();
-    AristocraticCloning aristocratic_clone(reparm_data);
-    fout << "Initialized ac" << endl;
-    initial_output = reparm_data->population_[0].GetOutputs()[0].str();
+    // // Initialize the functors
+    // Mutate mutate(reparm_data);
+    // fout << "Initialized mutate" << endl;
+    // initial_output = reparm_data->population_[0].GetOutputs()[0].str();
+    // Survivor survivor(reparm_data);
+    // fout << "Initialized survivor" << endl;
+    // initial_output = reparm_data->population_[0].GetOutputs()[0].str();
+    // Breed breed(reparm_data);
+    // fout << "Initialized breed" << endl;
+    // initial_output = reparm_data->population_[0].GetOutputs()[0].str();
+    // AristocraticCloning aristocratic_clone(reparm_data);
+    // fout << "Initialized ac" << endl;
+    // initial_output = reparm_data->population_[0].GetOutputs()[0].str();
 
-    // Index starts at one, guarenteeing that at least member is at least as good as
-    // the user's input
-    mutate(reparm_data->population_, 1, reparm_data->GetReparmInput().GetPopulationSize());
-    fout << "Finished first mutation" << endl;
-    initial_output = reparm_data->population_[0].GetOutputs()[0].str();
+    // // Index starts at one, guarenteeing that at least member is at least as good as
+    // // the user's input
+    // mutate(reparm_data->population_, 1, reparm_data->GetReparmInput().GetPopulationSize());
+    // fout << "Finished first mutation" << endl;
+    // initial_output = reparm_data->population_[0].GetOutputs()[0].str();
 
-    fout << "Determining fitnesss" << endl;
-    Fitness fitness(reparm_data->population_, reparm_data->GetHighLevelOutputs());
-    fout << "Determined fitnesss" << endl;
-    initial_output = reparm_data->population_[0].GetOutputs()[0].str();
+    // fout << "Determining fitnesss" << endl;
+    // Fitness fitness(reparm_data->population_, reparm_data->GetHighLevelOutputs());
+    // fout << "Determined fitnesss" << endl;
+    // initial_output = reparm_data->population_[0].GetOutputs()[0].str();
 
-    // ******* Begin the main loop *********
-    original_fitness = fitness(reparm_data->population_[0]);
-    double best_fitness = original_fitness;
-    fout << "\nOriginal Fitness" << endl;
-    fout << fitness.StringList(reparm_data->population_[0]) << endl;
-    for (int i = 0; i < reparm_data->GetReparmInput().GetNumberGenerations(); ++i){
+    // // ******* Begin the main loop *********
+    // original_fitness = fitness(reparm_data->population_[0]);
+    // double best_fitness = original_fitness;
+    // fout << "\nOriginal Fitness" << endl;
+    // fout << fitness.StringList(reparm_data->population_[0]) << endl;
+    // for (int i = 0; i < reparm_data->GetReparmInput().GetNumberGenerations(); ++i){
 
-      fout << "Step: " << i << endl;
-      survivor(reparm_data->population_);
-      aristocratic_clone(reparm_data->population_, fitness);
-      fitness(reparm_data->population_);
-      breed(reparm_data->population_);
-      mutate(reparm_data->population_);
-      fitness(reparm_data->population_);
+    //   fout << "Step: " << i << endl;
+    //   survivor(reparm_data->population_);
+    //   aristocratic_clone(reparm_data->population_, fitness);
+    //   fitness(reparm_data->population_);
+    //   breed(reparm_data->population_);
+    //   mutate(reparm_data->population_);
+    //   fitness(reparm_data->population_);
 
-      if (best_fitness > reparm_data->population_[0].GetFitness()){
-        fout << "New Best Fitness Found at Step " << i <<  endl;
-        fout << fitness.StringList(reparm_data->population_[0]);
-        best_fitness = reparm_data->population_[0].GetFitness();
-  	fout << "Total Fitness: " << best_fitness / original_fitness << "\n" << endl;
-      }
-    }
+    //   if (best_fitness > reparm_data->population_[0].GetFitness()){
+    //     fout << "New Best Fitness Found at Step " << i <<  endl;
+    //     fout << fitness.StringList(reparm_data->population_[0]);
+    //     best_fitness = reparm_data->population_[0].GetFitness();
+    // 	fout << "Total Fitness: " << best_fitness / original_fitness << "\n" << endl;
+    //   }
+    // }
   }
   catch(const char *e){
     fout << "An Error was Found" << endl;
