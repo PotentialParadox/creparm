@@ -25,12 +25,14 @@ using namespace chrono;
 
 
 int main(){
-  ifstream fin{"Thiophene.log"};
+  ifstream fin{"test.log"};
   string infile;
   string line;
   while (getline(fin, line))
     infile += line + "\n";
-  reparm::gaussian::FindOptCoordinates(infile);
+  reparm::gaussian::FindNormalModes(infile);
+  // Coordinates a = reparm::gaussian::FindOptCoordinates(infile);
+  // std::cout << a.str() << std::endl;
 
   
   // std::string initial_output;

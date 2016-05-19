@@ -160,6 +160,95 @@ namespace reparm{
 
       return reparm::Coordinates{charge, multip, v_coordinates};
     }
+
+    void FindNormalModes(const std::string &s){
+      /* We first extract the general frequency information into
+	 a vector of upto three modes per element */
+      std::regex p_float{"-?\\d+\\.\\d+"};
+      std::regex p_freq_block{"Frequencies(.|\n)*?(?=(Thermo|Frequ))"};
+      std::sregex_iterator pos(s.cbegin(), s.cend(), p_freq_block);
+      std::sregex_iterator end;
+      std::vector<std::string> matches;
+      for (; pos != end; ++pos)
+	matches.emplace_back(pos->str(0));
+
+      /* Now from each of these elements 
+	 we extract the force contants */
+      std::vector<float> force_constants;
+      std::regex p_frc_const{"Frc.*"};
+      for (const auto i: matches){
+	std::smatch m;
+	std::regex_search(i, m, p_frc_const);
+	std::string match = m[0].str();
+	pos = std::sregex_iterator(match.cbegin(),
+				   match.cend(),
+				   p_float);
+	end = std::sregex_iterator();
+	for (; pos != end; ++pos)
+	  force_constants.emplace_back(std::stof(pos->str(0)));
+      }
+
+      /* To get the normal modes, we recognize that the rows we 
+	 want from the output are the only ones that begin an integer
+	 and end with a double */
+      std::regex p_atom{"\n\\s+\\d\\s+.*-?\\d+\\.\\d+"};
+      /* The normal modes per atom */
+      std::vector<std::vector<float> > normals_of_atoms;
+      bool first_loop = true;
+      for (const auto i: matches){
+	pos = std::sregex_iterator(i.cbegin(), i.cend(), p_atom);
+	end = std::sregex_iterator();
+	std::vector<float> atom_values;
+	size_t atom = 0;
+	for (; pos != end; ++pos, ++atom){
+	  if (first_loop)
+	    normals_of_atoms.push_back(std::vector<float>());
+	  std::string line = pos->str();
+	  /* from each line representing an atom
+	     we grab the floats and insert them into
+	     the atom vector*/
+	  std::sregex_iterator pos1(line.cbegin(), line.cend(), p_float);
+	  auto end1 = std::sregex_iterator();
+	  for (; pos1 != end1; pos1++)
+	    normals_of_atoms[atom].emplace_back(std::stof(pos1->str(0)));
+	}
+	first_loop = false;
+      }
+
+      /* Right now we have two data objects. The first is a simple 
+	 vector of the Force constants per frequency. The second 
+	 is a vector of vectors representing atoms<normal_values>. 
+	 We now want to merge the two such to get a vector of
+	 vectors, in which the inner vector is composed of
+	 force_constant, x_atom1, y_atom1, z_atom1, x_atom2 ... 
+	 and the outer represents each frequency*/
+      std::vector<std::vector<float> > normal_modes(force_constants.size());
+      for (size_t i = 0; i != normal_modes.size(); ++i)
+	normal_modes[i].push_back(force_constants[i]);
+      for (size_t i = 0; i != normals_of_atoms.size(); ++i){
+	std::vector<float> x;
+	std::vector<float> y;
+	std::vector<float> z;
+	for (size_t j = 0; j != normals_of_atoms[i].size(); ++j){
+	  if ((j % 3) == 0)
+	    x.push_back(normals_of_atoms[i][j]);
+	  if ((j % 3) == 1)
+	    y.push_back(normals_of_atoms[i][j]);
+	  if ((j % 3) == 2)
+	    z.push_back(normals_of_atoms[i][j]);
+	}
+	for (size_t j = 0; j != x.size(); ++j){
+	  std::vector<float> v = {x[j], y[j], z[j]};
+	  normal_modes[j].insert(normal_modes[j].end(),
+				 v.begin(), v.end());
+	}
+      }
+
+      /* Lets test this */
+      for (auto i: normal_modes[1])
+	std::cout << i << std::endl;
+      
+    }
     
   }
 }
