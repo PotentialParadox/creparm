@@ -119,7 +119,19 @@ namespace reparm{
       return es_intensities;
     }
 
-    void FindOptCoordinates(const std::string &s){
+    reparm::Coordinates FindOptCoordinates(const std::string &s){
+      /* We're going to have to build a reparm::Coorindate
+	 object so we need the charge and multiplicity */
+      std::regex p_charg_mult{"Charge\\s+=\\s+(\\d+)\\s+M.+(\\d+)"};
+      std::smatch m;
+      std::regex_search(s, m, p_charg_mult);
+      int charge{stoi(m[1].str())};
+      int multip{stoi(m[2].str())};
+      
+
+      /* Getting the optimized coordinates is a little harder.
+	 We split it up into two tasks */
+
       /* Find the standard orientation blocks */
       std::regex p_stand_orient{"Standard orientation(.|\n)*?(?=Rotat)"};
       std::sregex_iterator pos(s.cbegin(), s.cend(), p_stand_orient);
@@ -128,7 +140,25 @@ namespace reparm{
       for (; pos != end; ++pos)
 	matches.emplace_back(pos->str(0));
       auto last_occurance = std::prev(matches.cend(), 1);
-      std::cout << *last_occurance << std::endl;
+
+      /* Now we extract the coordinates from this block.
+	 We only want the atomic number, x, y , and z. */
+      std::vector<std::vector<float> > v_coordinates;
+      std::regex p_coord{"\n\\s+\\d+\\s+(\\d+)\\s+\\d+\\s+(-?\\d+\\.\\d+)"
+	  "\\s+(-?\\d+\\.\\d+)\\s+(-?\\d+\\.\\d+)"};
+      pos = std::sregex_iterator(last_occurance->cbegin(),
+				 last_occurance->cend(),
+				 p_coord);
+      for (; pos != end; ++pos){
+	float atom_number = std::stof(pos->str(1));
+	float x_coord = std::stof(pos->str(2));
+	float y_coord = std::stof(pos->str(3));
+	float z_coord = std::stof(pos->str(4));
+	v_coordinates.emplace_back(std::vector<float>{atom_number,
+	      x_coord, y_coord, z_coord});
+      }
+
+      return reparm::Coordinates{charge, multip, v_coordinates};
     }
     
   }

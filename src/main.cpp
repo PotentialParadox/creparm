@@ -25,13 +25,12 @@ using namespace chrono;
 
 
 int main(){
-  ifstream fin{"Thiophene.com"};
+  ifstream fin{"Thiophene.log"};
   string infile;
   string line;
   while (getline(fin, line))
     infile += line + "\n";
-  GaussianInput a("Thiophene.com");
-  cout << a.GetCoordinates().str() << endl;
+  reparm::gaussian::FindOptCoordinates(infile);
 
   
   // std::string initial_output;

@@ -17,7 +17,7 @@ namespace reparm{
     std::vector<double> FindIntensities(const std::string &s);
     std::vector<double> FindESFrequencies(const std::string &s);
     std::vector<double> FindESIntensities(const std::string &s);
-    void FindOptCoordinates(const std::string &s);
+    reparm::Coordinates FindOptCoordinates(const std::string &s);
 
   }
 }
