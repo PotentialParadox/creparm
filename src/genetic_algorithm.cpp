@@ -52,10 +52,6 @@ reparm::GaussianInput CreateHLTInput
   return gaus_input1;
 }
 
-reparm::Coordinates FindOptCoordinates(const std::string &s){
-  
-}
-
 reparm::GaussianInput reparm::CreateReparmGaussian
 (std::string s, reparm::ReparmInput &reparm_input){
   /* We need to first optimize at the high

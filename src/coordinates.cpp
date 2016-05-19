@@ -8,16 +8,29 @@
 #include <cmath>
 #include <map>
 
+reparm::Coordinates::Coordinates()
+  : charge_(0)
+  , multiplicity_(0)
+{}
+
 reparm::Coordinates::Coordinates(const std::string &s){
   ReadSpins(s);
   ReadCoordinates(s);
 }
 
+reparm::Coordinates::Coordinates
+(int charge, int multiplicity, std::vector<std::vector<float> > &coordinates)
+  : charge_(charge)
+  , multiplicity_(multiplicity)
+  , coordinates_(coordinates)
+{}
+
 void reparm::Coordinates::ReadSpins(const std::string &s){
-  std::regex p_spins{"\\d+\\s+\\d+\\s*\n"};
+  std::regex p_spins{"(\\d+)\\s+(\\d+)\\s*\n"};
   std::smatch m;
   std::regex_search(s, m, p_spins);
-  this->spins_ = m[0];
+  charge_ = stoi(m[1]);
+  multiplicity_ = stoi(m[2]);
 }
 
 std::string Number(const std::string &s){
@@ -65,7 +78,7 @@ void reparm::Coordinates::Perturb(const float &p){
 std::string reparm::Coordinates::str() const{
   std::stringstream coordinates;
   coordinates.setf(std::ios::fixed);
-  coordinates << this->spins_;
+  coordinates << charge_ << " " << multiplicity_ << "\n";
   for (const auto &i: this->coordinates_){
     coordinates.precision(0);
     coordinates << i[0];

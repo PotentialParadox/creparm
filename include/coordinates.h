@@ -13,15 +13,17 @@ namespace reparm{
 
 class Coordinates{
   private:
-    std::string spins_;
+    int charge_;
+    int multiplicity_;
     std::vector<std::vector<float> >  coordinates_; 
 
   public:
-    Coordinates()
-      : spins_{}
-      , coordinates_{}
-      {}
+    Coordinates();
     Coordinates(const std::string&);
+    Coordinates(int charge, int multiplicity,
+		std::vector<std::vector<float> > &coordinates);
+    /* These read functions only read gaussian input
+       files */
     void ReadSpins(const std::string&);
     void ReadCoordinates(const std::string&);
     void ClearCoordinates();

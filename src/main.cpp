@@ -17,6 +17,7 @@
 #include <survivor.h>
 #include <breed.h>
 #include <aristocratic_cloning.h>
+#include <gout_reader.h>
 
 using namespace std;
 using namespace reparm;
@@ -24,29 +25,38 @@ using namespace chrono;
 
 
 int main(){
-  std::string initial_output;
-  // Read the input files and convert to a Reparm Gaussian Input
-  high_resolution_clock::time_point t1 = high_resolution_clock::now();
-  auto reparm_data = unique_ptr<ReparmData>(new ReparmData("reparm.in"));
-  ofstream fout{"reparm.out"};
-  fout << PrintTitle();
-  GaussianInput input;
-  double original_fitness = 0;
-  try{
-    ReparmInput reparm_input{reparm_data->GetReparmInput()};
-    if (reparm_input.GetShouldContinue()){
-      fout << "Continuing from last run" << endl;
-      input = GaussianInput{"best_es.com"};
-      Header header{"#P AM1(Input,print)\n\nContinuing\n"};
-      input.SetHeader(header);
-    }
-    else{
-      fout << "Starting new job" << endl;
-      string starter_file{reparm_input.GetMoleculeName() + ".com"};
-      input = GaussianInput{CreateReparmGaussian(starter_file, reparm_input)};
-    }
-    fout << "Creating AM1 population" << endl;
-    reparm_data->CreatePopulation(input);
+  ifstream fin{"Thiophene.com"};
+  string infile;
+  string line;
+  while (getline(fin, line))
+    infile += line + "\n";
+  GaussianInput a("Thiophene.com");
+  cout << a.GetCoordinates().str() << endl;
+
+  
+  // std::string initial_output;
+  // // Read the input files and convert to a Reparm Gaussian Input
+  // high_resolution_clock::time_point t1 = high_resolution_clock::now();
+  // auto reparm_data = unique_ptr<ReparmData>(new ReparmData("reparm.in"));
+  // ofstream fout{"reparm.out"};
+  // fout << PrintTitle();
+  // GaussianInput input;
+  // double original_fitness = 0;
+  // try{
+  //   ReparmInput reparm_input{reparm_data->GetReparmInput()};
+  //   if (reparm_input.GetShouldContinue()){
+  //     fout << "Continuing from last run" << endl;
+  //     input = GaussianInput{"best_es.com"};
+  //     Header header{"#P AM1(Input,print)\n\nContinuing\n"};
+  //     input.SetHeader(header);
+  //   }
+  //   else{
+  //     fout << "Starting new job" << endl;
+  //     string starter_file{reparm_input.GetMoleculeName() + ".com"};
+  //     input = GaussianInput{CreateReparmGaussian(starter_file, reparm_input)};
+  //   }
+    // fout << "Creating AM1 population" << endl;
+    // reparm_data->CreatePopulation(input);
     // Since the entire population is the same, we only run the first
     // Gaussian gaussian{reparm_data->population_[0]};
     // vector<GaussianOutput> gouts{gaussian.RunGaussian()};
@@ -105,26 +115,27 @@ int main(){
     // 	fout << "Total Fitness: " << best_fitness / original_fitness << "\n" << endl;
     //   }
     // }
-  }
-  catch(const char *e){
-    fout << "An Error was Found" << endl;
-    fout << e << endl;
-  }
-  // Create a function for this
-  reparm_data->RunBest();
-  fout << "Initial Output" << endl;
-  fout << initial_output << endl;
-  fout << "BEST OUTPUTS" << endl;
-  fout << reparm_data->population_[0].GetOutputs()[0].str() << endl;
-  fout << "Corresponding DFT" << endl;
-  fout << reparm_data->high_level_outputs_[0].str() << endl;
-  fout << "Fitness: " << reparm_data->population_[0].GetFitness()
-    / original_fitness << endl;
-  high_resolution_clock::time_point t2 = high_resolution_clock::now();
-  duration<double> time_span = duration_cast<duration<double> >(t2 - t1);
-  int time = static_cast<int>(time_span.count());
-  fout << "Job took " << static_cast<int>(time/3600) << " hours ";
-  fout << static_cast<int>( (time % 3600) / 60 ) << " minutes ";
-  fout << static_cast<int>(time % 60) << " seconds";
-  fout.close();
+  // }
+  // catch(const char *e){
+  //   fout << "An Error was Found" << endl;
+  //   fout << e << endl;
+  // }
+  // // Create a function for this
+  // reparm_data->RunBest();
+  // fout << "Initial Output" << endl;
+  // fout << initial_output << endl;
+  // fout << "BEST OUTPUTS" << endl;
+  // fout << reparm_data->population_[0].GetOutputs()[0].str() << endl;
+  // fout << "Corresponding DFT" << endl;
+  // fout << reparm_data->high_level_outputs_[0].str() << endl;
+  // fout << "Fitness: " << reparm_data->population_[0].GetFitness()
+  //   / original_fitness << endl;
+  // high_resolution_clock::time_point t2 = high_resolution_clock::now();
+  // duration<double> time_span = duration_cast<duration<double> >(t2 - t1);
+  // int time = static_cast<int>(time_span.count());
+  // fout << "Job took " << static_cast<int>(time/3600) << " hours ";
+  // fout << static_cast<int>( (time % 3600) / 60 ) << " minutes ";
+  // fout << static_cast<int>(time % 60) << " seconds";
+  // fout.close();
+  return 0;
 }
