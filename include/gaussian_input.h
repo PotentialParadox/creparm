@@ -33,9 +33,6 @@ class GaussianInput{
 
   void ImportString(const std::string&);
   std::string ReadFile(const std::string&) const;
-  reparm::Coordinates ReadCoordinates(const std::string&);
-  reparm::Header ReadHeader(const std::string&);
-  reparm::Parameters ReadParameters(const std::string&);
   void SetHeader(const reparm::Header&);
   void SetCoordinates(const reparm::Coordinates&);
   void PerturbCoordinates(const float &p);

@@ -2,7 +2,7 @@
 #include <aristocratic_cloning.h>
 
 reparm::AristocraticCloning::AristocraticCloning
-(std::unique_ptr<reparm::ReparmData> &reparm_data)
+(std::shared_ptr<reparm::ReparmData> &reparm_data)
   : number_elites_{reparm_data->GetReparmInput().GetNumberElites()}
 {
   // How much smaller we want the mutation rate to be
@@ -11,7 +11,7 @@ reparm::AristocraticCloning::AristocraticCloning
   double mutation_rate = reparm_data->GetReparmInput().GetMutationRate() / division_factor;
   double mutation_perturbation = (reparm_data->GetReparmInput().GetGeometricPerturbation() /
                                    division_factor);
-  std::unique_ptr<reparm::ReparmData> reparm_mod(new reparm::ReparmData(*reparm_data));
+  std::shared_ptr<reparm::ReparmData> reparm_mod(new reparm::ReparmData(*reparm_data));
   reparm_mod->GetReparmInput().SetMutationRate(mutation_rate);
   reparm_mod->GetReparmInput().SetMutationPerturbation(mutation_perturbation);
   reparm::Mutate mutate{reparm_mod};

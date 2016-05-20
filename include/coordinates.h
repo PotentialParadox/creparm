@@ -26,6 +26,8 @@ class Coordinates{
        files */
     void ReadSpins(const std::string&);
     void ReadCoordinates(const std::string&);
+    std::vector<std::vector<float> > GetCoordinates() const
+      {return coordinates_;}
     void ClearCoordinates();
     void Perturb(const float&);
     std::string str() const;

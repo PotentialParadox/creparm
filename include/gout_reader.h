@@ -1,3 +1,6 @@
+/* This class was created to parse gaussian outputs 
+   Created by Dustin Tracy (dtracy.ufl@gmail.com) */
+
 #ifndef GAUS_READER_H
 #define GAUS_READER_H
 
@@ -18,7 +21,7 @@ namespace reparm{
     std::vector<double> FindESFrequencies(const std::string &s);
     std::vector<double> FindESIntensities(const std::string &s);
     reparm::Coordinates FindOptCoordinates(const std::string &s);
-    void FindNormalModes(const std::string &s);
+    std::vector<std::vector<float> > FindNormalModes(const std::string &s);
 
   }
 }

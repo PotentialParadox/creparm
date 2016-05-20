@@ -20,7 +20,7 @@ namespace reparm{
     Breed();
 
   public:
-  Breed(const std::unique_ptr<reparm::ReparmData> &reparm_data)
+  Breed(const std::shared_ptr<reparm::ReparmData> &reparm_data)
     : population_size_{reparm_data->GetReparmInput().GetPopulationSize()}
     , number_elites_{reparm_data->GetReparmInput().GetNumberElites()}
     {}

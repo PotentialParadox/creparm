@@ -14,22 +14,26 @@
 namespace reparm{
 
   class ReparmData{
-    private:
-      ReparmInput reparm_input_;
 
-    public:
-      ReparmData(std::string s)
-        : reparm_input_{s}
-        {}
+  private:
+    ReparmInput reparm_input_;
+
+  public:
+  ReparmData(std::string s)
+    : reparm_input_{s}
+    {}
+
       
-      // population_ should be modifiable
-      std::vector<GaussianOutput> high_level_outputs_;
-      std::vector<ParameterGroup> population_;
-      ReparmInput GetReparmInput() const;
-      std::vector<reparm::ParameterGroup> CreatePopulation(GaussianInput &input);
-      const std::vector<GaussianOutput>& GetHighLevelOutputs() const;
-      void CalculateHighLevel();
-      void RunBest();
+    // population_ should be modifiable
+    void Load();
+    void Save();
+    std::vector<GaussianOutput> high_level_outputs_;
+    std::vector<ParameterGroup> population_;
+    ReparmInput GetReparmInput() const;
+    std::vector<reparm::ParameterGroup> CreatePopulation(GaussianInput &input);
+    const std::vector<GaussianOutput>& GetHighLevelOutputs() const;
+    void CalculateHighLevel();
+    void RunBest();
   };
 
 }

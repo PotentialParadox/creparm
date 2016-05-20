@@ -43,8 +43,8 @@ class ReparmInput {
 
   void SetHighLevelTheory(std::string);
   std::string GetHighLevelTheory() const;
-  void SetMoleculeName(std::string);
-  std::string GetMoleculeName() const;
+  void SetInputFile(std::string);
+  std::string GetInputFile() const;
   void SetNumberGenerations(int N);
   int GetNumberGenerations() const;
   void SetNumberProcessors(int N);

@@ -161,7 +161,7 @@ namespace reparm{
       return reparm::Coordinates{charge, multip, v_coordinates};
     }
 
-    void FindNormalModes(const std::string &s){
+    std::vector<std::vector<float> > FindNormalModes(const std::string &s){
       /* We first extract the general frequency information into
 	 a vector of upto three modes per element */
       std::regex p_float{"-?\\d+\\.\\d+"};
@@ -244,9 +244,7 @@ namespace reparm{
 	}
       }
 
-      /* Lets test this */
-      for (auto i: normal_modes[1])
-	std::cout << i << std::endl;
+      return normal_modes;
       
     }
     

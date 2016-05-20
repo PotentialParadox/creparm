@@ -14,10 +14,10 @@ void reparm::ReparmInput::ReadInputFile(){
       file += line + "\n";
     }
 
-    std::regex p{"Input File:\\s+(.+).com"};
+    std::regex p{"Input File:\\s+(.+.com)"};
     std::smatch m;
     if(std::regex_search (file, m,  p)){
-      this->SetMoleculeName(m[1]);
+      this->SetInputFile(m[1]);
     }
     else {throw "\"Input File:\" not found in input";}
 
@@ -97,11 +97,11 @@ std::string reparm::ReparmInput::GetHighLevelTheory() const{
   return this->high_level_theory_;
 }
 
-void reparm::ReparmInput::SetMoleculeName(std::string s){
+void reparm::ReparmInput::SetInputFile(std::string s){
   this->molecule_name_ = s;
 }
 
-std::string reparm::ReparmInput::GetMoleculeName() const{
+std::string reparm::ReparmInput::GetInputFile() const{
   return this->molecule_name_;
 }
 

@@ -1,4 +1,5 @@
 #include <gaussian_input.h>
+#include <gin_reader.h>
 #include <regex>
 #include <iostream>
 #include <fstream>
@@ -14,14 +15,17 @@ reparm::GaussianInput::GaussianInput(const std::string &s)
   , coordinates_(new std::vector<reparm::Coordinates>)
   , parameters_(new std::vector<reparm::Parameters>)
 {
-  try{
-  std::string file{ReadFile(s)};
-  reparm::Header header{ReadHeader(file)};
-  header_->push_back(header);
-  reparm::Coordinates coordinates{ReadCoordinates(file)};
-  coordinates_->push_back(coordinates);
-  reparm::Parameters parameters{ReadParameters(file)};
-  parameters_->push_back(parameters);
+  try {
+    std::string file{ReadFile(s)};
+    reparm::Header header{gaussian::ReadHeader(file)};
+    header_->push_back(header);
+    reparm::Coordinates coordinates{gaussian::ReadCoordinates(file)};
+    coordinates_->push_back(coordinates);
+    try {
+      reparm::Parameters parameters{gaussian::ReadParameters(file)};
+      parameters_->push_back(parameters);
+    }
+    catch(...){}
   }
   catch(...){
     std::cerr << "Gaussian Input Read Error" << std::endl;
@@ -48,12 +52,15 @@ reparm::GaussianInput& reparm::GaussianInput::operator=
   
 void reparm::GaussianInput::ImportString(const std::string &file){
   try{
-  reparm::Header header{ReadHeader(file)};
-  header_->push_back(header);
-  reparm::Coordinates coordinates{ReadCoordinates(file)};
-  coordinates_->push_back(coordinates);
-  reparm::Parameters parameters{ReadParameters(file)};
-  parameters_->push_back(parameters);
+    reparm::Header header{gaussian::ReadHeader(file)};
+    header_->push_back(header);
+    reparm::Coordinates coordinates{gaussian::ReadCoordinates(file)};
+    coordinates_->push_back(coordinates);
+    try {
+      reparm::Parameters parameters{gaussian::ReadParameters(file)};
+      parameters_->push_back(parameters);
+    }
+    catch(...){}
   }
   catch(...){
     std::cerr << "Gaussian Input Read Error" << std::endl;
@@ -81,33 +88,6 @@ std::string reparm::GaussianInput::ReadFile(const std::string &file_name) const{
   catch(const char *e){
     throw e;
   }
-}
-
-reparm::Header reparm::GaussianInput::ReadHeader(const std::string &file){
-  using namespace std;
-  regex p_header{"^(.+\n)+\n(.+\n)"};
-  smatch m;
-  regex_search(file, m, p_header);
-  reparm::Header header{m[0]};
-  return header;
-}
-
-reparm::Coordinates reparm::GaussianInput::ReadCoordinates(const std::string &file){
-  using namespace std;
-  regex p_coordinates{"\n\\s*\\d+\\s+\\d+\\s*\n(\\s*\\S+\\s+-?\\d+\\..+)+"};
-  smatch m;
-  regex_search(file, m, p_coordinates);
-  reparm::Coordinates coordinates{m[0]};
-  return coordinates;
-}
-
-reparm::Parameters reparm::GaussianInput::ReadParameters(const std::string &file){
-  using namespace std;
-  regex p_parameters{"Method=(.|\n)*?(?=\\-\\-Link1)"};
-  smatch m;
-  regex_search(file, m, p_parameters);
-  reparm::Parameters parameters{m[0]};
-  return parameters;
 }
 
 void reparm::GaussianInput::SetHeader(const reparm::Header &header){
@@ -144,14 +124,20 @@ reparm::Parameters reparm::GaussianInput::Cross(const reparm::Parameters &params
 }
 
 reparm::Header reparm::GaussianInput::GetHeader() const{
+  if (header_->empty())
+    throw "No header found";
   return (*header_)[0];
 }
 
 reparm::Coordinates reparm::GaussianInput::GetCoordinates() const{
+  if (coordinates_->empty())
+    throw "No coordinates found";
   return (*coordinates_)[0];
 }
 
 reparm::Parameters reparm::GaussianInput::GetParameters() const{
+  if (parameters_->empty())
+    throw "No parameters found";
   return (*parameters_)[0];
 }
 

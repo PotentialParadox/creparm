@@ -23,7 +23,7 @@ private:
   Mutate(){};
 
 public:
- Mutate(const std::unique_ptr<reparm::ReparmData> &reparm_data)
+ Mutate(const std::shared_ptr<reparm::ReparmData> &reparm_data)
     : mutation_rate_{reparm_data->GetReparmInput().GetMutationRate()}
     , mutation_perturbation_{reparm_data->GetReparmInput().GetMutationPerturbations()}
     , number_elites_{reparm_data->GetReparmInput().GetNumberElites()}

@@ -18,7 +18,7 @@ namespace reparm{
     Survivor();
 
   public:
-  Survivor(const std::unique_ptr<reparm::ReparmData>  &reparm_data)
+  Survivor(const std::shared_ptr<reparm::ReparmData>  &reparm_data)
     : number_elites_{reparm_data->GetReparmInput().GetNumberElites()}
     , survival_chance_{reparm_data->GetReparmInput().GetSurvivalChance()}
     {}

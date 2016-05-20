@@ -17,6 +17,7 @@
 #include <survivor.h>
 #include <breed.h>
 #include <aristocratic_cloning.h>
+#include <genesis.h>
 #include <gout_reader.h>
 
 using namespace std;
@@ -25,97 +26,86 @@ using namespace chrono;
 
 
 int main(){
-  ifstream fin{"test.log"};
-  string infile;
-  string line;
-  while (getline(fin, line))
-    infile += line + "\n";
-  reparm::gaussian::FindNormalModes(infile);
-  // Coordinates a = reparm::gaussian::FindOptCoordinates(infile);
-  // std::cout << a.str() << std::endl;
-
-  
-  // std::string initial_output;
-  // // Read the input files and convert to a Reparm Gaussian Input
+  std::string initial_output;
+  // Read the input files and convert to a Reparm Gaussian Input
   // high_resolution_clock::time_point t1 = high_resolution_clock::now();
-  // auto reparm_data = unique_ptr<ReparmData>(new ReparmData("reparm.in"));
-  // ofstream fout{"reparm.out"};
-  // fout << PrintTitle();
-  // GaussianInput input;
+  shared_ptr<ReparmData> reparm_data(make_shared<ReparmData>("reparm.in"));
+  ofstream fout{"reparm.out"};
+  fout << PrintTitle();
+  GaussianInput input;
   // double original_fitness = 0;
   // try{
-  //   ReparmInput reparm_input{reparm_data->GetReparmInput()};
-  //   if (reparm_input.GetShouldContinue()){
-  //     fout << "Continuing from last run" << endl;
-  //     input = GaussianInput{"best_es.com"};
-  //     Header header{"#P AM1(Input,print)\n\nContinuing\n"};
-  //     input.SetHeader(header);
+  ReparmInput reparm_input{reparm_data->GetReparmInput()};
+  if (reparm_input.GetShouldContinue()){
+    fout << "Continuing from last run" << endl;
+    input = GaussianInput{"best_es.com"};
+    Header header{"#P AM1(Input,print)\n\nContinuing\n"};
+    input.SetHeader(header);
+  }
+  else{
+    fout << "Starting new job" << endl;
+    Genesis genesis(reparm_data);
+  }
+  //   fout << "Creating AM1 population" << endl;
+  //   reparm_data->CreatePopulation(input);
+  //   // Since the entire population is the same, we only run the first
+  //   Gaussian gaussian{reparm_data->population_[0]};
+  //   vector<GaussianOutput> gouts{gaussian.RunGaussian()};
+  //   reparm_data->population_[0].SetOutputs(gouts);
+  //   initial_output = reparm_data->population_[0].GetOutputs()[0].str();
+
+  //   fout << "Calculating High Level Theory" << endl;
+  //   fout << "This could take a lot of time" << endl;
+  //   reparm_data->CalculateHighLevel();
+  //   fout << "Finished with High Level Theory" << endl;
+
+  //   // Initialize the functors
+  //   Mutate mutate(reparm_data);
+  //   fout << "Initialized mutate" << endl;
+  //   initial_output = reparm_data->population_[0].GetOutputs()[0].str();
+  //   Survivor survivor(reparm_data);
+  //   fout << "Initialized survivor" << endl;
+  //   initial_output = reparm_data->population_[0].GetOutputs()[0].str();
+  //   Breed breed(reparm_data);
+  //   fout << "Initialized breed" << endl;
+  //   initial_output = reparm_data->population_[0].GetOutputs()[0].str();
+  //   AristocraticCloning aristocratic_clone(reparm_data);
+  //   fout << "Initialized ac" << endl;
+  //   initial_output = reparm_data->population_[0].GetOutputs()[0].str();
+
+  //   // Index starts at one, guarenteeing that at least member is at least as good as
+  //   // the user's input
+  //   mutate(reparm_data->population_, 1, reparm_data->GetReparmInput().GetPopulationSize());
+  //   fout << "Finished first mutation" << endl;
+  //   initial_output = reparm_data->population_[0].GetOutputs()[0].str();
+
+  //   fout << "Determining fitnesss" << endl;
+  //   Fitness fitness(reparm_data->population_, reparm_data->GetHighLevelOutputs());
+  //   fout << "Determined fitnesss" << endl;
+  //   initial_output = reparm_data->population_[0].GetOutputs()[0].str();
+
+  //   // ******* Begin the main loop *********
+  //   original_fitness = fitness(reparm_data->population_[0]);
+  //   double best_fitness = original_fitness;
+  //   fout << "\nOriginal Fitness" << endl;
+  //   fout << fitness.StringList(reparm_data->population_[0]) << endl;
+  //   for (int i = 0; i < reparm_data->GetReparmInput().GetNumberGenerations(); ++i){
+
+  //     fout << "Step: " << i << endl;
+  //     survivor(reparm_data->population_);
+  //     aristocratic_clone(reparm_data->population_, fitness);
+  //     fitness(reparm_data->population_);
+  //     breed(reparm_data->population_);
+  //     mutate(reparm_data->population_);
+  //     fitness(reparm_data->population_);
+
+  //     if (best_fitness > reparm_data->population_[0].GetFitness()){
+  //       fout << "New Best Fitness Found at Step " << i <<  endl;
+  //       fout << fitness.StringList(reparm_data->population_[0]);
+  //       best_fitness = reparm_data->population_[0].GetFitness();
+  //   	fout << "Total Fitness: " << best_fitness / original_fitness << "\n" << endl;
+  //     }
   //   }
-  //   else{
-  //     fout << "Starting new job" << endl;
-  //     string starter_file{reparm_input.GetMoleculeName() + ".com"};
-  //     input = GaussianInput{CreateReparmGaussian(starter_file, reparm_input)};
-  //   }
-    // fout << "Creating AM1 population" << endl;
-    // reparm_data->CreatePopulation(input);
-    // Since the entire population is the same, we only run the first
-    // Gaussian gaussian{reparm_data->population_[0]};
-    // vector<GaussianOutput> gouts{gaussian.RunGaussian()};
-    // reparm_data->population_[0].SetOutputs(gouts);
-    // initial_output = reparm_data->population_[0].GetOutputs()[0].str();
-
-    // fout << "Calculating High Level Theory" << endl;
-    // fout << "This could take a lot of time" << endl;
-    // reparm_data->CalculateHighLevel();
-    // fout << "Finished with High Level Theory" << endl;
-
-    // // Initialize the functors
-    // Mutate mutate(reparm_data);
-    // fout << "Initialized mutate" << endl;
-    // initial_output = reparm_data->population_[0].GetOutputs()[0].str();
-    // Survivor survivor(reparm_data);
-    // fout << "Initialized survivor" << endl;
-    // initial_output = reparm_data->population_[0].GetOutputs()[0].str();
-    // Breed breed(reparm_data);
-    // fout << "Initialized breed" << endl;
-    // initial_output = reparm_data->population_[0].GetOutputs()[0].str();
-    // AristocraticCloning aristocratic_clone(reparm_data);
-    // fout << "Initialized ac" << endl;
-    // initial_output = reparm_data->population_[0].GetOutputs()[0].str();
-
-    // // Index starts at one, guarenteeing that at least member is at least as good as
-    // // the user's input
-    // mutate(reparm_data->population_, 1, reparm_data->GetReparmInput().GetPopulationSize());
-    // fout << "Finished first mutation" << endl;
-    // initial_output = reparm_data->population_[0].GetOutputs()[0].str();
-
-    // fout << "Determining fitnesss" << endl;
-    // Fitness fitness(reparm_data->population_, reparm_data->GetHighLevelOutputs());
-    // fout << "Determined fitnesss" << endl;
-    // initial_output = reparm_data->population_[0].GetOutputs()[0].str();
-
-    // // ******* Begin the main loop *********
-    // original_fitness = fitness(reparm_data->population_[0]);
-    // double best_fitness = original_fitness;
-    // fout << "\nOriginal Fitness" << endl;
-    // fout << fitness.StringList(reparm_data->population_[0]) << endl;
-    // for (int i = 0; i < reparm_data->GetReparmInput().GetNumberGenerations(); ++i){
-
-    //   fout << "Step: " << i << endl;
-    //   survivor(reparm_data->population_);
-    //   aristocratic_clone(reparm_data->population_, fitness);
-    //   fitness(reparm_data->population_);
-    //   breed(reparm_data->population_);
-    //   mutate(reparm_data->population_);
-    //   fitness(reparm_data->population_);
-
-    //   if (best_fitness > reparm_data->population_[0].GetFitness()){
-    //     fout << "New Best Fitness Found at Step " << i <<  endl;
-    //     fout << fitness.StringList(reparm_data->population_[0]);
-    //     best_fitness = reparm_data->population_[0].GetFitness();
-    // 	fout << "Total Fitness: " << best_fitness / original_fitness << "\n" << endl;
-    //   }
-    // }
   // }
   // catch(const char *e){
   //   fout << "An Error was Found" << endl;
