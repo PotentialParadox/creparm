@@ -161,6 +161,16 @@ namespace reparm{
       return reparm::Coordinates{charge, multip, v_coordinates};
     }
 
+    reparm::Parameters FindParameters(const std::string &s){
+      std::regex p_parameters{"Method=(.|\n)*?(?=Standard basis)"};
+      std::smatch m;
+      if (regex_search(s, m, p_parameters))
+	return Parameters{m[0]}; 
+      else
+	throw "could not read parameters";
+      return Parameters();
+    }
+
     std::vector<std::vector<float> > FindNormalModes(const std::string &s){
       /* We first extract the general frequency information into
 	 a vector of upto three modes per element */

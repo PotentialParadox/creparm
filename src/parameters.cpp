@@ -135,3 +135,7 @@ reparm::Parameters reparm::Parameters::Cross(const reparm::Parameters& rhs){
     cross_parameters.SetParameters(cross_p_floats);
     return cross_parameters;
 }
+
+bool reparm::Parameters::empty() const{
+  return parameter_floats_.empty();
+}

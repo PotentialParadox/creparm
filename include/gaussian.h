@@ -29,4 +29,6 @@ class Gaussian{
 
 }
 
+extern reparm::Gaussian g_run;
+
 #endif /* GAUSSIAN_H */

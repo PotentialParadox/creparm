@@ -31,6 +31,7 @@ class Parameters{
     reparm::Parameters Cross(const reparm::Parameters&);
     void Mutate(const double &pertubation, const float &mutation_rate);
     std::string str() const;
+    bool empty() const;
 };
 
 }

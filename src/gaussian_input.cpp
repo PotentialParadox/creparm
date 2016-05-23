@@ -25,7 +25,11 @@ reparm::GaussianInput::GaussianInput(const std::string &s)
       reparm::Parameters parameters{gaussian::ReadParameters(file)};
       parameters_->push_back(parameters);
     }
-    catch(...){}
+    catch(...){
+      /* There doesn't necessarily need to be parameters */
+      reparm::Parameters parameters;
+      parameters_->push_back(parameters);
+    }
   }
   catch(...){
     std::cerr << "Gaussian Input Read Error" << std::endl;
@@ -143,7 +147,7 @@ reparm::Parameters reparm::GaussianInput::GetParameters() const{
 
 std::string reparm::GaussianInput::str() {
   std::string input = ((*header_)[0].str() + (*coordinates_)[0].str()
-                       + (*parameters_)[0].str());
+		       + (*parameters_)[0].str());
   for (size_t i = 1; i < this->header_->size(); ++i){
     input += ("--Link1--\n" + (*header_)[i].str() + (*coordinates_)[i].str()
               + (*parameters_)[i].str());

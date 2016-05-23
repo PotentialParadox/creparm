@@ -98,3 +98,5 @@ std::vector<reparm::GaussianOutput> Gaussian::RunGaussian(reparm::ParameterGroup
 
   return outputs;
 }
+
+reparm::Gaussian g_run = reparm::Gaussian();
