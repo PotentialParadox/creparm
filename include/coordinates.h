@@ -28,6 +28,8 @@ class Coordinates{
     void ReadCoordinates(const std::string&);
     std::vector<std::vector<float> > GetCoordinates() const
       {return coordinates_;}
+    int GetCharge() const {return charge_;}
+    int GetMultiplicity() const {return multiplicity_;}
     void ClearCoordinates();
     void Perturb(const float&);
     std::string str() const;

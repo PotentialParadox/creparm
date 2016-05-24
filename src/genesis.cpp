@@ -4,6 +4,7 @@
 #include <gout_reader.h>
 #include <fstream>
 #include <iostream>
+#include <armadillo>
 
 namespace reparm{
 
@@ -72,25 +73,81 @@ namespace reparm{
   
   void Genesis::CreateCoordinates(){
     /* Our goal is to make the average energy per atom
-       equal to 3/2 kb T, so we should start by
-       converting the normal modes into a vector
-       of energies per mode. Gaussian normalizes
-       the modes, so we only need the force
-       constants to create these energies*/
-    std::vector<float> normal_energies;
+       equal to 3/2 kb T. That means the total energy
+       of the molecule should be 3/2 kb T Na, where
+       Na is the number of atoms. */
     int number_atoms = (normal_modes_[0].size() - 1) / 3;
-    for (const auto &i: normal_modes_){
-      float force_const = 100 * i[0];
-      float energy_per_atom = 0;
-      energy_per_atom = force_const * 0.5 / number_atoms;
-      normal_energies.push_back(energy_per_atom);
+    constexpr double kb = 1.380648E-23; // Boltzman const
+    constexpr double T = 298;  // Temperature
+    const double Et = 3/2 * kb * T * number_atoms;
+
+    /* We now want to distribute this energy to each of
+       the modes. */
+    // arma::arma_rng::set_seed_random();
+    int number_modes = normal_modes_.size();
+    int number_geometries = reparm_data_->GetReparmInput().GetNumberGeometries();
+    std::cout << opt_coord_.str() << std::endl;
+    for (int geom = 0; geom != number_geometries; ++geom){
+      arma::rowvec r_values(number_modes, arma::fill::randu);
+      // r_values.print("r_values: ");
+      double normalizer = std::accumulate(r_values.begin(),
+					  r_values.end(),
+					  0.0);
+      r_values.for_each([normalizer](arma::rowvec::elem_type &val)
+			{val /= normalizer;});
+      arma::rowvec energy_per_mode = Et * r_values;
+      // energy_per_mode.print("energies: ");
+
+      /* Given the energy and force constants, we can find
+	 the max displacements using hooks law, E = 1/2 kx^2 */
+      arma::rowvec force_consts(normal_modes_.size());
+      for (size_t i = 0; i != normal_modes_.size(); ++i)
+	force_consts[i] = normal_modes_[i][0];
+      // force_consts.print("force_consts: ");
+
+      arma::rowvec max_displacements;
+      max_displacements = 2 * energy_per_mode / force_consts;
+      max_displacements.for_each( [](arma::rowvec::elem_type &val)
+				  {val = std::sqrt(val) * 1E10;} );
+      arma::mat m_max_displacements(number_modes, number_modes);
+      /* A diagonal matrix will be more useful */
+      m_max_displacements.zeros();
+      for (size_t i = 0; i != max_displacements.size(); ++i)
+	m_max_displacements(i,i) = max_displacements[i];
+      // m_max_displacements.print("max_displ: ");
+
+      /* We now get the coordinate displacements for each of the 
+	 normal modes. To do this we create a matrix of the normalized
+	 coordinate modes, where the rows represent each mode
+	 and the columns represent the coordinate */
+      arma::mat normal_displacement(number_modes, number_atoms * 3);
+      for (size_t i = 0; i != normal_modes_.size(); ++i)
+	for (size_t j = 1; j != normal_modes_[i].size(); ++j)
+	  normal_displacement(i,j-1)= normal_modes_[i][j];
+      arma::mat m_displacement = m_max_displacements * normal_displacement;
+      // m_displacement.print("m_displacements: ");
+
+      /* Sum the rows for each column to a vector representing the
+	 displacement for each coordinant. */
+      arma::rowvec displacements(number_atoms * 3);
+      for (size_t i = 0; i != number_modes; ++i)
+	for (size_t j = 0; j != number_atoms * 3; ++j)
+	  displacements[j] += m_displacement(i, j);
+
+      // displacements.print("displ: ");
+
+      auto m_coordinates = opt_coord_.GetCoordinates();
+      for (size_t i = 0; i != m_coordinates.size(); ++i)
+	for (size_t j = 1; j != m_coordinates[0].size(); ++j) // Skip atom number
+	  m_coordinates[i][j] += displacements[3*i + j - 1];
+
+      Coordinates coordinates(opt_coord_.GetCharge(),
+			      opt_coord_.GetMultiplicity(),
+			      m_coordinates);
+
+      std::cout << coordinates.str() << std::endl;
+      coordinates_.push_back(coordinates);
     }
-
-    /* Now make a vector of random numbers from 0 to 1 */
-
-    /* Normalize this random number array such that the
-       element wise product of random times energy, leads
-       to our expected atom energy */
   }
 
 }

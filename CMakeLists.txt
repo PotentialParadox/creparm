@@ -9,8 +9,8 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_FLAGS}")
 find_package(Threads REQUIRED)
 find_package(Armadillo REQUIRED)
 # Bring in the headers
-include_directories(include)
+include_directories(include ${ARMADILLO_INCLUDE_DIRS})
 # Glob the sources since I'm lazy
 file(GLOB SOURCES "src/*.cpp")
 add_executable(reparm ${SOURCES})
-target_link_libraries(reparm ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(reparm ${CMAKE_THREAD_LIBS_INIT} ${ARMADILLO_LIBRARIES})
