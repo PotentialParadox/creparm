@@ -112,8 +112,8 @@ std::string reparm::Coordinates::XYZString() const{
   std::stringstream ss;
   ss << "\n";
   int number_atoms = coordinates_.size();
+  ss << number_atoms << "\n";
   for (auto i: coordinates_){
-    ss << number_atoms << "\n";
     ss << i[0] << " " << i[1] << " ";
     ss << i[2] << " " << i[3] << "\n";
   }
