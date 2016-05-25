@@ -89,7 +89,7 @@ namespace reparm{
     const int number_modes = normal_modes_.size();
     const int number_geometries = reparm_data_->GetReparmInput().GetNumberGeometries();
     for (int geom = 0; geom != number_geometries; ++geom){
-      // arma::arma_rng::set_seed_random();
+      arma::arma_rng::set_seed_random();
       arma::rowvec r_values(number_modes, arma::fill::randu);
       double normalizer = std::accumulate(r_values.begin(),
 					  r_values.end(),

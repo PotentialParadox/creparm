@@ -110,11 +110,13 @@ void reparm::Coordinates::ClearCoordinates(){
 
 std::string reparm::Coordinates::XYZString() const{
   std::stringstream ss;
+  ss << "\n";
+  int number_atoms = coordinates_.size();
   for (auto i: coordinates_){
+    ss << number_atoms << "\n";
     ss << i[0] << " " << i[1] << " ";
     ss << i[2] << " " << i[3] << "\n";
   }
-  ss << "\n";
   return ss.str();
 }
 
