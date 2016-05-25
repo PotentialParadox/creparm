@@ -28,7 +28,8 @@ namespace reparm{
     /* Uses the normal modes to create a vector of
        coordinate to be used for our sample */
     void CreateCoordinates();
-    
+    void CreatePopulation();
+    void CreateHLT();
     
 
   public:

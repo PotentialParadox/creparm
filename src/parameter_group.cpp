@@ -1,4 +1,5 @@
 #include <parameter_group.h>
+#include <sstream>
 #include <parameters.h>
 
 void reparm::ParameterGroup::SetInputs(const std::vector<reparm::GaussianInput> inputs){
@@ -37,6 +38,14 @@ void reparm::ParameterGroup::SetOutputs(const std::vector<reparm::GaussianOutput
   this->outputs_ = outputs;
 }
 
+void reparm::ParameterGroup::SetUpdated(const bool updated){
+  updated_ = updated;
+}
+
+bool reparm::ParameterGroup::IsUpdated() const {
+  return updated_;
+}
+
 void reparm::ParameterGroup::SetFitness(double fitness){
   fitness_ = fitness;
 }
@@ -47,4 +56,11 @@ double reparm::ParameterGroup::GetFitness(){
 
 std::vector<reparm::GaussianOutput> reparm::ParameterGroup::GetOutputs() const{
   return this->outputs_;
+}
+
+std::string reparm::ParameterGroup::XYZString() const{
+  std::string s;
+  for (const auto &i: inputs_)
+    s += i.GetCoordinates().XYZString();
+  return s;
 }

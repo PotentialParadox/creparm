@@ -23,11 +23,10 @@ namespace reparm{
     : reparm_input_{s}
     {}
 
-      
-    // population_ should be modifiable
     void Load();
     void Save();
     std::vector<GaussianOutput> high_level_outputs_;
+    // population_ should be modifiable
     std::vector<ParameterGroup> population_;
     ReparmInput GetReparmInput() const;
     std::vector<reparm::ParameterGroup> CreatePopulation(GaussianInput &input);

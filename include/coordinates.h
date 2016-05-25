@@ -33,6 +33,7 @@ class Coordinates{
     void ClearCoordinates();
     void Perturb(const float&);
     std::string str() const;
+    std::string XYZString() const;
 };
 
 }

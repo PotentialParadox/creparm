@@ -14,6 +14,9 @@ namespace reparm{
     ReadUserInput();
     FindHLTOptNormal();
     CreateCoordinates();
+    for (auto i: coordinates_)
+      std::cout << i.str() << std::endl;
+    CreatePopulation();
   }
 
   void Genesis::ReadUserInput(){
@@ -76,65 +79,61 @@ namespace reparm{
        equal to 3/2 kb T. That means the total energy
        of the molecule should be 3/2 kb T Na, where
        Na is the number of atoms. */
-    int number_atoms = (normal_modes_[0].size() - 1) / 3;
+    const int number_atoms = (normal_modes_[0].size() - 1) / 3;
     constexpr double kb = 1.380648E-23; // Boltzman const
     constexpr double T = 298;  // Temperature
     const double Et = 3/2 * kb * T * number_atoms;
 
     /* We now want to distribute this energy to each of
        the modes. */
-    // arma::arma_rng::set_seed_random();
-    int number_modes = normal_modes_.size();
-    int number_geometries = reparm_data_->GetReparmInput().GetNumberGeometries();
-    std::cout << opt_coord_.str() << std::endl;
+    const int number_modes = normal_modes_.size();
+    const int number_geometries = reparm_data_->GetReparmInput().GetNumberGeometries();
     for (int geom = 0; geom != number_geometries; ++geom){
+      // arma::arma_rng::set_seed_random();
       arma::rowvec r_values(number_modes, arma::fill::randu);
-      // r_values.print("r_values: ");
       double normalizer = std::accumulate(r_values.begin(),
 					  r_values.end(),
 					  0.0);
       r_values.for_each([normalizer](arma::rowvec::elem_type &val)
 			{val /= normalizer;});
       arma::rowvec energy_per_mode = Et * r_values;
-      // energy_per_mode.print("energies: ");
+      energy_per_mode.print("energies: ");
 
       /* Given the energy and force constants, we can find
 	 the max displacements using hooks law, E = 1/2 kx^2 */
       arma::rowvec force_consts(normal_modes_.size());
       for (size_t i = 0; i != normal_modes_.size(); ++i)
 	force_consts[i] = normal_modes_[i][0];
-      // force_consts.print("force_consts: ");
 
       arma::rowvec max_displacements;
       max_displacements = 2 * energy_per_mode / force_consts;
       max_displacements.for_each( [](arma::rowvec::elem_type &val)
 				  {val = std::sqrt(val) * 1E10;} );
+      // max_displacements.print("max_displ");
       arma::mat m_max_displacements(number_modes, number_modes);
       /* A diagonal matrix will be more useful */
       m_max_displacements.zeros();
       for (size_t i = 0; i != max_displacements.size(); ++i)
 	m_max_displacements(i,i) = max_displacements[i];
-      // m_max_displacements.print("max_displ: ");
 
       /* We now get the coordinate displacements for each of the 
 	 normal modes. To do this we create a matrix of the normalized
 	 coordinate modes, where the rows represent each mode
 	 and the columns represent the coordinate */
       arma::mat normal_displacement(number_modes, number_atoms * 3);
+      normal_displacement.zeros();
       for (size_t i = 0; i != normal_modes_.size(); ++i)
 	for (size_t j = 1; j != normal_modes_[i].size(); ++j)
 	  normal_displacement(i,j-1)= normal_modes_[i][j];
       arma::mat m_displacement = m_max_displacements * normal_displacement;
-      // m_displacement.print("m_displacements: ");
 
       /* Sum the rows for each column to a vector representing the
 	 displacement for each coordinant. */
-      arma::rowvec displacements(number_atoms * 3);
+      arma::rowvec displacements(number_atoms * 3, arma::fill::zeros);
       for (size_t i = 0; i != number_modes; ++i)
 	for (size_t j = 0; j != number_atoms * 3; ++j)
 	  displacements[j] += m_displacement(i, j);
 
-      // displacements.print("displ: ");
 
       auto m_coordinates = opt_coord_.GetCoordinates();
       for (size_t i = 0; i != m_coordinates.size(); ++i)
@@ -145,9 +144,40 @@ namespace reparm{
 			      opt_coord_.GetMultiplicity(),
 			      m_coordinates);
 
-      std::cout << coordinates.str() << std::endl;
       coordinates_.push_back(coordinates);
     }
+  }
+  
+ 
+  void Genesis::CreatePopulation(){
+    std::stringstream ss;
+    ss << reparm_data_->GetReparmInput().GetNumberExcitedStates();
+    std::string ne =  ss.str();
+    reparm::Header first_header{"#P AM1(Input,Print) CIS(Singlets,NStates=" + ne + ") pop(full)\n\nAM1\n"};
+    reparm::Header second_header{"#P AM1(Input, Print) freq\n\nAM1\n"};
+    std::vector<reparm::GaussianInput> inputs;
+    for (const auto i: coordinates_){
+      GaussianInput gin;
+      gin.SetHeader(first_header);
+      gin.SetCoordinates(i);
+      gin.SetParameters(init_parameters_);
+      GaussianInput gin2 = gin;
+      gin2.SetHeader(second_header);
+      gin.Link(gin2);
+      inputs.push_back(gin);
+    }
+    Gaussian gaussian(inputs);
+    std::cout << "running gaussian" << std::endl;
+    std::ofstream fout{"test.com"};
+    fout << inputs[1].str() << std::endl;
+    std::vector<reparm::GaussianOutput> gouts{gaussian.RunGaussian()};
+    reparm::ParameterGroup param_group{inputs};
+    param_group.SetOutputs(gouts);
+    std::vector<reparm::ParameterGroup> population;
+    int p = reparm_data_->GetReparmInput().GetPopulationSize();
+    for (int i = 0; i < p; ++i)
+      population.push_back(param_group);
+    reparm_data_->population_ = population;
   }
 
 }

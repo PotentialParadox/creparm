@@ -26,15 +26,29 @@ using namespace chrono;
 
 
 int main(){
+
+  // string s_gout;
+  // ifstream fin{"test.log"};
+  // string line;
+  // while (getline(fin, line))
+  //   s_gout += line + "\n";
+  // GaussianOutput gout{s_gout};
+  
   std::string initial_output;
+
   // Read the input files and convert to a Reparm Gaussian Input
   // high_resolution_clock::time_point t1 = high_resolution_clock::now();
+  
   shared_ptr<ReparmData> reparm_data(make_shared<ReparmData>("reparm.in"));
   ofstream fout{"reparm.out"};
-  fout << PrintTitle();
+
+  // fout << PrintTitle();
+
   GaussianInput input;
+
   // double original_fitness = 0;
   // try{
+
   ReparmInput reparm_input{reparm_data->GetReparmInput()};
   if (reparm_input.GetShouldContinue()){
     fout << "Continuing from last run" << endl;
@@ -45,7 +59,12 @@ int main(){
   else{
     fout << "Starting new job" << endl;
     Genesis genesis(reparm_data);
+    std::string xyz;
+    xyz = reparm_data->population_[0].XYZString();
+    ofstream xyz_file{"xyz.xyz"};
+    xyz_file << xyz;
   }
+
   //   fout << "Creating AM1 population" << endl;
   //   reparm_data->CreatePopulation(input);
   //   // Since the entire population is the same, we only run the first

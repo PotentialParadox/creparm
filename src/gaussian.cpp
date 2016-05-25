@@ -7,6 +7,7 @@
 #include <vector>
 #include <thread>
 #include <gaussian_output.h>
+#include <fstream>
 
 using namespace reparm;
 
@@ -35,6 +36,11 @@ int number_threads = std::thread::hardware_concurrency();
       throw "No Gaussian";
     }
     else{
+      std::cout << "Gaussian failed to run to completion" << std::endl;
+      std::stringstream ss;
+      ss << "g_failure_" << j << ".log";
+      std::ofstream fout{ss.str()};
+      fout << gout << std::endl;
       failure = true;
     }
   }
