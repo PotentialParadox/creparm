@@ -17,65 +17,6 @@ const std::vector<reparm::GaussianOutput>& reparm::ReparmData::GetHighLevelOutpu
   return high_level_outputs_;
 }
 
-std::vector<reparm::ParameterGroup> 
-reparm::ReparmData::CreatePopulation(reparm::GaussianInput &input){
-  // First perturb the coordinates
-  int ng = reparm_input_.GetNumberGeometries();
-  std::stringstream ss;
-  ss << reparm_input_.GetNumberExcitedStates();
-  std::string ne = ss.str();
-  reparm::Parameters empty_params{""};
-  reparm::Header first_header{"#P AM1(Input,Print) CIS(Singlets,NStates=" + ne + ") pop(full)\n\nhi\n"};
-  reparm::Header second_header{"#P AM1(Input, Print) freq\n\nhi\n"};
-  double pert = reparm_input_.GetGeometricPerturbation();
-  std::vector<reparm::GaussianInput> inputs;
-  for (int i = 0; i != ng; ++i){
-    reparm::GaussianInput input_es = input;
-    input_es.SetHeader(first_header);
-    input_es.PerturbCoordinates(pert);
-    reparm::GaussianInput input_freq{input_es};
-    input_freq.SetHeader(second_header);
-    input_es.Link(input_freq);
-    inputs.push_back(input_es);
-  }
-  int ps = reparm_input_.GetPopulationSize();
-  for (int i = 0; i != ps; ++i){
-    population_.push_back(ParameterGroup{inputs});
-  }
-  return population_;
-}
-
-void reparm::ReparmData::CalculateHighLevel(){
-  std::string hlt = reparm_input_.GetHighLevelTheory();
-  std::stringstream ss;
-  ss << reparm_input_.GetNumberExcitedStates();
-  std::string ne{ss.str()};
-  reparm::Parameters empty_params{""};
-  reparm::Header first_header{"#P " + hlt + " CIS(Singlets,NStates=" + ne + ") pop(full)\n\nhi\n"};
-  reparm::Header second_header{"#P " + hlt + " freq\n\nhi\n"};
-  reparm::ParameterGroup am1_group{population_[0]};
-  std::vector<reparm::GaussianInput> am1_inputs = am1_group.GetInputs();
-  std::vector<reparm::GaussianInput> hlt_inputs;
-  for (auto &&i: am1_inputs){
-    reparm::GaussianInput hlt_input;
-    hlt_input.SetHeader(first_header);
-    hlt_input.SetCoordinates(i.GetCoordinates());
-    hlt_input.SetParameters(empty_params);
-    reparm::GaussianInput freq{hlt_input};
-    freq.SetHeader(second_header);
-    hlt_input.Link(freq);
-    hlt_inputs.push_back(hlt_input);
-  }
-  reparm::ParameterGroup hlgroup{hlt_inputs};
-  reparm::Gaussian gaussian{hlgroup};
-  try{
-    high_level_outputs_ = gaussian.RunGaussian();
-  }
-  catch(...){
-    throw "Problem running high level calculations";
-  }
-}
-
 void reparm::ReparmData::RunBest(){
   reparm::GaussianInput input_freq{population_[0].GetInputs()[0]};
   reparm::GaussianInput input_es{population_[0].GetInputs()[0]};

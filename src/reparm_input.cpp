@@ -56,6 +56,11 @@ void reparm::ReparmInput::ReadInputFile(){
     if(std::regex_search (file, m,  p)){
       this->population_size_ = stoi(m[1]);
     }
+    
+    p = "Temperature:\\s+(.+)";
+    if(std::regex_search (file, m,  p)){
+      this->temperature_ = stoi(m[1]);
+    }
 
     p = "Mutation Rate:\\s+(.+)";
     if(std::regex_search (file, m,  p)){
@@ -149,8 +154,16 @@ void reparm::ReparmInput::SetPopulationSize(int N){
   this->population_size_ = N;
 }
 
+void reparm::ReparmInput::SetTemperature(int N){
+  this->temperature_ = N;
+}
+
 int reparm::ReparmInput::GetPopulationSize() const{
   return this->population_size_;
+}
+
+int reparm::ReparmInput::GetTemperature() const{
+  return this->temperature_;
 }
 
 void reparm::ReparmInput::SetMutationRate(float N){

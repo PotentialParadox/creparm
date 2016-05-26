@@ -195,7 +195,7 @@ namespace reparm{
 				   p_float);
 	end = std::sregex_iterator();
 	for (; pos != end; ++pos)
-	  force_constants.emplace_back(std::stof(pos->str(0)));
+	  force_constants.emplace_back(std::stof(pos->str(0))* 100);
       }
 
       /* To get the normal modes, we recognize that the rows we 

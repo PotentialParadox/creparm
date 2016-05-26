@@ -17,6 +17,9 @@ namespace reparm{
     for (auto i: coordinates_)
       std::cout << i.str() << std::endl;
     CreatePopulation();
+    std::cout << "Calculating HLT" << std::endl;
+    CreateHLT();
+    std::cout << "Finished with HLT" << std::endl;
   }
 
   void Genesis::ReadUserInput(){
@@ -81,14 +84,15 @@ namespace reparm{
        Na is the number of atoms. */
     const int number_atoms = (normal_modes_[0].size() - 1) / 3;
     constexpr double kb = 1.380648E-23; // Boltzman const
-    constexpr double T = 298;  // Temperature
+    const double T = reparm_data_->GetReparmInput().GetTemperature();  // Temperature
     const double Et = 3/2 * kb * T * number_atoms;
 
     /* We now want to distribute this energy to each of
        the modes. */
     const int number_modes = normal_modes_.size();
     const int number_geometries = reparm_data_->GetReparmInput().GetNumberGeometries();
-    for (int geom = 0; geom != number_geometries; ++geom){
+    coordinates_.push_back(opt_coord_);
+    for (int geom = 1; geom != number_geometries; ++geom){
       arma::arma_rng::set_seed_random();
       arma::rowvec r_values(number_modes, arma::fill::randu);
       double normalizer = std::accumulate(r_values.begin(),
@@ -97,7 +101,6 @@ namespace reparm{
       r_values.for_each([normalizer](arma::rowvec::elem_type &val)
 			{val /= normalizer;});
       arma::rowvec energy_per_mode = Et * r_values;
-      energy_per_mode.print("energies: ");
 
       /* Given the energy and force constants, we can find
 	 the max displacements using hooks law, E = 1/2 kx^2 */
@@ -109,9 +112,18 @@ namespace reparm{
       max_displacements = 2 * energy_per_mode / force_consts;
       max_displacements.for_each( [](arma::rowvec::elem_type &val)
 				  {val = std::sqrt(val) * 1E10;} );
+      /* The modes can go in either direction, so we need to 
+	 randomly asign a negative value to some of them */
+      arma::rowvec r_direction(number_modes, arma::fill::randu);
+      auto it_disp = max_displacements.begin();
+      auto it_r = r_direction.begin();
+      auto end = max_displacements.end();
+      for (; it_disp != end; ++it_disp, ++it_r)
+	if (*it_r < 0.5)
+	  *it_disp = *it_disp * -1;
       // max_displacements.print("max_displ");
-      arma::mat m_max_displacements(number_modes, number_modes);
       /* A diagonal matrix will be more useful */
+      arma::mat m_max_displacements(number_modes, number_modes);
       m_max_displacements.zeros();
       for (size_t i = 0; i != max_displacements.size(); ++i)
 	m_max_displacements(i,i) = max_displacements[i];
@@ -178,6 +190,37 @@ namespace reparm{
     for (int i = 0; i < p; ++i)
       population.push_back(param_group);
     reparm_data_->population_ = population;
+  }
+
+  void Genesis::CreateHLT(){
+    std::string hlt = reparm_data_->GetReparmInput().GetHighLevelTheory();
+    std::stringstream ss;
+    ss << reparm_data_->GetReparmInput().GetNumberExcitedStates();
+    std::string ne{ss.str()};
+    reparm::Parameters empty_params{""};
+    reparm::Header first_header{"#P " + hlt + " CIS(Singlets,NStates=" + ne + ") pop(full)\n\nhi\n"};
+    reparm::Header second_header{"#P " + hlt + " freq\n\nhi\n"};
+    reparm::ParameterGroup am1_group{reparm_data_->population_[0]};
+    std::vector<reparm::GaussianInput> am1_inputs = am1_group.GetInputs();
+    std::vector<reparm::GaussianInput> hlt_inputs;
+    for (auto &&i: am1_inputs){
+      reparm::GaussianInput hlt_input;
+      hlt_input.SetHeader(first_header);
+      hlt_input.SetCoordinates(i.GetCoordinates());
+      hlt_input.SetParameters(empty_params);
+      reparm::GaussianInput freq{hlt_input};
+      freq.SetHeader(second_header);
+      hlt_input.Link(freq);
+      hlt_inputs.push_back(hlt_input);
+    }
+    reparm::ParameterGroup hlgroup{hlt_inputs};
+    reparm::Gaussian gaussian{hlgroup};
+    try{
+      reparm_data_->high_level_outputs_ = gaussian.RunGaussian();
+    }
+    catch(...){
+      throw "Problem running high level calculations";
+    }
   }
 
 }

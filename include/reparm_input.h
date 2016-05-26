@@ -17,6 +17,7 @@ class ReparmInput {
   int number_geometries_;
   int number_elites_;
   int population_size_;
+  int temperature_;
   float mutation_rate_;
   float mutation_perturbation_;
   float survival_chance_;
@@ -34,6 +35,7 @@ class ReparmInput {
     , number_geometries_(1)
     , number_elites_(0)
     , population_size_(1)
+    , temperature_(298)
     , mutation_rate_(0.1)
     , mutation_perturbation_(0.05)
     , survival_chance_(0.5)
@@ -57,6 +59,8 @@ class ReparmInput {
   int GetNumberElites() const;
   void SetPopulationSize(int N);
   int GetPopulationSize() const;
+  void SetTemperature(int N);
+  int GetTemperature() const;
   void SetMutationRate(float N);
   float GetMutationRate() const;
   void SetMutationPerturbation(float N);
