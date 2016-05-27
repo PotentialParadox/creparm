@@ -31,6 +31,19 @@ void reparm::Parameters::SetParameters(const std::vector<double> p_floats){
   this->parameter_floats_ = p_floats;
 }
 
+
+std::vector<double> reparm::Parameters::GetParameters() const{
+  return parameter_floats_;
+}
+
+void reparm::Parameters::SetLabels(const std::vector<std::string> &p_labels){
+  parameter_labels_ = p_labels;
+}
+
+std::vector<std::string> reparm::Parameters::GetLabels() const{
+  return parameter_labels_;
+}
+
 void reparm::Parameters::ExtractFloats(){
   std::regex p_float{"-?\\d+\\.\\d+"};  // Used to extract the floats 
   std::vector<double> p_floats;

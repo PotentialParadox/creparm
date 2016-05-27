@@ -28,6 +28,10 @@ class Parameters{
     void ReadLabels(const std::string&);
     void ExtractFloats();
     void SetParameters(const std::vector<double>);
+
+    std::vector<double> GetParameters() const;
+    void SetLabels(const std::vector<std::string>&);
+    std::vector<std::string> GetLabels() const;
     reparm::Parameters Cross(const reparm::Parameters&);
     void Mutate(const double &pertubation, const float &mutation_rate);
     std::string str() const;

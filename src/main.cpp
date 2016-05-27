@@ -29,8 +29,8 @@ int main(){
 
   std::string initial_output;
 
-  /* Read the input files and convert to a Reparm Gaussian Input */
-  high_resolution_clock::time_point t1 = high_resolution_clock::now();
+  // /* Read the input files and convert to a Reparm Gaussian Input */
+  // high_resolution_clock::time_point t1 = high_resolution_clock::now();
   
   shared_ptr<ReparmData> reparm_data(make_shared<ReparmData>("reparm.in"));
   ofstream fout{"reparm.out"};
@@ -39,8 +39,8 @@ int main(){
 
   GaussianInput input;
 
-  double original_fitness = 0;
-  try{
+  // double original_fitness = 0;
+  // try{
 
     ReparmInput reparm_input{reparm_data->GetReparmInput()};
     if (reparm_input.GetShouldContinue()){
@@ -51,81 +51,83 @@ int main(){
     }
     else{
       fout << "Starting new job" << endl;
-      Genesis genesis(reparm_data);
-      std::string xyz;
-      xyz = reparm_data->population_[0].XYZString();
-      ofstream xyz_file{"xyz.xyz"};
-      xyz_file << xyz;
+      reparm_data->Load();
+      // Genesis genesis(reparm_data);
+      // reparm_data->Save();
+      // std::string xyz;
+      // xyz = reparm_data->population_[0].XYZString();
+      // ofstream xyz_file{"xyz.xyz"};
+      // xyz_file << xyz;
     }
 
-    // Initialize the functors
-    Mutate mutate(reparm_data);
-    fout << "Initialized mutate" << endl;
-    initial_output = reparm_data->population_[0].GetOutputs()[0].str();
-    Survivor survivor(reparm_data);
-    fout << "Initialized survivor" << endl;
-    initial_output = reparm_data->population_[0].GetOutputs()[0].str();
-    Breed breed(reparm_data);
-    fout << "Initialized breed" << endl;
-    initial_output = reparm_data->population_[0].GetOutputs()[0].str();
-    AristocraticCloning aristocratic_clone(reparm_data);
-    fout << "Initialized ac" << endl;
-    initial_output = reparm_data->population_[0].GetOutputs()[0].str();
+  //   // Initialize the functors
+  //   Mutate mutate(reparm_data);
+  //   fout << "Initialized mutate" << endl;
+  //   initial_output = reparm_data->population_[0].GetOutputs()[0].str();
+  //   Survivor survivor(reparm_data);
+  //   fout << "Initialized survivor" << endl;
+  //   initial_output = reparm_data->population_[0].GetOutputs()[0].str();
+  //   Breed breed(reparm_data);
+  //   fout << "Initialized breed" << endl;
+  //   initial_output = reparm_data->population_[0].GetOutputs()[0].str();
+  //   AristocraticCloning aristocratic_clone(reparm_data);
+  //   fout << "Initialized ac" << endl;
+  //   initial_output = reparm_data->population_[0].GetOutputs()[0].str();
 
-    // Index starts at one, guarenteeing that at least member is at least as good as
-    // the user's input
-    mutate(reparm_data->population_, 1, reparm_data->GetReparmInput().GetPopulationSize());
-    fout << "Finished first mutation" << endl;
-    initial_output = reparm_data->population_[0].GetOutputs()[0].str();
+  //   // Index starts at one, guarenteeing that at least member is at least as good as
+  //   // the user's input
+  //   mutate(reparm_data->population_, 1, reparm_data->GetReparmInput().GetPopulationSize());
+  //   fout << "Finished first mutation" << endl;
+  //   initial_output = reparm_data->population_[0].GetOutputs()[0].str();
 
-    fout << "Determining fitnesss" << endl;
-    Fitness fitness(reparm_data->population_, reparm_data->GetHighLevelOutputs());
-    fout << "Determined fitnesss" << endl;
-    initial_output = reparm_data->population_[0].GetOutputs()[0].str();
+  //   fout << "Determining fitnesss" << endl;
+  //   Fitness fitness(reparm_data->population_, reparm_data->GetHighLevelOutputs());
+  //   fout << "Determined fitnesss" << endl;
+  //   initial_output = reparm_data->population_[0].GetOutputs()[0].str();
 
-    // ******* Begin the main loop *********
-    original_fitness = fitness(reparm_data->population_[0]);
-    double best_fitness = original_fitness;
-    fout << "\nOriginal Fitness" << endl;
-    fout << fitness.StringList(reparm_data->population_[0]) << endl;
-    for (int i = 0; i < reparm_data->GetReparmInput().GetNumberGenerations(); ++i){
+  //   // ******* Begin the main loop *********
+  //   original_fitness = fitness(reparm_data->population_[0]);
+  //   double best_fitness = original_fitness;
+  //   fout << "\nOriginal Fitness" << endl;
+  //   fout << fitness.StringList(reparm_data->population_[0]) << endl;
+  //   for (int i = 0; i < reparm_data->GetReparmInput().GetNumberGenerations(); ++i){
 
-      fout << "Step: " << i << endl;
-      survivor(reparm_data->population_);
-      aristocratic_clone(reparm_data->population_, fitness);
-      fitness(reparm_data->population_);
-      breed(reparm_data->population_);
-      mutate(reparm_data->population_);
-      fitness(reparm_data->population_);
+  //     fout << "Step: " << i << endl;
+  //     survivor(reparm_data->population_);
+  //     aristocratic_clone(reparm_data->population_, fitness);
+  //     fitness(reparm_data->population_);
+  //     breed(reparm_data->population_);
+  //     mutate(reparm_data->population_);
+  //     fitness(reparm_data->population_);
 
-      if (best_fitness > reparm_data->population_[0].GetFitness()){
-        fout << "New Best Fitness Found at Step " << i <<  endl;
-        fout << fitness.StringList(reparm_data->population_[0]);
-        best_fitness = reparm_data->population_[0].GetFitness();
-    	fout << "Total Fitness: " << best_fitness / original_fitness << "\n" << endl;
-      }
-    }
-  }
-  catch(const char *e){
-    fout << "An Error was Found" << endl;
-    fout << e << endl;
-  }
-  // Create a function for this
-  reparm_data->RunBest();
-  fout << "Initial Output" << endl;
-  fout << initial_output << endl;
-  fout << "BEST OUTPUTS" << endl;
-  fout << reparm_data->population_[0].GetOutputs()[0].str() << endl;
-  fout << "Corresponding DFT" << endl;
-  fout << reparm_data->high_level_outputs_[0].str() << endl;
-  fout << "Fitness: " << reparm_data->population_[0].GetFitness()
-    / original_fitness << endl;
-  high_resolution_clock::time_point t2 = high_resolution_clock::now();
-  duration<double> time_span = duration_cast<duration<double> >(t2 - t1);
-  int time = static_cast<int>(time_span.count());
-  fout << "Job took " << static_cast<int>(time/3600) << " hours ";
-  fout << static_cast<int>( (time % 3600) / 60 ) << " minutes ";
-  fout << static_cast<int>(time % 60) << " seconds";
-  fout.close();
+  //     if (best_fitness > reparm_data->population_[0].GetFitness()){
+  //       fout << "New Best Fitness Found at Step " << i <<  endl;
+  //       fout << fitness.StringList(reparm_data->population_[0]);
+  //       best_fitness = reparm_data->population_[0].GetFitness();
+  //   	fout << "Total Fitness: " << best_fitness / original_fitness << "\n" << endl;
+  //     }
+  //   }
+  // }
+  // catch(const char *e){
+  //   fout << "An Error was Found" << endl;
+  //   fout << e << endl;
+  // }
+  // // Create a function for this
+  // reparm_data->RunBest();
+  // fout << "Initial Output" << endl;
+  // fout << initial_output << endl;
+  // fout << "BEST OUTPUTS" << endl;
+  // fout << reparm_data->population_[0].GetOutputs()[0].str() << endl;
+  // fout << "Corresponding DFT" << endl;
+  // fout << reparm_data->high_level_outputs_[0].str() << endl;
+  // fout << "Fitness: " << reparm_data->population_[0].GetFitness()
+  //   / original_fitness << endl;
+  // high_resolution_clock::time_point t2 = high_resolution_clock::now();
+  // duration<double> time_span = duration_cast<duration<double> >(t2 - t1);
+  // int time = static_cast<int>(time_span.count());
+  // fout << "Job took " << static_cast<int>(time/3600) << " hours ";
+  // fout << static_cast<int>( (time % 3600) / 60 ) << " minutes ";
+  // fout << static_cast<int>(time % 60) << " seconds";
+  // fout.close();
   return 0;
 }
