@@ -8,6 +8,7 @@
 #include <vector>
 #include <gaussian.h>
 #include <fstream>
+#include <container_math.h>
 
 reparm::ReparmInput reparm::ReparmData::GetReparmInput() const{
   return reparm_input_;
@@ -159,13 +160,6 @@ void reparm::ReparmData::Save() const{
 
 void reparm::ReparmData::Load(){
   std::ifstream fin{"reparm.dat"};
-  std::vector<float> energies;
-  std::vector<float> dipoles;
-  std::vector<float> es_frequencies;
-  std::vector<float> es_intensities;
-  std::vector<float> forces;
-  std::vector<float> ir_frequencies;
-  std::vector<float> ir_intensities;
 
   fin >> number_geometries_ >> number_atoms_ >> charge_ >> multiplicity_;
   int vector_size;
@@ -179,7 +173,6 @@ void reparm::ReparmData::Load(){
   std::getline(fin, s_vec_size);
   std::getline(fin, s_vec_size);
   vector_size = std::stoi(s_vec_size);
-  std::cout << vector_size << std::endl;
   for (int i = 0; i != vector_size; ++i){
     std::string val;
     std::getline(fin, val);
@@ -194,7 +187,6 @@ void reparm::ReparmData::Load(){
     else
       parameter_labels_.push_back(val);
   }
-  std::cout << parameter_labels_.size() << std::endl;
   fin >> vector_size;
   for (int i = 0; i != vector_size; ++i){
     float val = 0;
@@ -205,45 +197,47 @@ void reparm::ReparmData::Load(){
   for (int i = 0; i != vector_size; ++i){
     float val = 0;
     fin >> val;
-    energies.push_back(val);
+    energies_.push_back(val);
   }
   fin >> vector_size;
   for (int i = 0; i != vector_size; ++i){
     float val = 0;
     fin >> val;
-    dipoles.push_back(val);
+    dipoles_.push_back(val);
   }
   fin >> vector_size;
   for (int i = 0; i != vector_size; ++i){
     float val = 0;
     fin >> val;
-    es_frequencies.push_back(val);
+    es_frequencies_.push_back(val);
   }
   fin >> vector_size;
   for (int i = 0; i != vector_size; ++i){
     float val = 0;
     fin >> val;
-    es_intensities.push_back(val);
+    es_intensities_.push_back(val);
   }
   fin >> vector_size;
   for (int i = 0; i != vector_size; ++i){
     float val = 0;
     fin >> val;
-    forces.push_back(val);
+    forces_.push_back(val);
   }
   fin >> vector_size;
   for (int i = 0; i != vector_size; ++i){
     float val = 0;
     fin >> val;
-    ir_frequencies.push_back(val);
+    ir_frequencies_.push_back(val);
   }
   fin >> vector_size;
   for (int i = 0; i != vector_size; ++i){
     float val = 0;
     fin >> val;
-    ir_intensities.push_back(val);
+    ir_intensities_.push_back(val);
   }
+  CheckInput();
   LoadPopulation();
+  LoadHLT();
 }
 
 void reparm::ReparmData::LoadPopulation(){
@@ -267,9 +261,12 @@ void reparm::ReparmData::LoadPopulation(){
       gin.Link(gin2);
       inputs.push_back(gin);
     }
+    reparm::GaussianOutput gout = g_run.RunGaussian(inputs[0]);
+    std::vector<reparm::GaussianOutput> gouts(number_geometries_, gout);
     int population_size = GetReparmInput().GetPopulationSize();
     for (int i = 0; i != population_size; ++i){
       reparm::ParameterGroup param_group{inputs};
+      param_group.SetOutputs(gouts);
       population_.push_back(param_group);
     }
 }
@@ -291,3 +288,52 @@ std::vector<reparm::Coordinates> reparm::ReparmData::LoadGeometries(){
   }
   return geometries;
 }
+
+bool reparm::ReparmData::CheckInput(){
+  int user_number_geometries = GetReparmInput().GetNumberGeometries();
+  if (number_geometries_ != user_number_geometries)
+    throw "Loaded data contains a different number of geometries than the user input";
+  return true;
+}
+
+void reparm::ReparmData::LoadHLT(){
+  int n_energies_geom = 1;
+  int n_dipoles_geom = 3;
+  int n_es_freq_geom = es_frequencies_.size() / number_geometries_;
+  int n_es_int_geom = es_intensities_.size() / number_geometries_;
+  int n_forces_geom = forces_.size() / number_geometries_;
+  int n_ir_freq_geom = ir_frequencies_.size() / number_geometries_;
+  int n_ir_int_geom = ir_intensities_.size() / number_geometries_;
+
+  /* Convert our vectors into a mutidimensional vector, where the outside
+     vector represents the geometry */
+  auto energies_geom = dmath::VectorOneToTwo(energies_, n_energies_geom);
+  auto dipoles_geom = dmath::VectorOneToTwo(dipoles_, n_dipoles_geom);
+  auto es_freq_geom = dmath::VectorOneToTwo(es_frequencies_, n_es_freq_geom);
+  auto es_int_geom = dmath::VectorOneToTwo(es_intensities_, n_es_int_geom);
+  auto forces_geom = dmath::VectorOneToTwo(forces_, n_forces_geom);
+  auto ir_freq_geom = dmath::VectorOneToTwo(ir_frequencies_, n_ir_freq_geom);
+  auto ir_int_geom = dmath::VectorOneToTwo(ir_intensities_, n_ir_int_geom);
+
+
+  for (size_t i = 0; i != number_geometries_; ++i){
+    auto energy = energies_geom[i][0];
+    auto dipoles = dipoles_geom[i];
+    auto es_frequencies = es_freq_geom[i];
+    auto es_intensities = es_int_geom[i];
+    auto forces = forces_geom[i];
+    auto ir_frequencies = ir_freq_geom[i];
+    auto ir_intensities = ir_int_geom[i];
+    reparm::GaussianOutput hlt_out(energy,
+				   dipoles,
+				   es_frequencies,
+				   es_intensities,
+				   forces,
+				   ir_frequencies,
+				   ir_intensities);
+    high_level_outputs_.push_back(hlt_out);
+  }
+}
+
+
+

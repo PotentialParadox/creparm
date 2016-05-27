@@ -388,8 +388,11 @@ double reparm::Fitness::IRIntensityDiffFitness
   auto hlt_it = hlt_differences.begin();
   auto end = am1_differences.end();
   for (; am1_it != end; ++am1_it, ++hlt_it){
-    if (am1_it->size() != hlt_it->size())
+    if (am1_it->size() != hlt_it->size()){
+      std::cerr << "am1 size: " << am1_it->size() << std::endl;
+      std::cerr << "hlt size: " << hlt_it->size() << std::endl;
       throw "ir intensities differences differ";
+    }
     distances.emplace_back(dmath::Distance(am1_it->begin()
 					   , am1_it->end(), hlt_it->begin()));
   }
@@ -595,9 +598,11 @@ reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
 	try{
 	  auto ir = IRFreqAverageFitness(i);
 	  ir_freq_avg_vals.push_back(ir);
-	}catch(...){}
+	}catch(const char * e){
+	  std::cerr << e << std::endl;
+	}
       if (ir_freq_avg_vals.size() <= 1)
-	throw "Not enough normal modes. Try lowering the mutation rate.";
+	throw "Not enough ir frequencies. Try lowering the mutation rate.";
       ir_freq_avg_sigma_ = dmath::STDEV(ir_freq_avg_vals.begin(), ir_freq_avg_vals.end());
 
       /* IR Frequency Difference Values */
@@ -608,7 +613,7 @@ reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
 	  ir_freq_diff_vals.push_back(ir);
 	}catch(...){}
       if (ir_freq_diff_vals.size() <= 1)
-	throw "Not enough normal modes. Try lowering the mutation rate.";
+	throw "Not enough ir frequency differences. Try lowering the mutation rate.";
       ir_freq_diff_sigma_ = dmath::STDEV(ir_freq_diff_vals.begin(), ir_freq_diff_vals.end());
 
       /* IR Intensities Average Values */
@@ -619,7 +624,7 @@ reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
 	  ir_int_avg_vals.push_back(ir);
 	}catch(...){}
       if (ir_int_avg_vals.size() <= 1)
-	throw "Not enough normal modes. Try lowering the mutation rate.";
+	throw "Not enough intensity averages. Try lowering the mutation rate.";
       ir_int_avg_sigma_ = dmath::STDEV(ir_int_avg_vals.begin(), ir_int_avg_vals.end());
 
       /* IR Intensities Difference Values */
@@ -628,9 +633,9 @@ reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
 	try{
 	  auto ir = IRIntensityDiffFitness(i);
 	  ir_int_diff_vals.push_back(ir);
-	}catch(...){}
+	}catch(const char *e){std::cerr << e << std::endl;}
       if (ir_int_diff_vals.size() <= 1)
-	throw "Not enough normal modes. Try lowering the mutation rate.";
+	throw "Not enough ir intensitity differences. Try lowering the mutation rate.";
       ir_int_diff_sigma_ = dmath::STDEV(ir_int_diff_vals.begin(), ir_int_diff_vals.end());
 
       /* Force Geometry Difference Values */

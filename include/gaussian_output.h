@@ -33,13 +33,13 @@ class GaussianOutput{
 		std::vector<double> forces,
 		std::vector<double> frequencies,
 		std::vector<double> intensities)
-   : energy_(0)
-    , dipole_(dipole)
-    , es_frequencies_(es_frequencies)
-    , es_intensities_(es_intensities)
-    , forces_(forces)
-    , frequencies_(frequencies)
-    , intensities_(intensities)
+   : energy_{energy}
+   , dipole_{dipole}
+   , es_frequencies_{es_frequencies}
+   , es_intensities_{es_intensities}
+   , forces_{forces}
+   , frequencies_{frequencies}
+   , intensities_{intensities}
   {}
   
   GaussianOutput(const std::string&);

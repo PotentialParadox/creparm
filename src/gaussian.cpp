@@ -14,6 +14,15 @@ using namespace reparm;
 std::string reparm::Gaussian::RunGaussian(std::string &input_file){
   std::string cmd{"#!/bin/sh\ng09 2>&1 <<END\n" + input_file + "END"};
   std::string gout(systls::exec(cmd, 100000));
+  std::regex p_normal_termination{"Normal termination of Gaussian 09"};
+  std::regex p_no_g09{"g09: not found"};
+  if (std::regex_search(gout, p_no_g09)){
+    std::cerr << "Gaussian not found, please check your exports" << std::endl;
+    throw "No Gaussian";
+  }
+  else if (!(std::regex_search(gout, p_normal_termination))){
+    throw "There was an error with gaussian";
+  }
   return gout;
 }
 
@@ -103,6 +112,12 @@ std::vector<reparm::GaussianOutput> Gaussian::RunGaussian(reparm::ParameterGroup
   }
 
   return outputs;
+}
+
+reparm::GaussianOutput Gaussian::RunGaussian(reparm::GaussianInput &input){
+  std::string s_input = input.str();
+  std::string s_output = g_run.RunGaussian(s_input);
+  return GaussianOutput(s_output);
 }
 
 reparm::Gaussian g_run = reparm::Gaussian();

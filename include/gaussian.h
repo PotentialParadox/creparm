@@ -8,7 +8,7 @@
 
 namespace reparm{
 
-class Gaussian{
+  class Gaussian{
   private:
     // Use the full file, not the file name
     reparm::ParameterGroup param_group_;
@@ -16,16 +16,17 @@ class Gaussian{
   public:
     Gaussian()
       :param_group_{}
-      {}
+    {}
     Gaussian(const reparm::ParameterGroup &param_group)
       :param_group_{param_group}
-      {}
+    {}
 
     std::vector<reparm::GaussianOutput> RunGaussian();
     std::vector<reparm::GaussianOutput> RunGaussian(reparm::ParameterGroup&);
+    reparm::GaussianOutput RunGaussian(reparm::GaussianInput&);
     std::string RunGaussian(std::string &input_file);
 
-};
+  };
 
 }
 

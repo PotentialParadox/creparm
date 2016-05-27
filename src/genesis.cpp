@@ -14,8 +14,6 @@ namespace reparm{
     ReadUserInput();
     FindHLTOptNormal();
     CreateCoordinates();
-    for (auto i: coordinates_)
-      std::cout << i.str() << std::endl;
     CreatePopulation();
     std::cout << "Calculating HLT" << std::endl;
     CreateHLT();

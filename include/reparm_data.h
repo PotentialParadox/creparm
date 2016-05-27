@@ -26,6 +26,13 @@ namespace reparm{
     std::vector<float> coordinates_;
     std::vector<double> best_parameters_;
     std::vector<std::string> parameter_labels_;
+    std::vector<double> energies_;
+    std::vector<double> dipoles_;
+    std::vector<double> es_frequencies_;
+    std::vector<double> es_intensities_;
+    std::vector<double> forces_;
+    std::vector<double> ir_frequencies_;
+    std::vector<double> ir_intensities_;
 
     /****** METHODS *****/
     void LoadHLT();
