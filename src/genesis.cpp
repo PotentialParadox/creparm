@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include <armadillo>
+#include <random>
 
 namespace reparm{
 
@@ -91,6 +92,13 @@ namespace reparm{
     const int number_geometries = reparm_data_->GetReparmInput().GetNumberGeometries();
     coordinates_.push_back(opt_coord_);
     for (int geom = 1; geom != number_geometries; ++geom){
+      /* We need to modify our total energy Et by a normal distribution */
+      double variance = 2 / ( 3 * number_atoms ) * Et;
+      double stand_dev = std::sqrt(variance);
+      std::default_random_engine generator;
+      std::normal_distribution<double> distr(Et, standard_dev);
+      double Et_modified = distr(generator);
+
       arma::arma_rng::set_seed_random();
       arma::rowvec r_values(number_modes, arma::fill::randu);
       double normalizer = std::accumulate(r_values.begin(),
@@ -98,7 +106,7 @@ namespace reparm{
 					  0.0);
       r_values.for_each([normalizer](arma::rowvec::elem_type &val)
 			{val /= normalizer;});
-      arma::rowvec energy_per_mode = Et * r_values;
+      arma::rowvec energy_per_mode = Et_modified * r_values;
 
       /* Given the energy and force constants, we can find
 	 the max displacements using hooks law, E = 1/2 kx^2 */

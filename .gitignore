@@ -34,3 +34,9 @@ test
 
 # Emacs
 *~
+*.el
+
+# Latex
+*.log
+*.aux
+*.prv
