@@ -134,6 +134,36 @@ namespace dmath{
     }
     return arma::Mat<T>(v_temp);
   }
+
+  //////////////////////////////////////////////
+// DifferenceVectorMatrix
+// Converts a one dimensional vector of vectors 
+// into a two dimensional array representing the
+// differences between each member of the original
+// vector
+  //////////////////////////////////////////////
+  template <typename T>
+  std::vector<std::vector<std::vector<T> > >
+  DifferenceVectorMatrix(const std::vector<std::vector<T> > &v){
+    /* The size of a vector */
+    size_t v_length = v[0].size();
+    /* The number of vectors */
+    size_t number_vectors = v.size();
+
+    /* Allocate the array */
+    std::vector<T> vec(v_length);
+    std::vector<std::vector<T> > row(number_vectors, vec);
+    std::vector<std::vector<std::vector<T> > > mat(number_vectors, row);
+
+    /* Populated the difference matrix */
+    for (size_t i = 0; i != number_vectors; ++i)
+      for (size_t j = 0; j != number_vectors && j > i; ++j)
+	mat[i][j] = VectorDifference(std::begin(v[i]), std::end(v[i]), std::begin(v[j]));
+
+    return mat;
+  }
+    
+
   
 }
 
