@@ -8,47 +8,70 @@
 
 \maketitle
 
-\section{Geometry array creation}
-The expected energy of an atom is
+\section{Overview}
+Each function analyzes only a parametergroup containing all the structures but only one set of parameters.
+
+
+\section{Energy Fitness}
+All the energies of each structure is contained in a vector $\mathbf{E}$.
+The differences between the energies of each structure is then inserted into a new vector
 \begin{equation}
-  \label{eq:energy_atom}
-  \left<E_{atom}\right>=\frac{3}{2}K_{b}T
+  \label{eq:energy_differences}
+  \Delta E_{i} = E_{i+1} - E_{i}
 \end{equation}
-where $K_b$ is the boltzman constant $1.38064853E^{-23}m^2kgS^{-2}K^{-1}$ and $T$ is temperature which is defaulted to $298K$ the default for Gaussian 09.
-The total energy of the molecule is then.
+This calculation is done for both AM1 and the HLT creating vectors $\mathbf{\Delta E_{AM1}}$ and $\mathbf{\Delta E_{HLT}}$.
+The distance between the two vectors is returned.
+
+
+\section{Dipole Average Fitness}
+We start with a 2 dimensional array, with the rows representing each structure, and the columns representing the magnitude of the dipole moment in coordinate $x_i$.
+\[
+\begin{bmatrix}
+  x_{1} & y_{1} & z_{1} \\
+  x_{2} & y_{2} & z_{2} \\
+  \hdotsfor{3}   \\
+  x_n & y_n & z_n
+\end{bmatrix}
+\]
+We average the values in each row to get the average dipole moment.
+Doing this for both AM1 and HLT yields
+
 \begin{equation}
-  \label{eq:energy_molecule}
- \left<E_{molecule}\right>=\sum_{i=atom}^{N}E_{atom}
+  \mathbf{D_{AM1|HLT}} = \left[x, y, z\right]
 \end{equation}
-where N is the number of atoms.
-Of course this is the expected value.
-We therefore need to use a random number from a normal distribution to modify it. 
-The variance of molecule energy is
+
+We then return the distance between $\mathbf{D_{AM1}}$ and $\mathbf{D_{HLT}}$.
+
+\section{Dipole Difference Fitness}
+For each level of theory, we once again start with the 2 dimensional array
+\[
+\begin{bmatrix}
+  x_{1} & y_{1} & z_{1} \\
+  x_{2} & y_{2} & z_{2} \\
+  \hdotsfor{3}   \\
+  x_n & y_n & z_n
+\end{bmatrix}
+\]
+We can represent represent each dipole by a 3 component vector, leading to
+\[
+  \begin{bmatrix}
+   \mathbf{d_1} \\
+   \mathbf{d_2} \\
+   \dots        \\
+   \mathbf{d_n} \\
+  \end{bmatrix}
+\]
+A matrix of the differences can now be created
 \begin{equation}
-  \label{eq:energy_variance}
-  \sigma^2=\frac{2}{3N}\left<E_{molecule}\right>
+  \mathbf{\Delta D}=
+  \begin{bmatrix}
+    0 & | \mathbf{d_2} - \mathbf{d_1} | & | \mathbf{d_3} - \mathbf{d_1} |  & \dots & | \mathbf{d_n} - \mathbf{d_1} | \\
+    | \mathbf{d_1} - \mathbf{d_2} | & 0 & | \mathbf{d_3} - \mathbf{d_2} |  & \dots & | \mathbf{d_n} - \mathbf{d_2} | \\
+    \hdotsfor{5} \\
+    | \mathbf{d_1} - \mathbf{d_n} | &  | \mathbf{d_2} - \mathbf{d_n} | & | \mathbf{d_3} - \mathbf{d_2} |  & \dots & 0 
+  \end{bmatrix}
 \end{equation}
-Leading to the molecule energy
-\begin{equation}
-  \label{eq:adj_molecule_energy}
-  E_{molecule}= \left<E_{molecule}\right> + R
-\end{equation}
-where $R$ is the random value generated from a normal distribution with aforementioned variance.
-We then distribute this energy among the normal modes using a uniform random number generator, giving us a new vector $E_{mode}$.
-Now, normal modes are represented by harmonic oscillators, so 
-\begin{align}
-  E_{mode}&=\frac{1}{2}kx^2\\
-  x&=\sqrt{\frac{2E}{k}}
-\end{align}
-where $k$ is the spring constant given  and x is the displacement from equilibrium.
-Now these diplacements, $\mathbf{x}$, can be made in any direction, so we once again apply a random number generator to flip the sign of some some of these modes.
-We now have our displacement vector $\mathbf{x}$.
-For simplification of calculations, we make this a diagonal matrix $\mathbf{X}$.
-Our normal modes are extracted from gaussian 09 and placed into a matrix $\mathbf{M}$ with the columns representing the coordinates for each atom, $X_{atom1}$, $Y_{atom1}$, $Z_{atom1}$, $X_{atom2}$, etc., and the rows representing the normal modes.
-Our diplacement matrix is thus,
-\begin{equation}
-  \label{eq:displacement}
- \mathbf{D}=\mathbf{XM} 
-\end{equation}
-When we sum the rows we obtain the displacement vector $\mathbf{d}$, which is then applied to the optimized coordinates.
+The distance is between $\mathbf{\Delta D_{AM1}}$ and $\mathbf{\Delta D_{HLT}}$ is returned.
+
+
 \end{document}

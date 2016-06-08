@@ -1,59 +1,14 @@
-\message{ !name(genesis.tex)}\documentclass[12pt]{article}
+\message{ !name(fitness.tex)}\documentclass[12pt]{article}
 \usepackage{amsmath}
 
-\title{Reparm: Genesisi}
+\title{Reparm: Genesis}
 \author{Dustin Tracy}
 
 \begin{document}
 
-\message{ !name(genesis.tex) !offset(-3) }
+\message{ !name(fitness.tex) !offset(64) }
+ is returned.
 
-
-\maketitle
-
-\section{Geometry array creation}
-The expected energy of an atom is
-\begin{equation}
-  \label{eq:energy_atom}
-  \left<E_{atom}\right>=\frac{3}{2}K_{b}T
-\end{equation}
-where $K_b$ is the boltzman constant $1.38064853E^{-23}m^2kgS^{-2}K^{-1}$ and $T$ is temperature which is defaulted to $298K$ the default for Gaussian 09.
-The total energy of the molecule is then.
-\begin{equation}
-  \label{eq:energy_molecule}
- \left<E_{molecule}\right>=\sum_{i=atom}^{N}E_{atom}
-\end{equation}
-where N is the number of atoms.
-Of course this is the expected value.
-We therefore need to use a random number from a normal distribution to modify it. 
-The variance of molecule energy is
-\begin{equation}
-  \label{eq:energy_variance}
-  \sigma^2=\frac{2}{3N}\left<E_{molecule}\right>
-\end{equation}
-Leading to the molecule energy
-\begin{equation}
-  \label{eq:adj_molecule_energy}
-  E_{molecule}= \left<E_{molecule}\right> + R
-\end{equation}
-where $R$ is the random value generated from a normal distribution with aforementioned variance.
-We then distribute this energy among the normal modes using a random number generator, giving us a new vector $E_{mode}$.
-Now, normal modes are represented by harmonic oscillators, so 
-\begin{align}
-  E_{mode}&=\frac{1}{2}kx^2\\
-  x&=\sqrt{\frac{2E}{k}}
-\end{align}
-where $k$ is the spring constant given  and x is the displacement from equilibrium.
-Now these diplacements, $\mathbf{x}$, can be made in any direction, so we once again apply a random number generator to flip the sign of some some of these modes.
-We now have our displacement vector $\mathbf{x}$.
-For simplification of calculations, we make this a diagonal matrix $\mathbf{X}$.
-Our normal modes are extracted from gaussian 09 and placed into a matrix $\mathbf{M}$ with the columns representing the coordinates for each atom, $X_{atom1}$, $Y_{atom1}$, $Z_{atom1}$, $X_{atom2}$, etc., and the rows representing the normal modes.
-Our diplacement matrix is thus,
-\begin{equation}
-  \label{eq:displacement}
- \mathbf{D}=\mathbf{XM} 
-\end{equation}
-When we sum the rows we obtain the displacement vector $\mathbf{d}$, which is then applied to the optimized coordinates.
 \end{document}
 
-\message{ !name(genesis.tex) !offset(-59) }
+\message{ !name(fitness.tex) !offset(-14) }
