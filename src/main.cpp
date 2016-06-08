@@ -51,6 +51,9 @@ int main(){
       fout << "Starting new job" << endl;
       Genesis genesis(reparm_data);
       reparm_data->Save();
+      fout << "Saved structures to reparm_structures.xyz" << endl;
+      ofstream xyz{"reparm_structures.xyz"};
+      xyz << reparm_data->population_[0].XYZString();
     }
 
     // Initialize the functors

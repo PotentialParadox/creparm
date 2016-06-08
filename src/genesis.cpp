@@ -96,7 +96,7 @@ namespace reparm{
       double variance = 2 / ( 3 * number_atoms ) * Et;
       double stand_dev = std::sqrt(variance);
       std::default_random_engine generator;
-      std::normal_distribution<double> distr(Et, standard_dev);
+      std::normal_distribution<double> distr(Et, stand_dev);
       double Et_modified = distr(generator);
 
       arma::arma_rng::set_seed_random();
