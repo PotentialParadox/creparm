@@ -157,8 +157,11 @@ namespace dmath{
 
     /* Populated the difference matrix */
     for (size_t i = 0; i != number_vectors; ++i)
-      for (size_t j = 0; j != number_vectors && j > i; ++j)
+      for (size_t j = 0; j != number_vectors && j > i; ++j){
 	mat[i][j] = VectorDifference(std::begin(v[i]), std::end(v[i]), std::begin(v[j]));
+	mat[j][i] = mat[i][j];
+      }
+    
 
     return mat;
   }
