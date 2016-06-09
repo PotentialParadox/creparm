@@ -74,51 +74,18 @@ double reparm::Fitness::DipoleDifferenceFitness
     am1_dipoles.push_back(i.GetDipole());
   if (am1_dipoles.empty())
     throw "Dipoles not found";
+  auto am1_differences = dmath::DifferenceVectorMatrix(am1_dipoles);
   std::vector<std::vector<double> > hlt_dipoles;
   for (auto &i: high_level_outputs_)
     hlt_dipoles.push_back(i.GetDipole());
   if (hlt_dipoles.empty())
     throw "Dipoles not found";
+  auto hlt_differences = dmath::DifferenceVectorMatrix(hlt_dipoles);
 
-  /* Convert into difference matrix */
-  std::vector<std::vector<double> > am1_differences;
-  auto it = am1_dipoles.begin();
-  auto it1 = next(it, 1);
-  auto end = am1_dipoles.end();
-  for (; it1 != end; ++it, ++it1){
-    am1_differences.emplace_back(dmath::VectorDifference<double>(
-								 it->begin(),
-								 it->end(),
-								 it1->begin()
-								 )
-				 );
-  }
-  std::vector<std::vector<double> > hlt_differences;
-  it = hlt_dipoles.begin();
-  it1 = next(it, 1);
-  end = hlt_dipoles.end();
-  for (; it1 != end; ++it, ++it1){
-    hlt_differences.emplace_back(dmath::VectorDifference<double>(
-								 it->begin(),
-								 it->end(),
-								 it1->begin()
-								 )
-				 );
-  }
+  auto DistanceMatrix = dmath::DistanceVectorMatrix(am1_differences,
+						      hlt_differences);
+  return dmath::MatrixAverage(DistanceMatrix);
 
-  /* Now Calculate the average distance between the distance vectors in
-     the am1 and hlt calculations */
-  if (am1_differences.size() != hlt_differences.size())
-    throw "Dipole differences sizes differ";
-  std::vector<double> distances;
-  it = am1_differences.begin();
-  it1 = hlt_differences.begin();
-  end = am1_differences.end();
-  for(; it != end; ++it, ++it1){
-    distances.emplace_back(dmath::Distance(it->begin(), it->end(), it1->begin()));
-  }
-  auto average = dmath::Average(distances.begin(), distances.end());
-  return average;
 }
 
 double reparm::Fitness::ExcitedFreqAverageFitness
@@ -159,41 +126,15 @@ double reparm::Fitness::ExcitedFreqDiffFitness
   std::vector<std::vector<double> > am1_es_freqs;
   for (auto &i: param_group.GetOutputs())
     am1_es_freqs.push_back(i.GetESFrequencies());
+  auto am1_differences = dmath::DifferenceVectorMatrix(am1_es_freqs);
   std::vector<std::vector<double> > hlt_es_freqs;
   for (auto &i: high_level_outputs_)
     hlt_es_freqs.push_back(i.GetESFrequencies());
+  auto hlt_differences = dmath::DifferenceVectorMatrix(hlt_es_freqs);
 
-  /* Convert to vector of differences */
-  std::vector<std::vector<double> > am1_differences;
-  for (auto &i: am1_es_freqs){
-    if (i.size() <= 1)
-      throw "Excited State Freq vector does not have enough elements";
-    std::vector<double> differences;
-    differences = dmath::Differences<double>(i.begin(), i.end());
-    am1_differences.push_back(differences);
-  }
-  std::vector<std::vector<double> > hlt_differences;
-  for (auto &i: hlt_es_freqs){
-    if (i.size() <= 1)
-      throw "Excited State Freq vector does not have enough elements";
-    std::vector<double> differences;
-    differences = dmath::Differences<double>(i.begin(), i.end());
-    hlt_differences.push_back(differences);
-  }
-
-  /* Create a vector of distances */
-  if (am1_differences.size() != hlt_differences.size())
-    throw "Excited State sizes differ";
-  std::vector<double> distances(am1_differences.size());
-  auto am1_it = am1_differences.begin();
-  auto end = am1_differences.end();
-  auto hlt_it = hlt_differences.begin();
-  for (; am1_it != end; ++am1_it, ++hlt_it){
-    double distance = dmath::Distance(am1_it->begin(), am1_it->end(), hlt_it->begin());
-    distances.push_back(distance);
-  }
-
-  return dmath::Average(distances.begin(), distances.end());
+  auto DistanceMatrix = dmath::DistanceVectorMatrix(am1_differences,
+						      hlt_differences);
+  return dmath::MatrixAverage(DistanceMatrix);
 }
 
 double reparm::Fitness::ExcitedIntAverageFitness
@@ -227,35 +168,17 @@ double reparm::Fitness::ExcitedIntDiffFitness
   std::vector<std::vector<double> > am1_es_intensities;
   for (auto &i: param_group.GetOutputs())
     am1_es_intensities.push_back(i.GetESIntensities());
+  auto am1_differences = dmath::DifferenceVectorMatrix(am1_es_intensities);
   std::vector<std::vector<double> > hlt_es_intensities;
   for (auto &i: high_level_outputs_)
     hlt_es_intensities.push_back(i.GetESIntensities());
   if (am1_es_intensities.empty() || hlt_es_intensities.empty())
     throw "Cannot not obtain es_intensities";
+  auto hlt_differences = dmath::DifferenceVectorMatrix(hlt_es_intensities);
 
-  /* Create vectors of the differences */
-  std::vector<std::vector<double> > am1_differences;
-  for (auto &i: am1_es_intensities)
-    am1_differences.emplace_back(dmath::Differences<double>(i.begin(), i.end()));
-  std::vector<std::vector<double> > hlt_differences;
-  for (auto &i: hlt_es_intensities)
-    hlt_differences.emplace_back(dmath::Differences<double>(i.begin(), i.end()));
-  if (hlt_differences.size() != am1_differences.size())
-    throw "amount of excited states differ";
-
-  /* Now make a vector of the distances between hlt and am1 */
-  std::vector<double> distances;
-  auto am1_it = am1_differences.begin();
-  auto hlt_it = hlt_differences.begin();
-  auto end = am1_differences.end();
-  for (; am1_it != end; ++am1_it, ++hlt_it){
-    if (am1_it->size() != hlt_it->size())
-      throw "excited intensities differences differ";
-    distances.emplace_back(dmath::Distance(am1_it->begin()
-					   , am1_it->end(), hlt_it->begin()));
-  }
-
-  return dmath::Average(distances.begin(), distances.end());
+  auto DistanceMatrix = dmath::DistanceVectorMatrix(am1_differences,
+						      hlt_differences);
+  return dmath::MatrixAverage(DistanceMatrix);
 }
 
 double reparm::Fitness::IRFreqAverageFitness
@@ -298,41 +221,15 @@ double reparm::Fitness::IRFreqDiffFitness
   std::vector<std::vector<double> > am1_ir_freqs;
   for (auto &i: param_group.GetOutputs())
     am1_ir_freqs.push_back(i.GetFrequencies());
+  auto am1_differences = dmath::DifferenceVectorMatrix(am1_ir_freqs);
   std::vector<std::vector<double> > hlt_ir_freqs;
   for (auto &i: high_level_outputs_)
     hlt_ir_freqs.push_back(i.GetFrequencies());
+  auto hlt_differences = dmath::DifferenceVectorMatrix(hlt_ir_freqs);
 
-  /* Convert to vector of differences */
-  std::vector<std::vector<double> > am1_differences;
-  for (auto &i: am1_ir_freqs){
-    if (i.size() <= 1)
-      throw "IR Freq vector does not have enough elements";
-    std::vector<double> differences;
-    differences = dmath::Differences<double>(i.begin(), i.end());
-    am1_differences.push_back(differences);
-  }
-  std::vector<std::vector<double> > hlt_differences;
-  for (auto &i: hlt_ir_freqs){
-    if (i.size() <= 1)
-      throw "IR Freq vector does not have enough elements";
-    std::vector<double> differences;
-    differences = dmath::Differences<double>(i.begin(), i.end());
-    hlt_differences.push_back(differences);
-  }
-
-  /* Create a vector of distances */
-  if (am1_differences.size() != hlt_differences.size())
-    throw "IR Frequency sizes differ";
-  std::vector<double> distances(am1_differences.size());
-  auto am1_it = am1_differences.begin();
-  auto end = am1_differences.end();
-  auto hlt_it = hlt_differences.begin();
-  for (; am1_it != end; ++am1_it, ++hlt_it){
-    double distance = dmath::Distance(am1_it->begin(), am1_it->end(), hlt_it->begin());
-    distances.push_back(distance);
-  }
-
-  return dmath::Average(distances.begin(), distances.end());
+  auto DistanceMatrix = dmath::DistanceVectorMatrix(am1_differences,
+						      hlt_differences);
+  return dmath::MatrixAverage(DistanceMatrix);
 }
 
 double reparm::Fitness::IRIntensityAverageFitness
@@ -366,38 +263,17 @@ double reparm::Fitness::IRIntensityDiffFitness
   std::vector<std::vector<double> > am1_ir_intensities;
   for (auto &i: param_group.GetOutputs())
     am1_ir_intensities.push_back(i.GetIntensities());
+  auto am1_differences = dmath::DifferenceVectorMatrix(am1_ir_intensities);
   std::vector<std::vector<double> > hlt_ir_intensities;
   for (auto &i: high_level_outputs_)
     hlt_ir_intensities.push_back(i.GetIntensities());
+  auto hlt_differences = dmath::DifferenceVectorMatrix(hlt_ir_intensities);
   if (am1_ir_intensities.empty() || hlt_ir_intensities.empty())
     throw "Cannot not obtain ir_intensities";
 
-  /* Create vectors of the differences */
-  std::vector<std::vector<double> > am1_differences;
-  for (auto &i: am1_ir_intensities)
-    am1_differences.emplace_back(dmath::Differences<double>(i.begin(), i.end()));
-  std::vector<std::vector<double> > hlt_differences;
-  for (auto &i: hlt_ir_intensities)
-    hlt_differences.emplace_back(dmath::Differences<double>(i.begin(), i.end()));
-  if (hlt_differences.size() != am1_differences.size())
-    throw "amount of normal modes differ";
-
-  /* Now make a vector of the distances between hlt and am1 */
-  std::vector<double> distances;
-  auto am1_it = am1_differences.begin();
-  auto hlt_it = hlt_differences.begin();
-  auto end = am1_differences.end();
-  for (; am1_it != end; ++am1_it, ++hlt_it){
-    if (am1_it->size() != hlt_it->size()){
-      std::cerr << "am1 size: " << am1_it->size() << std::endl;
-      std::cerr << "hlt size: " << hlt_it->size() << std::endl;
-      throw "ir intensities differences differ";
-    }
-    distances.emplace_back(dmath::Distance(am1_it->begin()
-					   , am1_it->end(), hlt_it->begin()));
-  }
-
-  return dmath::Average(distances.begin(), distances.end());
+  auto DistanceMatrix = dmath::DistanceVectorMatrix(am1_differences,
+						      hlt_differences);
+  return dmath::MatrixAverage(DistanceMatrix);
 }
 
 double reparm::Fitness::ForceGeomDiffFitness

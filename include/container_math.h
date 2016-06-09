@@ -143,8 +143,8 @@ namespace dmath{
 // vector
   //////////////////////////////////////////////
   template <typename T>
-  std::vector<std::vector<std::vector<T> > >
-  DifferenceVectorMatrix(const std::vector<std::vector<T> > &v){
+    std::vector<std::vector<std::vector<T> > >
+    DifferenceVectorMatrix(const std::vector<std::vector<T> > &v){
     /* The size of a vector */
     size_t v_length = v[0].size();
     /* The number of vectors */
@@ -157,17 +157,52 @@ namespace dmath{
 
     /* Populated the difference matrix */
     for (size_t i = 0; i != number_vectors; ++i)
-      for (size_t j = 0; j != number_vectors && j > i; ++j){
-	mat[i][j] = VectorDifference(std::begin(v[i]), std::end(v[i]), std::begin(v[j]));
+      for (size_t j = i + 1; j < number_vectors; ++j){
+	mat[i][j] = VectorDifference<T>(std::begin(v[i]), std::end(v[i]), std::begin(v[j]));
 	mat[j][i] = mat[i][j];
       }
     
 
     return mat;
   }
-    
 
-  
+  //////////////////////////////////////////////
+// DistanceVectorMatrix
+// Finds the distances between the vector 
+// components of two arrays of vectos
+  //////////////////////////////////////////////
+  template <typename T>
+    std::vector<std::vector<T> >
+    DistanceVectorMatrix(const std::vector<std::vector<std::vector<T> > > &v,
+			    const std::vector<std::vector<std::vector<T> > > &w){
+    std::vector<T> row(v.size());
+    std::vector<std::vector<T> > mat(v.size(), row);
+
+    for (size_t i = 0; i != v.size(); ++i)
+      for (size_t j = 0; j != v.size(); ++j){
+	mat[i][j] = Distance(std::begin(v[i][j]), std::end(v[i][j]), std::begin(w[i][j]));
+      }
+
+    return mat;
+  }
+
+    
+  //////////////////////////////////////////////
+// MatrixAverage
+// Calculate the average of a vector of vectors
+  //////////////////////////////////////////////
+  template <typename T>
+    T MatrixAverage(const std::vector<std::vector<T> > &mat){
+    if (mat.size() == 0 || mat[0].size() == 0)
+      throw "Dimensions of matrix must be > 0";
+    T value = 0;
+    for (const auto &i: mat)
+      for (const auto &j: i){
+	value += j;
+      }
+    value /= (mat.size() * mat[0].size());
+    return value;
+  }
 }
 
 #endif /* CONTAINER_MATH_H */

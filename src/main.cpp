@@ -19,6 +19,7 @@
 #include <aristocratic_cloning.h>
 #include <genesis.h>
 #include <gout_reader.h>
+#include <container_math.h>
 
 using namespace std;
 using namespace reparm;
