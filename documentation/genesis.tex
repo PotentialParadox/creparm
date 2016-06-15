@@ -9,7 +9,7 @@
 \maketitle
 
 \section{Geometry array creation}
-The expected kinetic energy of an atom is
+The expected kenergy of an atom is
 \begin{equation}
   \label{eq:energy_atom}
   \left<E_{atom}\right>=\frac{3}{2}K_{b}T
@@ -41,15 +41,17 @@ Now, normal modes are represented by harmonic oscillators, so
   E_{mode}&=\frac{1}{2}kx^2\\
   x&=\sqrt{\frac{2E}{k}}
 \end{align}
-where $k$ is the spring constant given  and x is the displacement from equilibrium.
-Now these diplacements, $\mathbf{x}$, can be made in any direction, so we once again apply a random number generator to flip the sign of some some of these modes.
-We now have our displacement vector $\mathbf{x}$.
-For simplification of calculations, we make this a diagonal matrix $\mathbf{X}$.
+where $k$ is the spring constant given  and x is the maximum displacement from equilibrium.
+Now these maximum diplacements, $\mathbf{x}$, can be made in any direction, so we once again apply a random number generator to flip the sign of some some of these modes.
+We now have our maximum displacement vector $\mathbf{x}$.
 Our normal modes are extracted from gaussian 09 and placed into a matrix $\mathbf{M}$ with the columns representing the coordinates for each atom, $X_{atom1}$, $Y_{atom1}$, $Z_{atom1}$, $X_{atom2}$, etc., and the rows representing the normal modes.
-Our diplacement matrix is thus,
+Our final diplacement vector is thus,
 \begin{equation}
   \label{eq:displacement}
- \mathbf{D}=\mathbf{XM} 
+ \mathbf{d}=\mathbf{x} \cdot \mathbf{M}
 \end{equation}
-When we sum the rows we obtain the displacement vector $\mathbf{d}$, which is then applied to the optimized coordinates.
+This vector is then added to the optimized structured $\mathbf{o}$ to get the new structure
+\begin{equation}
+  \mathbf{s} = \mathbf{o} + \mathbf{d}
+\end{equation}
 \end{document}

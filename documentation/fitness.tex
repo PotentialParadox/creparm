@@ -62,16 +62,25 @@ We can represent represent each dipole by a 3 component vector, leading to
   \end{bmatrix}
 \]
 A matrix of the differences can now be created
-\begin{equation}
-  \mathbf{\Delta D}=
+\begin{align*}
+  \mathbf{\Delta D}&=
   \begin{bmatrix}
-    0 & | \mathbf{d_2} - \mathbf{d_1} | & | \mathbf{d_3} - \mathbf{d_1} |  & \dots & | \mathbf{d_n} - \mathbf{d_1} | \\
-    | \mathbf{d_1} - \mathbf{d_2} | & 0 & | \mathbf{d_3} - \mathbf{d_2} |  & \dots & | \mathbf{d_n} - \mathbf{d_2} | \\
+    0 & \mathbf{d_2} - \mathbf{d_1} & \mathbf{d_3} - \mathbf{d_1}  & \dots & \mathbf{d_n} - \mathbf{d_1} \\
+     \mathbf{d_1} - \mathbf{d_2}  & 0 &  \mathbf{d_3} - \mathbf{d_2}   & \dots &  \mathbf{d_n} - \mathbf{d_2}  \\
     \hdotsfor{5} \\
-    | \mathbf{d_1} - \mathbf{d_n} | &  | \mathbf{d_2} - \mathbf{d_n} | & | \mathbf{d_3} - \mathbf{d_2} |  & \dots & 0 
+     \mathbf{d_1} - \mathbf{d_n}  &   \mathbf{d_2} - \mathbf{d_n}  &  \mathbf{d_3} - \mathbf{d_2}   & \dots & 0 
+  \end{bmatrix} \\
+&=
+  \begin{bmatrix}
+    0 &  \mathbf{d_{12}}  &  \mathbf{d_{13}}  & \dots &  \mathbf{d_{1n}} \\
+    \mathbf{d_{21}}&  0  &  \mathbf{d_{23}}  & \dots &  \mathbf{d_{2n}} \\
+    \hdotsfor{5} \\
+    \mathbf{d_{n1}} & \mathbf{d_{n1}}  &  \mathbf{d_{n3}}  & \dots & 0
   \end{bmatrix}
+\end{align*}
+We can find the distances between the componets of  $\mathbf{\Delta D_{AM1}}$ and $\mathbf{\Delta D_{HLT}}$, to get a new matrix 
+\begin{equation}
+  M_{ij} =  \sum_k (\Delta D_{AM1_{ijk}} - \Delta D_{HLT_{ijk}})^2
 \end{equation}
-The distance is between $\mathbf{\Delta D_{AM1}}$ and $\mathbf{\Delta D_{HLT}}$ is returned.
-
-
+The average of this value is returned.
 \end{document}
