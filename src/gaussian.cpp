@@ -1,6 +1,7 @@
 #include <gaussian.h>
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <regex>
 #include <system_tools.hpp>
 #include <reparm_exceptions.h>

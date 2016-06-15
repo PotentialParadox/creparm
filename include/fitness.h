@@ -17,31 +17,31 @@ class Fitness{
   private:
     std::vector<reparm::GaussianOutput> high_level_outputs_;
     /* Energy Fitness */
-    double energy_sigma_;  
+    double energy_weight_;  
     /* Dipole Average Fitness */
-    double dipole_average_sigma_;  
+    double dipole_average_weight_;  
     /* Dipole Difference Fitness */
-    double dipole_difference_sigma_;  
+    double dipole_difference_weight_;  
     /* Exctied State Frequencies average */
-    double excited_freq_avg_sigma_;  
+    double excited_freq_avg_weight_;  
     /* Excited State Frequencies differences */
-    double excited_freq_diff_sigma_;  
+    double excited_freq_diff_weight_;  
     /* Exctied State Intensities average */
-    double excited_int_avg_sigma_;  
+    double excited_int_avg_weight_;  
     /* Excited State Intensities differences */
-    double excited_int_diff_sigma_;
+    double excited_int_diff_weight_;
     /* Infrared frequencies average */
-    double ir_freq_avg_sigma_; 
+    double ir_freq_avg_weight_; 
     /* Infrared frequencies differences */
-    double ir_freq_diff_sigma_; 
+    double ir_freq_diff_weight_; 
     /* Infrared intensities average */
-    double ir_int_avg_sigma_;  
+    double ir_int_avg_weight_;  
     /* Infrared intensities differences */
-    double ir_int_diff_sigma_;
+    double ir_int_diff_weight_;
     /* The force difference between atoms of differenct geometries */
-    double force_geom_diff_sigma_;  
+    double force_geom_diff_weight_;  
     /* The average force for each atom among the geometriees */
-    double force_geom_avg_sigma_;
+    double force_geom_avg_weight_;
     double EnergyFitness(const reparm::ParameterGroup &param_group) const;
     double DipoleAverageFitness(const reparm::ParameterGroup &param_group) const;
     double DipoleDifferenceFitness(const reparm::ParameterGroup &param_group) const;

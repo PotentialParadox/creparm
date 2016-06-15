@@ -52,26 +52,26 @@ reparm::GaussianInput CreateHLTInput
   return gaus_input1;
 }
 
-reparm::GaussianInput reparm::CreateReparmGaussian
-(std::string s, reparm::ReparmInput &reparm_input){
-  /* We need to first optimize at the high
-     level of theory and calculate the normal modes */
-  auto hlt_input = CreateHLTInput(s, reparm_input);
-  std::cout << "Created HLT file" << std::endl;
-  std::ofstream fout("test.com");
-  fout << hlt_input.str();
-  std::string cmd{"#!/bin/sh\ng09 2>&1 <<END\n" + hlt_input.str() + "END"};
-  std::string hlt_out(systls::exec(cmd, 100000));
-  std::regex p_normal_termination{"Normal termination of Gaussian 09"};
-  std::regex p_no_g09{"g09: not found"};
-  if (!std::regex_search(hlt_out, p_normal_termination))
-    throw "Initial HLT calculation failed";
-  std::ofstream hlt_output("test.log");
-  hlt_output << hlt_out;
+// reparm::GaussianInput reparm::CreateReparmGaussian
+// (std::string s, reparm::ReparmInput &reparm_input){
+//   /* We need to first optimize at the high
+//      level of theory and calculate the normal modes */
+//   auto hlt_input = CreateHLTInput(s, reparm_input);
+//   std::cout << "Created HLT file" << std::endl;
+//   std::ofstream fout("test.com");
+//   fout << hlt_input.str();
+//   std::string cmd{"#!/bin/sh\ng09 2>&1 <<END\n" + hlt_input.str() + "END"};
+//   std::string hlt_out(systls::exec(cmd, 100000));
+//   std::regex p_normal_termination{"Normal termination of Gaussian 09"};
+//   std::regex p_no_g09{"g09: not found"};
+//   if (!std::regex_search(hlt_out, p_normal_termination))
+//     throw "Initial HLT calculation failed";
+//   std::ofstream hlt_output("test.log");
+//   hlt_output << hlt_out;
 
-  /* Now we need to parse this hlt output for the
-     coordinates and normal modes */
-}
+//   /* Now we need to parse this hlt output for the
+//      coordinates and normal modes */
+// }
 
 std::string reparm::PrintTitle(){
   std::stringstream ss;

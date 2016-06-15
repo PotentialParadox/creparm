@@ -376,156 +376,20 @@ double reparm::Fitness::ForceGeomDiffFitness
 reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
                          const std::vector<reparm::GaussianOutput> &high_level_outputs)
   : high_level_outputs_{high_level_outputs}
-  , energy_sigma_{0.0}
-  , dipole_average_sigma_{0.0}
-  , dipole_difference_sigma_(0.0)
-  , excited_freq_avg_sigma_(0.0)
-  , excited_freq_diff_sigma_(0.0)
-  , excited_int_avg_sigma_(0.0)
-  , excited_int_diff_sigma_(0.0)
-  , ir_freq_avg_sigma_(0.0)
-  , ir_freq_diff_sigma_(0.0)
-  , ir_int_avg_sigma_(0.0)
-  , ir_int_diff_sigma_(0.0)
-  , force_geom_diff_sigma_(0.0)
-  , force_geom_avg_sigma_(0.0)
-    {
-      /* Energy Values */
-      std::vector<double> energy_values;
-      for (const auto &i: population){
-	try{
-	  auto energy = EnergyFitness(i);
-	  energy_values.push_back(energy);
-	}catch(...){}
-      }
-      if (energy_values.size() <= 1)
-	throw "Not enough energies. Try lowering the mutation rate.";
-      energy_sigma_ = dmath::STDEV(energy_values.begin(), energy_values.end());
-
-      /* Dipole Average Values */
-      std::vector<double> dipole_avg_vals;
-      for (const auto &i: population)
-	try{
-	  auto dipole = DipoleAverageFitness(i);
-	  dipole_avg_vals.push_back(dipole);
-	}catch(...){}
-      if (dipole_avg_vals.size() <= 1)
-	throw "Not enough dipoles. Try lowering the mutation rate.";
-      dipole_average_sigma_ = dmath::STDEV(dipole_avg_vals.begin(), dipole_avg_vals.end());
-
-      /* Dipole Differences Values */
-      std::vector<double> dipole_diff_vals;
-      for (const auto &i: population)
-	try{
-	  auto dipole = DipoleDifferenceFitness(i);
-	  dipole_diff_vals.push_back(dipole);
-	}catch(...){}
-      if (dipole_diff_vals.size() <= 1)
-	throw "Not enough dipoles. Try lowering the mutation rate.";
-      dipole_difference_sigma_ = dmath::STDEV(dipole_diff_vals.begin(), dipole_diff_vals.end());
-
-      /* Excited State Frequency Average Values */
-      std::vector<double> es_freq_avg_vals;
-      for (const auto &i: population)
-	try{
-	  auto es = ExcitedFreqAverageFitness(i);
-	  es_freq_avg_vals.push_back(es);
-	}catch(...){}
-      if (es_freq_avg_vals.size() <= 1)
-	throw "Not enough excited states. Try lowering the mutation rate.";
-      excited_freq_avg_sigma_ = dmath::STDEV(es_freq_avg_vals.begin(), es_freq_avg_vals.end());
-
-      /* Excited State Frequency Difference Values */
-      std::vector<double> es_freq_diff_vals;
-      for (const auto &i: population)
-	try{
-	  auto es = ExcitedFreqDiffFitness(i);
-	  es_freq_diff_vals.push_back(es);
-	}catch(...){}
-      if (es_freq_diff_vals.size() <= 1)
-	throw "Not enough excited states. Try lowering the mutation rate.";
-      excited_freq_diff_sigma_ = dmath::STDEV(es_freq_diff_vals.begin(), es_freq_diff_vals.end());
-
-      /* Excited State Intensities Average Values */
-      std::vector<double> es_int_avg_vals;
-      for (const auto &i: population)
-	try{
-	  auto es = ExcitedIntAverageFitness(i);
-	  es_int_avg_vals.push_back(es);
-	}catch(...){}
-      if (es_int_avg_vals.size() <= 1)
-	throw "Not enough excited state intensities.";
-      excited_int_avg_sigma_ = dmath::STDEV(es_int_avg_vals.begin(), es_int_avg_vals.end());
-
-      /* Excited State Intensities Difference Values */
-      std::vector<double> es_int_diff_vals;
-      for (const auto &i: population)
-	try{
-	  auto es = ExcitedIntDiffFitness(i);
-	  es_int_diff_vals.push_back(es);
-	}catch(...){}
-      if (es_int_diff_vals.size() <= 1)
-	throw "Not enough excited state intensities.";
-      excited_int_diff_sigma_ = dmath::STDEV(es_int_diff_vals.begin(), es_int_diff_vals.end());
-      
-      /* IR Frequency Average Values */
-      std::vector<double> ir_freq_avg_vals;
-      for (const auto &i: population)
-	try{
-	  auto ir = IRFreqAverageFitness(i);
-	  ir_freq_avg_vals.push_back(ir);
-	}catch(const char * e){
-	  std::cerr << e << std::endl;
-	}
-      if (ir_freq_avg_vals.size() <= 1)
-	throw "Not enough ir frequencies. Try lowering the mutation rate.";
-      ir_freq_avg_sigma_ = dmath::STDEV(ir_freq_avg_vals.begin(), ir_freq_avg_vals.end());
-
-      /* IR Frequency Difference Values */
-      std::vector<double> ir_freq_diff_vals;
-      for (const auto &i: population)
-	try{
-	  auto ir = IRFreqDiffFitness(i);
-	  ir_freq_diff_vals.push_back(ir);
-	}catch(...){}
-      if (ir_freq_diff_vals.size() <= 1)
-	throw "Not enough ir frequency differences. Try lowering the mutation rate.";
-      ir_freq_diff_sigma_ = dmath::STDEV(ir_freq_diff_vals.begin(), ir_freq_diff_vals.end());
-
-      /* IR Intensities Average Values */
-      std::vector<double> ir_int_avg_vals;
-      for (const auto &i: population)
-	try{
-	  auto ir = IRIntensityAverageFitness(i);
-	  ir_int_avg_vals.push_back(ir);
-	}catch(...){}
-      if (ir_int_avg_vals.size() <= 1)
-	throw "Not enough intensity averages. Try lowering the mutation rate.";
-      ir_int_avg_sigma_ = dmath::STDEV(ir_int_avg_vals.begin(), ir_int_avg_vals.end());
-
-      /* IR Intensities Difference Values */
-      std::vector<double> ir_int_diff_vals;
-      for (const auto &i: population)
-	try{
-	  auto ir = IRIntensityDiffFitness(i);
-	  ir_int_diff_vals.push_back(ir);
-	}catch(const char *e){std::cerr << e << std::endl;}
-      if (ir_int_diff_vals.size() <= 1)
-	throw "Not enough ir intensitity differences. Try lowering the mutation rate.";
-      ir_int_diff_sigma_ = dmath::STDEV(ir_int_diff_vals.begin(), ir_int_diff_vals.end());
-
-      /* Force Geometry Difference Values */
-      std::vector<double> force_geom_diff_vals;
-      for (const auto &i: population)
-	try{
-	  auto force = ForceGeomDiffFitness(i);
-	  force_geom_diff_vals.push_back(force);
-	}catch(...){}
-      if (force_geom_diff_vals.size() <= 1)
-	throw "Not enough forces. Try lowering the mutation rate.";
-      force_geom_diff_sigma_ = dmath::STDEV(force_geom_diff_vals.begin(), force_geom_diff_vals.end());
-
-    }
+  , energy_weight_{1.0}
+  , dipole_average_weight_{1.0}
+  , dipole_difference_weight_(1.0)
+  , excited_freq_avg_weight_(1.0)
+  , excited_freq_diff_weight_(1.0)
+  , excited_int_avg_weight_(1.0)
+  , excited_int_diff_weight_(1.0)
+  , ir_freq_avg_weight_(1.0)
+  , ir_freq_diff_weight_(1.0)
+  , ir_int_avg_weight_(1.0)
+  , ir_int_diff_weight_(1.0)
+  , force_geom_diff_weight_(1.0)
+  , force_geom_avg_weight_(1.0)
+  {}
 
 std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_group) const{
   std::stringstream ss;
@@ -533,51 +397,51 @@ std::string reparm::Fitness::StringList(const reparm::ParameterGroup &param_grou
   try{
     double energy_fitness = EnergyFitness(param_group);
     ss << "Energy Fitness: ";
-    ss << energy_fitness / energy_sigma_ << std::endl;
+    ss << energy_fitness / energy_weight_ << std::endl;
 
     double dipole_average_fitness = DipoleAverageFitness(param_group);
     ss << "Dipole Average Fitness: ";
-    ss << dipole_average_fitness / dipole_average_sigma_ << std::endl;
+    ss << dipole_average_fitness / dipole_average_weight_ << std::endl;
 
     double dipole_difference_fitness = DipoleDifferenceFitness(param_group);
     ss << "Dipole Difference Fitness: ";
-    ss << dipole_difference_fitness / dipole_difference_sigma_ << std::endl;
+    ss << dipole_difference_fitness / dipole_difference_weight_ << std::endl;
 
     double excited_freq_average = ExcitedFreqAverageFitness(param_group);
     ss << "Excited State Frequency Average Fitness: ";
-    ss << excited_freq_average / excited_freq_avg_sigma_ << std::endl;
+    ss << excited_freq_average / excited_freq_avg_weight_ << std::endl;
 
     double excited_freq_difference = ExcitedFreqDiffFitness(param_group);
     ss << "Excited State Frequency Differences Fitness: ";
-    ss << excited_freq_difference / excited_freq_diff_sigma_ << std::endl;
+    ss << excited_freq_difference / excited_freq_diff_weight_ << std::endl;
 
     double excited_int_average = ExcitedIntAverageFitness(param_group);
     ss << "Excited State Intensities Average Fitness: ";
-    ss << excited_int_average / excited_int_avg_sigma_ << std::endl;
+    ss << excited_int_average / excited_int_avg_weight_ << std::endl;
 
     double excited_int_differences = ExcitedIntDiffFitness(param_group);
     ss << "Excited State Intensities Difference Fitness: ";
-    ss << excited_int_differences / excited_int_diff_sigma_ << std::endl;
+    ss << excited_int_differences / excited_int_diff_weight_ << std::endl;
 
     double ir_freq_average = IRFreqAverageFitness(param_group);
     ss << "IR Frequency Average Fitness: ";
-    ss << ir_freq_average / ir_freq_avg_sigma_ << std::endl;
+    ss << ir_freq_average / ir_freq_avg_weight_ << std::endl;
 
     double ir_freq_difference = IRFreqDiffFitness(param_group);
     ss << "IR Frequency Differences Fitness: ";
-    ss << ir_freq_difference / ir_freq_diff_sigma_ << std::endl;
+    ss << ir_freq_difference / ir_freq_diff_weight_ << std::endl;
 
     double ir_int_average = IRIntensityAverageFitness(param_group);
     ss << "IR Intensities Average Fitness: ";
-    ss << ir_int_average / ir_int_avg_sigma_ << std::endl;
+    ss << ir_int_average / ir_int_avg_weight_ << std::endl;
 
     double ir_int_differences = IRIntensityDiffFitness(param_group);
     ss << "IR Intensities Difference Fitness: ";
-    ss << ir_int_differences / ir_int_diff_sigma_ << std::endl;
+    ss << ir_int_differences / ir_int_diff_weight_ << std::endl;
 
     double force_geom_differences = ForceGeomDiffFitness(param_group);
     ss << "Force Geometry Difference Fitness: ";
-    ss << force_geom_differences / force_geom_diff_sigma_ << std::endl;
+    ss << force_geom_differences / force_geom_diff_weight_ << std::endl;
 
   }
   catch(const char* e){
@@ -614,17 +478,17 @@ double reparm::Fitness::operator () (reparm::ParameterGroup &rhs) const{
     iria_fitness = IRIntensityAverageFitness(rhs);
     irid_fitness = IRIntensityDiffFitness(rhs);
     fitness = (
-	       e_fitness / energy_sigma_
-               + d_fitness / dipole_average_sigma_
-	       + dd_fitness / dipole_difference_sigma_
-	       + efa_fitness / excited_freq_avg_sigma_
-	       + efd_fitness / excited_freq_diff_sigma_
-	       + eia_fitness / excited_int_avg_sigma_
-	       + eid_fitness / excited_int_diff_sigma_
-	       + irfa_fitness / ir_freq_avg_sigma_
-	       + irfd_fitness / ir_freq_diff_sigma_
-	       + iria_fitness / ir_int_avg_sigma_
-	       + irid_fitness / ir_int_diff_sigma_
+	       e_fitness / energy_weight_
+               + d_fitness / dipole_average_weight_
+	       + dd_fitness / dipole_difference_weight_
+	       + efa_fitness / excited_freq_avg_weight_
+	       + efd_fitness / excited_freq_diff_weight_
+	       + eia_fitness / excited_int_avg_weight_
+	       + eid_fitness / excited_int_diff_weight_
+	       + irfa_fitness / ir_freq_avg_weight_
+	       + irfd_fitness / ir_freq_diff_weight_
+	       + iria_fitness / ir_int_avg_weight_
+	       + irid_fitness / ir_int_diff_weight_
               );
   }
   catch(const char* e){
@@ -662,17 +526,17 @@ void reparm::Fitness::operator () (std::vector<reparm::ParameterGroup> &rhs) con
       iria_fitness = IRIntensityAverageFitness(i);
       irid_fitness = IRIntensityDiffFitness(i);
       fitness = (
-		 e_fitness / energy_sigma_
-		 + d_fitness / dipole_average_sigma_
-		 + dd_fitness / dipole_difference_sigma_
-		 + efa_fitness / excited_freq_avg_sigma_
-		 + efd_fitness / excited_freq_diff_sigma_
-		 + eia_fitness / excited_int_avg_sigma_
-		 + eid_fitness / excited_int_diff_sigma_
-		 + irfa_fitness / ir_freq_avg_sigma_
-		 + irfd_fitness / ir_freq_diff_sigma_
-		 + iria_fitness / ir_int_avg_sigma_
-		 + irid_fitness / ir_int_diff_sigma_
+		 e_fitness / energy_weight_
+		 + d_fitness / dipole_average_weight_
+		 + dd_fitness / dipole_difference_weight_
+		 + efa_fitness / excited_freq_avg_weight_
+		 + efd_fitness / excited_freq_diff_weight_
+		 + eia_fitness / excited_int_avg_weight_
+		 + eid_fitness / excited_int_diff_weight_
+		 + irfa_fitness / ir_freq_avg_weight_
+		 + irfd_fitness / ir_freq_diff_weight_
+		 + iria_fitness / ir_int_avg_weight_
+		 + irid_fitness / ir_int_diff_weight_
 		 );
     }
     catch(const char* e){
