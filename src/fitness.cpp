@@ -376,18 +376,18 @@ double reparm::Fitness::ForceGeomDiffFitness
 reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
                          const std::vector<reparm::GaussianOutput> &high_level_outputs)
   : high_level_outputs_{high_level_outputs}
-  , energy_weight_{1.0}
-  , dipole_average_weight_{1.0}
-  , dipole_difference_weight_(1.0)
-  , excited_freq_avg_weight_(1.0)
-  , excited_freq_diff_weight_(1.0)
-  , excited_int_avg_weight_(1.0)
-  , excited_int_diff_weight_(1.0)
-  , ir_freq_avg_weight_(1.0)
-  , ir_freq_diff_weight_(1.0)
-  , ir_int_avg_weight_(1.0)
-  , ir_int_diff_weight_(1.0)
-  , force_geom_diff_weight_(1.0)
+  , energy_weight_{0.2}
+  , dipole_average_weight_{0.5}
+  , dipole_difference_weight_(0.3)
+  , excited_freq_avg_weight_(14.0)
+  , excited_freq_diff_weight_(0.6)
+  , excited_int_avg_weight_(0.03)
+  , excited_int_diff_weight_(0.13)
+  , ir_freq_avg_weight_(55.0)
+  , ir_freq_diff_weight_(200.0)
+  , ir_int_avg_weight_(93.0)
+  , ir_int_diff_weight_(25)
+  , force_geom_diff_weight_(0.1)
   , force_geom_avg_weight_(1.0)
   {}
 
