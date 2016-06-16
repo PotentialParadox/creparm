@@ -335,5 +335,9 @@ void reparm::ReparmData::LoadHLT(){
   }
 }
 
+bool reparm::ReparmData::Adjust(int steps_since_last_best){
+  return true;
+};
+
 
 

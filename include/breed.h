@@ -15,14 +15,12 @@ namespace reparm{
 
   class Breed{
   private:
-    int population_size_;
-    int number_elites_;
+    std::shared_ptr<reparm::ReparmData> reparm_data_;
     Breed();
 
   public:
   Breed(const std::shared_ptr<reparm::ReparmData> &reparm_data)
-    : population_size_{reparm_data->GetReparmInput().GetPopulationSize()}
-    , number_elites_{reparm_data->GetReparmInput().GetNumberElites()}
+    : reparm_data_{reparm_data}
     {}
 
     void operator () (std::vector<reparm::ParameterGroup> &population);

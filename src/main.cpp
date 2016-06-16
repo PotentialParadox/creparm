@@ -87,8 +87,8 @@ int main(){
     double best_fitness = original_fitness;
     fout << "\nOriginal Fitness" << endl;
     fout << fitness.StringList(reparm_data->population_[0]) << endl;
+    int steps_since_last_best = 0;
     for (int i = 0; i < reparm_data->GetReparmInput().GetNumberGenerations(); ++i){
-
       fout << "Step: " << i << endl;
       survivor(reparm_data->population_);
       aristocratic_clone(reparm_data->population_, fitness);
@@ -98,12 +98,16 @@ int main(){
       fitness(reparm_data->population_);
 
       if (best_fitness > reparm_data->population_[0].GetFitness()){
+	steps_since_last_best = 0;
         fout << "New Best Fitness Found at Step " << i <<  endl;
         fout << fitness.StringList(reparm_data->population_[0]);
         best_fitness = reparm_data->population_[0].GetFitness();
     	  fout << "Total Fitness: " << best_fitness / original_fitness << "\n" << endl;
     	  reparm_data->Save();
       }
+      else ++steps_since_last_best;
+      if (!reparm_data->Adjust(steps_since_last_best))
+	  break;
     }
   }
   catch(const char *e){
