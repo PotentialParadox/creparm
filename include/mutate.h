@@ -17,16 +17,12 @@ class Mutate{
   friend class AristocraticCloning;
 
 private:
-  double mutation_rate_;
-  double mutation_perturbation_;
-  int number_elites_;
+  std::shared_ptr<reparm::ReparmData> reparm_data_;
   Mutate(){};
 
 public:
  Mutate(const std::shared_ptr<reparm::ReparmData> &reparm_data)
-    : mutation_rate_{reparm_data->GetReparmInput().GetMutationRate()}
-    , mutation_perturbation_{reparm_data->GetReparmInput().GetMutationPerturbations()}
-    , number_elites_{reparm_data->GetReparmInput().GetNumberElites()}
+   : reparm_data_{reparm_data}
   {}
 
   void operator () (std::vector<reparm::ParameterGroup> &population);

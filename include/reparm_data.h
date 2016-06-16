@@ -22,6 +22,8 @@ namespace reparm{
     int number_atoms_;
     int charge_;
     int multiplicity_;
+    float orig_mutation_rate_;
+    float orig_mutation_pert_;
     double original_fitness_;
     std::vector<float> coordinates_;
     std::vector<double> best_parameters_;
@@ -37,6 +39,8 @@ namespace reparm{
     /****** METHODS *****/
     void LoadHLT();
     void LoadPopulation();
+    void PopulationAdjustment(int steps);
+    void MutationAdjustment(int steps);
     std::vector<reparm::Coordinates> LoadGeometries();
     bool CheckInput();
 
@@ -47,6 +51,8 @@ namespace reparm{
       , number_atoms_{0}
       , charge_{0}
       , multiplicity_{0}
+      , orig_mutation_rate_{reparm_input_.GetMutationRate()}
+      , orig_mutation_pert_{reparm_input_.GetMutationPerturbations()}
       , original_fitness_{0}
     {}
 
