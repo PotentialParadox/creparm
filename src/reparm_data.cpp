@@ -336,6 +336,13 @@ void reparm::ReparmData::LoadHLT(){
 }
 
 bool reparm::ReparmData::Adjust(int steps_since_last_best){
+  if (steps_since_last_best == 10)
+    return false;
+  else if (steps_since_last_best > 2){
+    int population_size = reparm_input_.GetPopulationSize();
+    population_size = 3 / 2 * population_size;
+    reparm_input_.SetPopulationSize(population_size);
+  }
   return true;
 };
 

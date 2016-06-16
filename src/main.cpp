@@ -106,6 +106,8 @@ int main(){
     	  reparm_data->Save();
       }
       else ++steps_since_last_best;
+      /* If struggling to improve, adjust the population size and
+	 mutation rates first, else call convergence. */
       if (!reparm_data->Adjust(steps_since_last_best))
 	  break;
     }
