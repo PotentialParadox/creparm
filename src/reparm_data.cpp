@@ -340,8 +340,16 @@ bool reparm::ReparmData::Adjust(int steps_since_last_best){
     return false;
   else if (steps_since_last_best > 2){
     int population_size = reparm_input_.GetPopulationSize();
-    population_size = 3 / 2 * population_size;
+    population_size *= 3;
+    population_size /= 2;
     reparm_input_.SetPopulationSize(population_size);
+  }
+  else if (steps_since_last_best == 0){
+    int population_size = reparm_input_.GetPopulationSize();
+    population_size *= 10;
+    population_size /= 12;
+    auto survival_rate = reparm_input_.GetSurvivalChance();
+    auto number_elites = reparm_input_.GetNumberElites();
   }
   return true;
 };
