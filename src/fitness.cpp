@@ -282,95 +282,17 @@ double reparm::Fitness::ForceGeomDiffFitness
   std::vector<std::vector<double> > am1_raw_forces;
   for (auto &i: param_group.GetOutputs())
     am1_raw_forces.push_back(i.GetForces());
+  auto am1_differences = dmath::DifferenceVectorMatrix(am1_raw_forces);
   std::vector<std::vector<double> > hlt_raw_forces;
   for (auto &i: high_level_outputs_)
     hlt_raw_forces.push_back(i.GetForces());
   if (am1_raw_forces.size() < 2)
     throw "not enough geometries";
+  auto hlt_differences = dmath::DifferenceVectorMatrix(hlt_raw_forces);
 
-  /* Currently forces are stored as a one 3n long
-     array, where n is the number of force vectors.
-     I'm going to convert this into a n long vector
-     of vectors of size 3.
-  */
-  typedef std::vector<double> force;
-
-  std::vector<std::vector<force> > am1_forces;
-  /* for each geometry */
-  for (auto &i: am1_raw_forces){
-    std::vector<force> forces;
-    forces = dmath::VectorOneToTwo(i, 3);
-    am1_forces.push_back(forces);
-  }
-  std::vector<std::vector<force> > hlt_forces;
-  /* for each geometry */
-  for (auto &i: hlt_raw_forces){
-    std::vector<force> forces;
-    forces = dmath::VectorOneToTwo(i, 3);
-    hlt_forces.push_back(forces);
-  }
-
-  /* We now need to find the vector differences
-     between the geometries 
-  */
-  std::vector<std::vector<force> > am1_differences;
-  auto geom1 = am1_forces.begin();
-  auto geom2 = geom1 + 1;
-  auto geom_end = am1_forces.end();
-  for (; geom2 != geom_end; ++geom1, ++geom2){
-    std::vector<force> force_differences;
-    auto force1 = geom1->begin();
-    auto force2 = geom2->begin();
-    auto force_end = geom1->end();
-    for (; force1 != force_end; ++force1, ++force2){
-      force difference;
-      difference = dmath::VectorDifference<double>(force1->begin(), force1->end(), force2->begin());
-      force_differences.push_back(difference);
-    }
-    am1_differences.push_back(force_differences);
-  }
-  std::vector<std::vector<force> > hlt_differences;
-  geom1 = hlt_forces.begin();
-  geom2 = geom1 + 1;
-  geom_end = hlt_forces.end();
-  for (; geom2 != geom_end; ++geom1, ++geom2){
-    std::vector<force> force_differences;
-    auto force1 = geom1->begin();
-    auto force2 = geom2->begin();
-    auto force_end = geom1->end();
-    for (; force1 != force_end; ++force1, ++force2){
-      force difference;
-      difference = dmath::VectorDifference<double>(force1->begin(), force1->end(), force2->begin());
-      force_differences.push_back(difference);
-    }
-    hlt_differences.push_back(force_differences);
-  }
-
-  /* The differences vectors now hold the number of geometries - 1 values
-     representing the vector difference between the force in a geometry to that
-     of the geometry immediately following it. We now find the average distance
-     between the value of the two theories.
-  */
-  double distance = 0;
-  auto am1_geom = am1_differences.begin();
-  auto hlt_geom = hlt_differences.begin();
-  auto am1_geom_end = am1_differences.end();
-  for (; am1_geom != am1_geom_end; ++am1_geom, ++hlt_geom){
-    auto am1_force = am1_geom->begin();
-    auto hlt_force = hlt_geom->begin();
-    auto am1_force_end = am1_geom->end();
-    double distance_per_geometry = 0;
-    for (; am1_force != am1_force_end; ++am1_force, ++hlt_force){
-      double distance_per_force = 0;
-      distance_per_force =
-	dmath::Distance(am1_force->begin(), am1_force->end(), hlt_force->end());
-      distance_per_geometry += distance_per_force;
-    }
-    distance_per_geometry /= am1_geom->size();
-    distance += distance_per_geometry;
-  }
-
-  return distance /= am1_differences.size();
+  auto DistanceMatrix = dmath::DistanceVectorMatrix(am1_differences,
+						      hlt_differences);
+  return dmath::MatrixAverage(DistanceMatrix);
 }
 
 reparm::Fitness::Fitness(const std::vector<reparm::ParameterGroup> &population,
