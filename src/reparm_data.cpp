@@ -338,14 +338,14 @@ void reparm::ReparmData::LoadHLT(){
 void reparm::ReparmData::PopulationAdjustment(int steps){
   if (steps > 2){
     int population_size = reparm_input_.GetPopulationSize();
-    population_size *= 3;
-    population_size /= 2;
+    population_size *= 5;
+    population_size /= 4;
     reparm_input_.SetPopulationSize(population_size);
   }
   else if (steps == 0){
     int population_size = reparm_input_.GetPopulationSize();
-    population_size *= 10;
-    population_size /= 12;
+    population_size *= 9;
+    population_size /= 10;
     auto survival_rate = reparm_input_.GetSurvivalChance();
     auto number_elites = reparm_input_.GetNumberElites();
     if (population_size * survival_rate >= number_elites)
@@ -357,31 +357,37 @@ void reparm::ReparmData::MutationAdjustment(int steps){
   float mutation_rate = reparm_input_.GetMutationRate();
   float mutation_pert = reparm_input_.GetMutationPerturbations();
   if (steps > 2 && steps <= 7){
+    mutation_rate *= 0.9;
+    reparm_input_.SetMutationRate(mutation_rate);
+
+    mutation_pert *= 0.9;
+    reparm_input_.SetMutationPerturbation(mutation_pert);
+  }
+  else if (steps == 8){
+    mutation_rate = orig_mutation_rate_ * 1.1;
+    reparm_input_.SetMutationRate(mutation_rate);
+
+    mutation_pert = orig_mutation_pert_ * 1.1;
+    reparm_input_.SetMutationPerturbation(mutation_pert);
+  }
+  else if (steps > 8){
     mutation_rate *= 1.2;
     reparm_input_.SetMutationRate(mutation_rate);
 
     mutation_pert *= 1.2;
     reparm_input_.SetMutationPerturbation(mutation_pert);
   }
-  else if (steps == 8){
-    mutation_rate /= 1.44;
-    mutation_rate *= 0.85;
-    
-    mutation_pert /= 1.44;
-    mutation_pert *= 0.85;
-  }
-  else if (steps > 8){
-    mutation_rate *= 0.85;
-    mutation_pert *= 0.85;
-  }
   if (steps == 0){
     mutation_rate = orig_mutation_rate_;
+    reparm_input_.SetMutationRate(mutation_rate);
+
     mutation_pert = orig_mutation_pert_;
+    reparm_input_.SetMutationPerturbation(mutation_pert);
   }
 }
 
 bool reparm::ReparmData::Adjust(int steps_since_last_best){
-  if (steps_since_last_best == 15)
+  if (steps_since_last_best == 10)
     return false;
   PopulationAdjustment(steps_since_last_best);
   MutationAdjustment(steps_since_last_best);
