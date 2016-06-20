@@ -50,7 +50,7 @@ void reparm::ParameterGroup::SetFitness(double fitness){
   fitness_ = fitness;
 }
 
-double reparm::ParameterGroup::GetFitness(){
+double reparm::ParameterGroup::GetFitness() const{
   return fitness_;
 }
 

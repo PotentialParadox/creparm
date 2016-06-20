@@ -20,6 +20,7 @@
 #include <genesis.h>
 #include <gout_reader.h>
 #include <container_math.h>
+#include <diversity.h>
 
 using namespace std;
 using namespace reparm;
@@ -125,6 +126,8 @@ int main(){
   fout << initial_output << endl;
   fout << "BEST OUTPUTS" << endl;
   fout << reparm_data->population_[0].GetOutputs()[0].str() << endl;
+  Diversity diversity(reparm_data);
+  diversity.Sort(reparm_data->population_);
   fout << "Corresponding DFT" << endl;
   fout << reparm_data->high_level_outputs_[0].str() << endl;
   fout << "Fitness: " << reparm_data->population_[0].GetFitness()

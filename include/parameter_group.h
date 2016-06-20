@@ -40,7 +40,7 @@ class ParameterGroup{
   void SetUpdated(const bool updated);
   bool IsUpdated() const;
   void SetFitness(double fitness);
-  double GetFitness();
+  double GetFitness() const;
   void Mutate(const double &perturbation, const double &rate);
   reparm::ParameterGroup Cross(const reparm::ParameterGroup&);
   void SetParameters(const reparm::Parameters&);
