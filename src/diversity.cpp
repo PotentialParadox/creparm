@@ -22,7 +22,10 @@ namespace reparm {
     }
 
     void Diversity::SelectNext() {
-        auto it = std::min_element(temp_set_.begin(), temp_set_.end(), SortFunction);
+        auto it = std::min_element(temp_set_.begin(), temp_set_.end(),
+                                   [this](const ParameterGroup &a, const ParameterGroup &b) {
+                                       return DetermineValue(a) < DetermineValue(b);
+                                   });
         sorted_set_.push_back(*it);
         temp_set_.erase(std::remove(temp_set_.begin(), temp_set_.end(), *it), temp_set_.end());
     }
@@ -36,10 +39,4 @@ namespace reparm {
         }
         return distance_sum / sorted_set_.size();
     }
-
-    bool Diversity::SortFunction(const ParameterGroup &a,
-                                 const ParameterGroup &b) {
-        return DetermineValue(a) < DetermineValue(b);
-    }
-
 }

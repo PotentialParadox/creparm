@@ -20,9 +20,6 @@ namespace reparm {
 
         float DetermineValue(const ParameterGroup &);
 
-        bool SortFunction(const ParameterGroup &a,
-                          const ParameterGroup &b);
-
     public:
         Diversity(std::shared_ptr<ReparmData> reparm_data)
                 : reparm_data_{reparm_data} { }

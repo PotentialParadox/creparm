@@ -57,6 +57,10 @@ namespace reparm {
         bool operator<(const reparm::ParameterGroup &rhs) const {
           return fitness_ < rhs.fitness_;
         }
+
+        bool operator==(const reparm::ParameterGroup &rhs) const {
+            return fitness_ == rhs.fitness_;
+        }
     };
 
 }
