@@ -11,45 +11,53 @@ Create by Dustin Tracy (dtracy.uf@gmail.com) April 11, 2016 */
 #include <gaussian_input.h>
 #include <gaussian_output.h>
 
-namespace reparm{
+namespace reparm {
 
-class ParameterGroup{
- private:
-  std::vector<reparm::GaussianInput> inputs_;
-  std::vector<reparm::GaussianOutput> outputs_;
-  /* Keep track of whether outputs_ is up to date */
-  bool updated_;
-  double fitness_;
+    class ParameterGroup {
+    private:
+        std::vector<reparm::GaussianInput> inputs_;
+        std::vector<reparm::GaussianOutput> outputs_;
+        /* Keep track of whether outputs_ is up to date */
+        bool updated_;
+        double fitness_;
 
- public:
- ParameterGroup(const std::vector<reparm::GaussianInput> inputs)
-   : inputs_(inputs)
-    , updated_(false)
-    , fitness_(1.0)
-    {}
- ParameterGroup()
-   : inputs_()
-    , outputs_()
-    , fitness_(1.0)
-    {}
+    public:
+        ParameterGroup(const std::vector<reparm::GaussianInput> inputs)
+                : inputs_(inputs), updated_(false), fitness_(1.0) { }
 
-  void SetInputs(const std::vector<reparm::GaussianInput>);
-  std::vector<reparm::GaussianInput> GetInputs() const;
-  void SetOutputs(const std::vector<reparm::GaussianOutput>&);
-  std::vector<reparm::GaussianOutput> GetOutputs() const;
-  void SetUpdated(const bool updated);
-  bool IsUpdated() const;
-  void SetFitness(double fitness);
-  double GetFitness() const;
-  void Mutate(const double &perturbation, const double &rate);
-  reparm::ParameterGroup Cross(const reparm::ParameterGroup&);
-  void SetParameters(const reparm::Parameters&);
-  std::string XYZString() const;
+        ParameterGroup()
+                : inputs_(), outputs_(), fitness_(1.0) { }
 
-  bool operator < (const reparm::ParameterGroup &rhs) const{
-    return fitness_ < rhs.fitness_;
-  }
-};
+        void SetInputs(const std::vector<reparm::GaussianInput>);
+
+        std::vector<reparm::GaussianInput> GetInputs() const;
+
+        void SetOutputs(const std::vector<reparm::GaussianOutput> &);
+
+        std::vector<reparm::GaussianOutput> GetOutputs() const;
+
+        void SetUpdated(const bool updated);
+
+        bool IsUpdated() const;
+
+        void SetFitness(double fitness);
+
+        double GetFitness() const;
+
+        void Mutate(const double &perturbation, const double &rate);
+
+        reparm::ParameterGroup Cross(const reparm::ParameterGroup &);
+
+        reparm::Parameters GetParameters() const;
+
+        void SetParameters(const reparm::Parameters &);
+
+        std::string XYZString() const;
+
+        bool operator<(const reparm::ParameterGroup &rhs) const {
+          return fitness_ < rhs.fitness_;
+        }
+    };
 
 }
 

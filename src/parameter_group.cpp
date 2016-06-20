@@ -1,6 +1,5 @@
 #include <parameter_group.h>
 #include <sstream>
-#include <parameters.h>
 
 void reparm::ParameterGroup::SetInputs(const std::vector<reparm::GaussianInput> inputs){
   this->inputs_ = inputs;
@@ -19,6 +18,10 @@ void reparm::ParameterGroup::Mutate(const double &perturbation, const double &ra
   for (auto &&i: this->inputs_){
     i.SetParameters(parameters);
   }
+}
+
+reparm::Parameters reparm::ParameterGroup::GetParameters() const {
+    return inputs_[0].GetParameters();
 }
 
 void reparm::ParameterGroup::SetParameters(const reparm::Parameters &parameters){
