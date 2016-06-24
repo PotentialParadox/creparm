@@ -111,9 +111,6 @@ int main(){
 	 mutation rates first, else call convergence. */
       if (!reparm_data->Adjust(steps_since_last_best))
 	  break;
-      std::cout << "reparm pop size: " << reparm_data->GetReparmInput().GetPopulationSize() << std::endl;
-      std::cout << "mutation_rate: " << reparm_data->GetReparmInput().GetMutationRate() << std::endl;
-      std::cout << "mutation_pert: " << reparm_data->GetReparmInput().GetMutationPerturbations() << std::endl;
     }
   }
   catch(const char *e){

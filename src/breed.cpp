@@ -5,7 +5,6 @@
 
 void reparm::Breed::operator()(std::vector<reparm::ParameterGroup> &population){
   int population_size = reparm_data_->GetReparmInput().GetPopulationSize();
-  std::cout << "population size: " << population_size << std::endl;
   int number_elites = reparm_data_->GetReparmInput().GetNumberElites();
   if (population.size() > 1){
     std::vector<reparm::ParameterGroup> child_population;

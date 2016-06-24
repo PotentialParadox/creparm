@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="CPP_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src/aristocratic_cloning.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/breed.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/mutate.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/survivor.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/reparm_input.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/diversity.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/reparm_data.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/gaussian_output.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/gin_reader.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/genesis.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/header.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/parameters.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/fitness.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/gaussian_input.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/parameter_group.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/genetic_algorithm.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/gout_reader.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/gaussian.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/coordinates.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="Header Search Paths">
+        <CLASSES>
+          <root url="file:///usr/include" />
+          <root url="file:///usr/lib/gcc/x86_64-pc-linux-gnu/6.1.1/include" />
+          <root url="file:///usr/lib/gcc/x86_64-pc-linux-gnu/6.1.1/include-fixed" />
+          <root url="file:///usr/local/include" />
+        </CLASSES>
+        <SOURCES>
+          <root url="file:///usr/include" />
+          <root url="file:///usr/lib/gcc/x86_64-pc-linux-gnu/6.1.1/include" />
+          <root url="file:///usr/lib/gcc/x86_64-pc-linux-gnu/6.1.1/include-fixed" />
+          <root url="file:///usr/local/include" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+  </component>
+</module>

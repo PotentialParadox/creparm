@@ -37,6 +37,7 @@ namespace reparm {
             auto i_params = i.GetParameters().GetParameters();
             distance_sum += dmath::Distance(i_params.begin(), i_params.end(), pg_params.begin());
         }
+        std::cout << distance_sum / sorted_set_.size() << std::endl;
         return distance_sum / sorted_set_.size();
     }
 }
