@@ -43,3 +43,5 @@ test
 
 #Clion
 *.xml
+.idea
+.ropeproject
