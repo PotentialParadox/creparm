@@ -19,8 +19,8 @@ int main() {
 
     /* Find the fitness */
     Fitness fitness{reparm_data.population_, reparm_data.high_level_outputs_};
+    fitness(reparm_data.population_[0]);
     cout << fitness.StringList(reparm_data.population_[0]);
-    cout << "Total Fitness: " << fitness(reparm_data.population_[0]) /
-                                 reparm_data.GetOriginalFitness();
+    cout << "Total Fitness: " << reparm_data.population_[0].GetFitness();
     return 0;
 }
