@@ -1,0 +1,13 @@
+Input File:                    Thiophene.com
+High Level Theory:             B3LYP/3-21G
+Number of Excited States:      10
+Number of Generations:         2
+Number of Processors:          4
+Number of Geometries:          4
+Number of Elites:              2
+Population Size:               4
+Mutation Rate:                 0.05
+Mutation Perturbation:         0.025
+Survival Chance:               0.5
+Geometric Perturbation:        0.10
+Continue From Last Run:        True
