@@ -52,7 +52,6 @@ int main(){
     else{
       fout << "Starting new job" << endl;
       Genesis genesis(reparm_data);
-      reparm_data->Save();
       fout << "Saved structures to reparm_structures.xyz" << endl;
       ofstream xyz{"reparm_structures.xyz"};
       xyz << reparm_data->population_[0].XYZString();
@@ -85,6 +84,8 @@ int main(){
 
     // ******* Begin the main loop *********
     original_fitness = fitness(reparm_data->population_[0]);
+    reparm_data->SetOriginalFitness(original_fitness);
+    reparm_data->Save();
     double best_fitness = original_fitness;
     fout << "\nOriginal Fitness" << endl;
     fout << fitness.StringList(reparm_data->population_[0]) << endl;

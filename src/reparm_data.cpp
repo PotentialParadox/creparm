@@ -108,7 +108,7 @@ void reparm::ReparmData::Save() const{
     for (const auto &j: i.GetIntensities())
       ir_intensities.push_back(j);
   }
-    
+    fout << original_fitness_ << std::endl;
   fout << number_geometries << std::endl;
   fout << number_atoms << std::endl;
   fout << charge << std::endl;
@@ -161,7 +161,8 @@ void reparm::ReparmData::Save() const{
 void reparm::ReparmData::Load(){
   std::ifstream fin{"reparm.dat"};
 
-  fin >> number_geometries_ >> number_atoms_ >> charge_ >> multiplicity_;
+  fin >> original_fitness_ >> number_geometries_ >> number_atoms_
+  >> charge_ >> multiplicity_;
   int vector_size;
   fin >> vector_size;
   for (int i = 0; i != vector_size; ++i){
@@ -392,5 +393,8 @@ bool reparm::ReparmData::Adjust(int steps_since_last_best){
   return true;
 };
 
+void reparm::ReparmData::SetOriginalFitness(double n){
+  original_fitness_ = n;
+}
 
 
