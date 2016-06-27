@@ -65,6 +65,9 @@ namespace reparm{
         const std::vector<GaussianOutput>& GetHighLevelOutputs() const;
         void RunBest();
         bool Adjust(int steps_since_last_best);
+        double GetOriginalFitness() const{
+            return original_fitness_;
+        }
     };
 
 }
