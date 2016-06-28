@@ -68,6 +68,7 @@ namespace reparm{
     void RunBest();
     bool Adjust(int steps_since_last_best);
       void SetOriginalFitness(double n);
+      double GetOriginalFitness() const;
   };
 
 }

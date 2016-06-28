@@ -1,14 +1,12 @@
+#include <gaussian_input.h>
+#include <reparm_input.h>
 #include <iostream>
-#include <string>
 #include <sstream>
-#include <vector>
+#include <gaussian.h>
 #include <fstream>
-#include "../include/reparm_input.h"
-#include "../include/reparm_data.h"
-#include "../include/gaussian_output.h"
-#include "../include/container_math.h"
-#include "../include/system_tools.h"
-#include "../include/gaussian.h"
+#include <container_math.h>
+#include <system_tools.h>
+#include <reparm_data.h>
 
 reparm::ReparmInput reparm::ReparmData::GetReparmInput() const{
     return reparm_input_;
@@ -108,7 +106,7 @@ void reparm::ReparmData::Save() const{
         for (const auto &j: i.GetIntensities())
             ir_intensities.push_back(j);
     }
-
+    fout << original_fitness_ << std::endl;
     fout << number_geometries << std::endl;
     fout << number_atoms << std::endl;
     fout << charge << std::endl;
@@ -161,7 +159,8 @@ void reparm::ReparmData::Save() const{
 void reparm::ReparmData::Load(){
     std::ifstream fin{"reparm.dat"};
 
-    fin >> number_geometries_ >> number_atoms_ >> charge_ >> multiplicity_;
+    fin >> original_fitness_ >> number_geometries_ >> number_atoms_
+    >> charge_ >> multiplicity_;
     int vector_size;
     fin >> vector_size;
     for (int i = 0; i != vector_size; ++i){
@@ -338,14 +337,12 @@ void reparm::ReparmData::LoadHLT(){
 void reparm::ReparmData::PopulationAdjustment(int steps){
     if (steps > 2){
         int population_size = reparm_input_.GetPopulationSize();
-        population_size *= 5;
-        population_size /= 4;
+        population_size += (5.0/4.0 * orig_population_size_);
         reparm_input_.SetPopulationSize(population_size);
     }
     else if (steps == 0){
         int population_size = reparm_input_.GetPopulationSize();
-        population_size *= 9;
-        population_size /= 10;
+        population_size -= (9.0/10.0 * orig_population_size_);
         auto survival_rate = reparm_input_.GetSurvivalChance();
         auto number_elites = reparm_input_.GetNumberElites();
         if (population_size * survival_rate >= number_elites)
@@ -356,21 +353,21 @@ void reparm::ReparmData::PopulationAdjustment(int steps){
 void reparm::ReparmData::MutationAdjustment(int steps){
     float mutation_rate = reparm_input_.GetMutationRate();
     float mutation_pert = reparm_input_.GetMutationPerturbations();
-    if (steps > 2 && steps <= 7){
+    if (steps > 2 && steps < 13){
         mutation_rate *= 0.9;
         reparm_input_.SetMutationRate(mutation_rate);
 
         mutation_pert *= 0.9;
         reparm_input_.SetMutationPerturbation(mutation_pert);
     }
-    else if (steps == 8){
+    else if (steps == 13){
         mutation_rate = orig_mutation_rate_ * 1.1;
         reparm_input_.SetMutationRate(mutation_rate);
 
         mutation_pert = orig_mutation_pert_ * 1.1;
         reparm_input_.SetMutationPerturbation(mutation_pert);
     }
-    else if (steps > 8){
+    else if (steps > 13){
         mutation_rate *= 1.2;
         reparm_input_.SetMutationRate(mutation_rate);
 
@@ -387,12 +384,19 @@ void reparm::ReparmData::MutationAdjustment(int steps){
 }
 
 bool reparm::ReparmData::Adjust(int steps_since_last_best){
-    if (steps_since_last_best == 10)
+    if (steps_since_last_best == 15)
         return false;
     PopulationAdjustment(steps_since_last_best);
     MutationAdjustment(steps_since_last_best);
     return true;
 };
 
+void reparm::ReparmData::SetOriginalFitness(double n){
+    original_fitness_ = n;
+}
+
+double reparm::ReparmData::GetOriginalFitness() const{
+    return original_fitness_;
+}
 
 

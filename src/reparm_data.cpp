@@ -397,4 +397,8 @@ void reparm::ReparmData::SetOriginalFitness(double n){
   original_fitness_ = n;
 }
 
+double reparm::ReparmData::GetOriginalFitness() const{
+  return original_fitness_;
+}
+
 

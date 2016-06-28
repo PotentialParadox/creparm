@@ -1,3 +1,4 @@
+
 // This class acts as the primary struct to main and contains
 // the highest level objects
 // Created by Dustin Tracy (dtracy.uf@gmail.com) 3/7/2016
@@ -6,10 +7,10 @@
 
 #include <string>
 #include <vector>
-#include "coordinates.h"
-#include "gaussian_output.h"
-#include "reparm_input.h"
-#include "parameter_group.h"
+#include <reparm_input.h>
+#include <parameter_group.h>
+#include <gaussian_output.h>
+#include <gaussian_input.h>
 
 namespace reparm{
 
@@ -22,6 +23,7 @@ namespace reparm{
         int number_atoms_;
         int charge_;
         int multiplicity_;
+        int orig_population_size_;
         float orig_mutation_rate_;
         float orig_mutation_pert_;
         double original_fitness_;
@@ -51,6 +53,7 @@ namespace reparm{
                 , number_atoms_{0}
                 , charge_{0}
                 , multiplicity_{0}
+                , orig_population_size_{reparm_input_.GetPopulationSize()}
                 , orig_mutation_rate_{reparm_input_.GetMutationRate()}
                 , orig_mutation_pert_{reparm_input_.GetMutationPerturbations()}
                 , original_fitness_{0}
@@ -65,11 +68,9 @@ namespace reparm{
         const std::vector<GaussianOutput>& GetHighLevelOutputs() const;
         void RunBest();
         bool Adjust(int steps_since_last_best);
-        double GetOriginalFitness() const{
-            return original_fitness_;
-        }
+        void SetOriginalFitness(double n);
+        double GetOriginalFitness() const;
     };
 
 }
 #endif /* REPARM_DATA_H */
-
