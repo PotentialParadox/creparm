@@ -1,17 +1,11 @@
 #include <iostream>
-#include <stdexcept>
 #include <memory>
 #include <fstream>
 #include <algorithm>
 #include <gaussian_input.h>
 #include <parameter_group.h>
-#include <header.h>
-#include <gaussian.h>
 #include <chrono>
-#include <gaussian_output.h>
 #include <genetic_algorithm.h>
-#include <reparm_data.h>
-#include <reparm_input.h>
 #include <fitness.h>
 #include <mutate.h>
 #include <survivor.h>
@@ -83,8 +77,13 @@ int main(){
     initial_output = reparm_data->population_[0].GetOutputs()[0].str();
 
     // ******* Begin the main loop *********
-    original_fitness = fitness(reparm_data->population_[0]);
-    reparm_data->SetOriginalFitness(original_fitness);
+    if (reparm_input.GetShouldContinue()){
+      original_fitness = reparm_data->GetOriginalFitness();
+    }
+    else{
+      original_fitness = fitness(reparm_data->population_[0]);
+      reparm_data->SetOriginalFitness(original_fitness);
+    }
     reparm_data->Save();
     double best_fitness = original_fitness;
     fout << "\nOriginal Fitness" << endl;
