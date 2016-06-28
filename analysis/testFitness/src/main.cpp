@@ -1,4 +1,5 @@
 #include <iostream>
+#include <gaussian.h>
 #include "../include/reparm_data.h"
 #include "../include/fitness.h"
 
@@ -15,9 +16,12 @@ int main() {
      * and override our population */
     GaussianInput gin{"test_parameters.com"};
     Parameters params = gin.GetParameters();
-    cout << reparm_data.population_[0].GetParameters().str() << endl;
     reparm_data.population_[0].SetParameters(params);
-    cout << reparm_data.population_[0].GetParameters().str() << endl;
+
+    /* Create the output files */
+    Gaussian gaussian(reparm_data.population_[0]);
+    vector<GaussianOutput> gouts{gaussian.RunGaussian()};
+    reparm_data.population_[0].SetOutputs(gouts);
 
     /* Find the fitness */
     Fitness fitness{reparm_data.population_, reparm_data.high_level_outputs_};

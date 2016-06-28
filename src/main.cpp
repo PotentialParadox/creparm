@@ -76,6 +76,18 @@ int main(){
     fout << "Determined fitnesss" << endl;
     initial_output = reparm_data->population_[0].GetOutputs()[0].str();
 
+    /*  Begin Adrian Testing */
+    GaussianInput first_run{"first_run.com"};
+    GaussianInput second_run{"second_run.com"};
+    GaussianInput third_run{"third_run.com"};
+    auto param_one = first_run.GetParameters();
+    auto param_two = second_run.GetParameters();
+    auto param_three = third_run.GetParameters();
+    reparm_data->population_[1].SetParameters(param_one);
+    reparm_data->population_[2].SetParameters(param_two);
+    reparm_data->population_[3].SetParameters(param_three);
+    /*  End Adrian Testing */
+
     // ******* Begin the main loop *********
     if (reparm_input.GetShouldContinue()){
       original_fitness = reparm_data->GetOriginalFitness();
@@ -123,8 +135,8 @@ int main(){
   fout << initial_output << endl;
   fout << "BEST OUTPUTS" << endl;
   fout << reparm_data->population_[0].GetOutputs()[0].str() << endl;
-  Diversity diversity(reparm_data);
-  diversity.Sort();
+//  Diversity diversity(reparm_data);
+//  diversity.Sort();
   fout << "Corresponding DFT" << endl;
   fout << reparm_data->high_level_outputs_[0].str() << endl;
   fout << "Fitness: " << reparm_data->population_[0].GetFitness()
